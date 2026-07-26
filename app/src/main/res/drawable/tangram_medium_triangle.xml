@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="121.26dp"
+    android:height="121.26dp"
+    android:viewportWidth="121.2569587999887838"
+    android:viewportHeight="121.2569587999887838">
+    <group android:name="triangle"
+        android:pivotX="60.6284793999943919"
+        android:pivotY="60.6284793999943919"
+        android:rotation="0">
+        <path android:strokeWidth="?attr/tangramOutlineWidth"
+            android:strokeColor="?attr/tangramOutlineColor"
+            android:strokeLineJoin="miter"
+            android:fillColor="?attr/tangramMediumTriangleColor"
+            android:pathData="M 60.6284793999943919,22.9161177367118573 L 117.1970218949181939,79.4846602316356592 L 4.05993690507058995,79.4846602316356592 Z"/>
+    </group>
+</vector>

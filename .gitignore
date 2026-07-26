@@ -1,0 +1,22 @@
+# Backups
+*~
+
+# Android Studio-generated files
+*.apk
+*.apk.idsig
+*.iml
+.cxx
+.DS_Store
+.externalNativeBuild
+.gradle
+.idea
+/local.properties
+/build
+/captures
+local.properties
+
+# Local AI tools
+.aiexclude
+.claude
+AGENTS.md
+CLAUDE.md

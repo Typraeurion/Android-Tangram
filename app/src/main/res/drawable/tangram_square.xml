@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="82dp"
+    android:height="82dp"
+    android:viewportWidth="82"
+    android:viewportHeight="82">
+    <group android:name="square"
+        android:pivotX="41"
+        android:pivotY="41"
+        android:rotation="0">
+        <path android:strokeWidth="?attr/tangramOutlineWidth"
+            android:strokeColor="?attr/tangramOutlineColor"
+            android:strokeLineJoin="miter"
+            android:fillColor="?attr/tangramSmallSquareColor"
+            android:pathData="M 12.71572875253809902,12.71572875253809902 L 69.284271247461901,12.71572875253809902 L 69.284271247461901,69.284271247461901 L 12.71572875253809902,69.284271247461901 Z"/>
+    </group>
+</vector>

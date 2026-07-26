@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Tangram" parent="Theme.AppCompat">
+        <!-- Default styles for previewing the vector drawables;
+             this is the same as easy / solution mode. -->
+        <item name="tangramOutlineWidth">1dp</item>
+        <item name="tangramOutlineColor">@color/gray7</item>
+        <item name="tangramSmallTriangleColor">@color/crimson</item>
+        <item name="tangramSmallSquareColor">@color/gold</item>
+        <item name="tangramParallelogramColor">@color/dark_orange</item>
+        <item name="tangramMediumTriangleColor">@color/forest_green</item>
+        <item name="tangramLargeTriangleColor">@color/dodger_blue</item>
+    </style>
+
+    <!-- Block color variants for hinting -->
+    <!-- The default puzzle mode is all black, no outlines -->
+    <style name="Theme.Tangram.Puzzle" parent="Theme.Tangram">
+        <item name="tangramOutlineWidth">0dp</item>
+        <item name="tangramOutlineColor">@color/gray7</item>
+        <item name="tangramSmallTriangleColor">@color/gray7</item>
+        <item name="tangramSmallSquareColor">@color/gray7</item>
+        <item name="tangramParallelogramColor">@color/gray7</item>
+        <item name="tangramMediumTriangleColor">@color/gray7</item>
+        <item name="tangramLargeTriangleColor">@color/gray7</item>
+    </style>
+
+    <!-- For a light hint, we add a white outline -->
+    <style name="Theme.Tangram.Hinted" parent="Theme.Tangram">
+        <item name="tangramOutlineWidth">1dp</item>
+        <item name="tangramOutlineColor">@color/white_smoke</item>
+        <item name="tangramSmallTriangleColor">@color/gray7</item>
+        <item name="tangramSmallSquareColor">@color/gray7</item>
+        <item name="tangramParallelogramColor">@color/gray7</item>
+        <item name="tangramMediumTriangleColor">@color/gray7</item>
+        <item name="tangramLargeTriangleColor">@color/gray7</item>
+    </style>
+
+</resources>

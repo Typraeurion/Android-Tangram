@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="tangramOutlineWidth" format="dimension|reference" />
+    <attr name="tangramOutlineColor" format="color|reference" />
+    <attr name="tangramSmallTriangleColor" format="color|reference" />
+    <attr name="tangramSmallSquareColor" format="color|reference" />
+    <attr name="tangramParallelogramColor" format="color|reference" />
+    <attr name="tangramMediumTriangleColor" format="color|reference" />
+    <attr name="tangramLargeTriangleColor" format="color|reference" />
+</resources>

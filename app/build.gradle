@@ -1,0 +1,76 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace = 'com.xmission.trevin.android.tangram'
+    compileSdk = 37
+
+    buildToolsVersion = "37.0.0"
+
+    /**
+     * The defaultConfig block encapsulates default settings and entries
+     * for all build variants and can override some attributes in
+     * main/AndroidManifest.xml dynamically from the build system.
+     * You can configure product flavors to override these values for
+     * different versions of your app.
+     */
+
+    defaultConfig {
+        // Uniquely identifies the package for publishing.
+        applicationId "com.xmission.trevin.android.tangram"
+
+        // Defines the minimum API level required to run the app.
+        // Current minimum is Marshmallow (Android 6)
+        minSdk 23
+
+        // Specifies the API level used to test the app.
+        // Current target is Cinnamon Bun (Android 17)
+        targetSdk 37
+
+        // Defines the version number of your app.
+        versionCode 10001
+
+        // Defines a user-friendly version name for your app.
+        versionName "0.1"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+        }
+        release {
+            optimization {
+                enable false
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    aaptOptions {
+        // This may be needed to work around a reproducibility issue
+        // where PNG optimization does not provide deterministic output.
+        cruncherEnabled = false
+    }
+
+    lintOptions {
+        // Workaround for issues with Android Studio
+        // complaining about not targeting the latest SDK
+        disable 'ExpiredTargetSdkVersion'
+    }
+}
+
+dependencies {
+    implementation libs.androidx.appcompat
+
+    androidTestImplementation libs.androidx.runner
+    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.androidx.junit
+
+    testImplementation libs.junit
+}
