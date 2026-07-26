@@ -7,4 +7,16 @@
     <attr name="tangramParallelogramColor" format="color|reference" />
     <attr name="tangramMediumTriangleColor" format="color|reference" />
     <attr name="tangramLargeTriangleColor" format="color|reference" />
+
+    <!-- Groups the tangram styling attributes so PlayTableView can read
+         them from the theme with generated, type-checked index constants. -->
+    <declare-styleable name="PlayTableView">
+        <attr name="tangramOutlineWidth" />
+        <attr name="tangramOutlineColor" />
+        <attr name="tangramSmallTriangleColor" />
+        <attr name="tangramSmallSquareColor" />
+        <attr name="tangramParallelogramColor" />
+        <attr name="tangramMediumTriangleColor" />
+        <attr name="tangramLargeTriangleColor" />
+    </declare-styleable>
 </resources>
