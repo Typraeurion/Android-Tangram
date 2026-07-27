@@ -10,7 +10,7 @@
         android:rotation="0">
         <path android:strokeWidth="?attr/tangramOutlineWidth"
             android:strokeColor="?attr/tangramOutlineColor"
-            android:strokeLineJoin="miter"
+            android:strokeLineJoin="round"
             android:fillColor="?attr/tangramSmallSquareColor"
             android:pathData="M 12.71572875253809902,12.71572875253809902 L 69.284271247461901,12.71572875253809902 L 69.284271247461901,69.284271247461901 L 12.71572875253809902,69.284271247461901 Z"/>
     </group>

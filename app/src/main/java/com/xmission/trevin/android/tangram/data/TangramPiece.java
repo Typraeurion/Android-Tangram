@@ -1,3 +1,19 @@
+/*
+ * Copyright © 2026 Trevin Beattie
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.xmission.trevin.android.tangram.data;
 
 import android.content.Context;
@@ -6,6 +22,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Superclass of all pieces of a Tangram.  These are polygons whose
@@ -16,6 +35,18 @@ import androidx.appcompat.content.res.AppCompatResources;
  * relative to the closest point to the centroid of the polygon.
  */
 public abstract class TangramPiece {
+
+    /** JSON key for the name of the piece **/
+    public static final String JSON_NAME = "name";
+
+    /** JSON key for the rotation of the piece **/
+    public static final String JSON_ROTATION = "rotation";
+
+    /** JSON key for the position of the piece **/
+    public static final String JSON_POSITION = "position";
+
+    /** JSON key for whether this piece is mirrored */
+    public static final String JSON_MIRRORED = "isMirrored";
 
     /**
      * Current orientation from the baseline around the centroid
@@ -38,6 +69,9 @@ public abstract class TangramPiece {
      * only be changed if the piece has no reflective symmetry.
      */
     protected boolean isMirrored = false;
+
+    /** @return the name of the piece to use in JSON puzzle files */
+    public abstract String getJsonName();
 
     /**
      * @return the current orientation of this piece as a
@@ -175,6 +209,46 @@ public abstract class TangramPiece {
         }
         return Math.max(drawable.getMinimumWidth(),
                 drawable.getMinimumHeight());
+    }
+
+    /**
+     * Map this piece to a JSON object for saving to a file.
+     *
+     * @return the JSON object
+     */
+    public JSONObject toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put(JSON_NAME, getJsonName());
+        json.put(JSON_POSITION, position.toJSON());
+        if (canFlip())
+            json.put(JSON_MIRRORED, isMirrored);
+        json.put(JSON_ROTATION, rotation);
+        return json;
+    }
+
+    /**
+     * Create a piece from a JSON object.
+     *
+     * @throws JSONException if any required fields are missing or
+     * if any of the values in the JSON object are invalid.
+     */
+    public static TangramPiece fromJSON(JSONObject json) throws JSONException {
+        String name = json.getString(JSON_NAME);
+        TangramPiece piece = switch(name) {
+            case TangramSmallTriangle.JSON_NAME -> new TangramSmallTriangle();
+            case TangramSquare.JSON_NAME -> new TangramSquare();
+            case TangramParallelogram.JSON_NAME -> new TangramParallelogram();
+            case TangramMediumTriangle.JSON_NAME -> new TangramMediumTriangle();
+            case TangramLargeTriangle.JSON_NAME -> new TangramLargeTriangle();
+            default -> null;
+        };
+        if (piece == null)
+            throw new JSONException("Unknown piece name: " + name);
+        piece.position = new TPoint(json.getJSONObject(JSON_POSITION));
+        if (piece.canFlip())
+            piece.isMirrored = json.getBoolean(JSON_MIRRORED);
+        piece.rotation = (float) json.getDouble(JSON_ROTATION);
+        return piece;
     }
 
 }

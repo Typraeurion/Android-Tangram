@@ -1,6 +1,25 @@
+/*
+ * Copyright © 2026 Trevin Beattie
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.xmission.trevin.android.tangram.data;
 
 import androidx.annotation.NonNull;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A point in Tangram space.  Numbers in the coordinate system are
@@ -14,6 +33,18 @@ public class TPoint {
 
     public static final double SQRT2 = Math.sqrt(2);
 
+    /** JSON key for the <i>a</i> coefficient of the X coordinate */
+    public static final String JSON_X_A = "xa";
+
+    /** JSON key for the <i>b</i> coefficient of the X coordinate */
+    public static final String JSON_X_B = "xb";
+
+    /** JSON key for the <i>a</i> coefficient of the Y coordinate */
+    public static final String JSON_Y_A = "ya";
+
+    /** JSON key for the <i>b</i> coefficient of the Y coordinate */
+    public static final String JSON_Y_B = "yb";
+
     protected final float xa, xb, ya, yb;
 
     /**
@@ -26,6 +57,31 @@ public class TPoint {
         xb = bx;
         ya = ay;
         yb = by;
+    }
+
+    /**
+     * Construct a point from a JSON object.
+     *
+     * @throws JSONException if any of the values in the JSON object
+     * are not valid floating-point numbers.
+     */
+    public TPoint(JSONObject json) throws JSONException {
+        if (json.has(JSON_X_A))
+            xa = (float) json.getDouble(JSON_X_A);
+        else
+            xa = 0;
+        if (json.has(JSON_X_B))
+            xb = (float) json.getDouble(JSON_X_B);
+        else
+            xb = 0;
+        if (json.has(JSON_Y_A))
+            ya = (float) json.getDouble(JSON_Y_A);
+        else
+            ya = 0;
+        if (json.has(JSON_Y_B))
+            yb = (float) json.getDouble(JSON_Y_B);
+        else
+            yb = 0;
     }
 
     /** The origin of the puzzle space. */
@@ -152,6 +208,24 @@ public class TPoint {
      */
     public @NonNull TPoint mirrorY() {
         return new TPoint(xa, xb, -ya, -yb);
+    }
+
+    /**
+     * Map this point to a JSON object for saving to a file.
+     *
+     * @return the JSON object
+     */
+    public JSONObject toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        if (xb == 0 || xa != 0)
+            json.put(JSON_X_A, xa);
+        if (xb != 0)
+            json.put(JSON_X_B, xb);
+        if (yb == 0 || ya != 0)
+            json.put(JSON_Y_A, ya);
+        if (yb != 0)
+            json.put(JSON_Y_B, yb);
+        return json;
     }
 
 }

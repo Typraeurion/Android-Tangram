@@ -1,12 +1,44 @@
+/*
+ * Copyright © 2026 Trevin Beattie
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package com.xmission.trevin.android.tangram.data;
 
 import androidx.annotation.Nullable;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Container for a Tangram.  This names a puzzle and provides the
  * placement of its pieces.
  */
 public class TangramPuzzle {
+
+    /** JSON key for the name of the puzzle */
+    public static final String JSON_NAME = "name";
+
+    /** JSON key for the size of the puzzle */
+    public static final String JSON_SIZE = "size";
+
+    /** JSON Key for the array of pieces of the puzzle */
+    public static final String JSON_PIECES = "pieces";
 
     protected @Nullable String name;
     /**
@@ -37,7 +69,26 @@ public class TangramPuzzle {
             pieces[i].setPosition(new TPoint(12*i - 36, 0, 24, 0));
     }
 
-    // To Do: Construct a puzzle from a text description.
+    /**
+     * Create a puzzle from a JSON object.
+     *
+     * @throws InvalidPuzzleException if the puzzle does not contain
+     * the seven required pieces.
+     * @throws JSONException if any required field is missing or
+     * if any of the values in the JSON object are invalid.
+     */
+    public TangramPuzzle(JSONObject json)
+            throws InvalidPuzzleException, JSONException {
+        name = json.getString(JSON_NAME);
+        // To Do: Check for a translation table
+        size = (float) json.getDouble(JSON_SIZE);
+        JSONArray jsonPieces = json.getJSONArray(JSON_PIECES);
+        pieces = new TangramPiece[jsonPieces.length()];
+        for (int i = 0; i < pieces.length; i++)
+            pieces[i] = TangramPiece.fromJSON(jsonPieces.getJSONObject(i));
+        if (!isValid())
+            throw new InvalidPuzzleException("Invalid puzzle: " + name);
+    }
 
     /** @return the number of pieces in the puzzle (normally 7) */
     public int getPieceCount() {
@@ -60,6 +111,51 @@ public class TangramPuzzle {
      */
     public float getSize() {
         return size;
+    }
+
+    private static final Map<Class<? extends TangramPiece>, Integer>
+            EXPECTED_PIECES = Map.of(TangramLargeTriangle.class, 2,
+            TangramMediumTriangle.class, 1,
+            TangramParallelogram.class, 1,
+            TangramSquare.class, 1,
+            TangramSmallTriangle.class, 2);
+
+    /**
+     * Check whether this is a valid Tangram.  To be valid,
+     * it must contain exactly seven pieces:
+     * <ul>
+     *     <li>2 large triangles</li>
+     *     <li>1 medium triangle</li>
+     *     <li>1 parallelogram</li>
+     *     <li>1 square</li>
+     *     <li>2 small triangles</li>
+     * </ul>
+     */
+    public boolean isValid() {
+        if (pieces.length != 7)
+            return false;
+        Map<Class<? extends TangramPiece>, Integer> counts = new HashMap<>();
+        for (TangramPiece piece : pieces) {
+            Class<? extends TangramPiece> pieceClass = piece.getClass();
+            counts.put(pieceClass, counts.get(pieceClass) + 1);
+        }
+        return counts.equals(EXPECTED_PIECES);
+    }
+
+    /**
+     * Map this puzzle to a JSON object for saving to a file.
+     *
+     * @return the JSON object
+     */
+    public JSONObject toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put(JSON_NAME, name);
+        json.put(JSON_SIZE, size);
+        JSONArray jsonPieces = new JSONArray();
+        for (int i = 0; i < pieces.length; i++)
+            jsonPieces.put(pieces[i].toJSON());
+        json.put(JSON_PIECES, jsonPieces);
+        return json;
     }
 
 }
