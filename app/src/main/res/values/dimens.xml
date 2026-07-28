@@ -6,4 +6,14 @@
     <dimen name="piece_tray_item_margin">6dp</dimen>
     <!-- Padding inside the tray strip, around the row/column of slots. -->
     <dimen name="piece_tray_padding">4dp</dimen>
+
+    <!-- Hovering play-area controls (back button, goal preview). -->
+    <dimen name="hover_control_size">48dp</dimen>
+    <dimen name="hover_control_margin">12dp</dimen>
+    <dimen name="hover_control_padding">10dp</dimen>
+    <dimen name="goal_view_size">88dp</dimen>
+
+    <!-- Contextual flip button, centered near the bottom of the play area. -->
+    <dimen name="flip_button_size">56dp</dimen>
+    <dimen name="flip_button_margin_bottom">16dp</dimen>
 </resources>

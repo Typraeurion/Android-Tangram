@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,6 +84,39 @@ public class PlayActivity extends AppCompatActivity {
                 getIntent(), EXTRA_PUZZLE_GOAL, TangramPuzzle.class);
         playTableView.setSolution(goal);
         setUpDropTarget();
+        setUpOverlayControls(goal != null);
+    }
+
+    /**
+     * Wire up the controls that hover over the play area: the back / exit
+     * button, the goal preview (shown only when solving a puzzle), and the
+     * contextual flip button (shown only while a flippable piece&mdash;the
+     * parallelogram&mdash;is selected).
+     *
+     * @param hasGoal whether this session has a goal puzzle to display
+     */
+    private void setUpOverlayControls(boolean hasGoal) {
+        findViewById(R.id.button_back).setOnClickListener(v -> finish());
+
+        // To Do: render the goal as a target silhouette; for now this is
+        // just a placeholder panel that only appears in puzzle mode.
+        findViewById(R.id.goal_view)
+                .setVisibility(hasGoal ? View.VISIBLE : View.GONE);
+
+        ImageButton flipButton = findViewById(R.id.button_flip);
+        flipButton.setOnClickListener(v -> playTableView.flipSelectedPiece());
+        playTableView.setOnSelectionChangedListener(selected ->
+                flipButton.setVisibility(canFlip(selected)
+                        ? View.VISIBLE : View.GONE));
+        // Reflect the current selection (normally none on a fresh start).
+        flipButton.setVisibility(
+                canFlip(playTableView.getSelectedPiece())
+                        ? View.VISIBLE : View.GONE);
+    }
+
+    /** @return whether a (possibly {@code null}) piece can be flipped. */
+    private static boolean canFlip(@Nullable TangramPiece piece) {
+        return piece != null && piece.canFlip();
     }
 
     /**

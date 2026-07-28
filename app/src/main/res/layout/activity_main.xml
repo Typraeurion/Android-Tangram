@@ -31,6 +31,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <!-- This button should be hidden unless there is a game in progress
+         and the user has navigated back to the main screen. -->
+    <Button android:id="@+id/MainButtonResume"
+        android:text="@string/MenuResume"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <!-- To Do: Make this an image button using the "wrench" tangram. -->
     <Button android:id="@+id/MainButtonPreferences"
         android:text="@string/MenuPreferences"

@@ -2,8 +2,9 @@
 <!--
   ~ Copyright © 2026 Trevin Beattie
   ~
-  ~ Portrait play screen: the play surface fills the top and the tray of
-  ~ available pieces runs along the bottom, ordered smallest to largest.
+  ~ Portrait play screen: the play surface fills the top (with hovering
+  ~ controls layered over it) and the tray of available pieces runs along
+  ~ the bottom, ordered smallest to largest.
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,11 +12,60 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.xmission.trevin.android.tangram.ui.PlayTableView
-        android:id="@+id/play_table"
+    <FrameLayout
+        android:id="@+id/play_area"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <com.xmission.trevin.android.tangram.ui.PlayTableView
+            android:id="@+id/play_table"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Hovering controls.  Back and goal default to opposite top
+             corners; their placement is intended to become user-
+             customizable (handedness / preference) later. -->
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="@dimen/hover_control_size"
+            android:layout_height="@dimen/hover_control_size"
+            android:layout_gravity="top|start"
+            android:layout_margin="@dimen/hover_control_margin"
+            android:background="@drawable/hover_button_background"
+            android:contentDescription="@string/back_button_description"
+            android:elevation="4dp"
+            android:padding="@dimen/hover_control_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back" />
+
+        <ImageView
+            android:id="@+id/goal_view"
+            android:layout_width="@dimen/goal_view_size"
+            android:layout_height="@dimen/goal_view_size"
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/hover_control_margin"
+            android:background="@drawable/hover_panel_background"
+            android:contentDescription="@string/goal_view_description"
+            android:elevation="4dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/button_flip"
+            android:layout_width="@dimen/flip_button_size"
+            android:layout_height="@dimen/flip_button_size"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="@dimen/flip_button_margin_bottom"
+            android:background="@drawable/hover_button_background"
+            android:contentDescription="@string/flip_button_description"
+            android:elevation="4dp"
+            android:padding="@dimen/hover_control_padding"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_flip_parallelogram"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <HorizontalScrollView
         android:layout_width="match_parent"

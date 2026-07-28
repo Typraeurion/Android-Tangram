@@ -16,4 +16,7 @@
     <color name="gold">#FFFFD700</color>
     <color name="dark_orange">#FFFF8C00</color>
     <color name="crimson">#FFDC143C</color>
+
+    <color name="foreground">@color/black</color>
+    <color name="background">@color/white</color>
 </resources>

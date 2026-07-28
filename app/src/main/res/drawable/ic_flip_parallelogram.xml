@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2026 Trevin Beattie
+  ~
+  ~ PLACEHOLDER flip icon: two mirror-image parallelograms (in the theme's
+  ~ parallelogram color) with a pair of semicircular swap arrows between
+  ~ them.  The geometry is rough and meant to be refined later.
+  -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- FIXME: Parallelograms are scaled incorrectly,
+         and ought to be parallel to the vertical axis. -->
+    <!-- Left parallelogram -->
+    <path
+        android:fillColor="@color/foreground"
+        android:pathData="M10,28 L20,28 L16,38 L6,38 Z" />
+    <!-- Right parallelogram (mirror image) -->
+    <path
+        android:fillColor="@color/foreground"
+        android:pathData="M38,28 L28,28 L32,38 L42,38 Z" />
+
+    <!-- Top swap arrow, curving left-to-right -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="@color/foreground"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M12,18 A12,10 0 0,1 36,18" />
+    <!-- FIXME: Arrows are not aligned properly to the end of the paths! -->
+    <path
+        android:fillColor="@color/crimson"
+        android:pathData="M36,18 L33,12 L40,14 Z" />
+
+    <!-- Bottom swap arrow, curving right-to-left -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="@color/foreground"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M36,22 A12,10 0 0,1 12,22" />
+    <path
+        android:fillColor="@color/crimson"
+        android:pathData="M12,22 L15,28 L8,26 Z" />
+</vector>

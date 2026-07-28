@@ -160,6 +160,24 @@ public class PlayTableView extends View {
     private TangramPiece selectedPiece;
 
     /**
+     * Notified whenever {@link #selectedPiece} changes, so a host (e.g. the
+     * activity) can update contextual controls such as the flip button.
+     */
+    @Nullable
+    private OnSelectionChangedListener selectionListener;
+
+    /**
+     * Callback for a change in which piece is selected.
+     */
+    public interface OnSelectionChangedListener {
+        /**
+         * @param selected the newly selected piece, or {@code null} if
+         * nothing is selected
+         */
+        void onSelectionChanged(@Nullable TangramPiece selected);
+    }
+
+    /**
      * The id of the pointer currently dragging {@link #selectedPiece},
      * or {@link MotionEvent#INVALID_POINTER_ID} when nothing is dragging.
      */
@@ -223,7 +241,7 @@ public class PlayTableView extends View {
         pieces.clear();
         for (int i = 0; i < puzzle.getPieceCount(); i++)
             pieces.add(puzzle.getPiece(i));
-        selectedPiece = null;
+        setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         computeFitScale();
         rebuildTransform();
@@ -245,7 +263,7 @@ public class PlayTableView extends View {
         playfieldSize = (puzzle != null)
                 ? puzzle.getSize() : DEFAULT_PLAYFIELD_SIZE;
         pieces.clear();
-        selectedPiece = null;
+        setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
         computeFitScale();
@@ -274,10 +292,49 @@ public class PlayTableView extends View {
         mapTouchToPuzzle(viewX, viewY);
         piece.setPosition(new TPoint(touchBuffer[0], 0, touchBuffer[1], 0));
         pieces.add(piece);
-        selectedPiece = piece;
+        setSelectedPiece(piece);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
         invalidate();
+    }
+
+    /**
+     * Register a listener to hear when the selected piece changes.
+     *
+     * @param listener the listener, or {@code null} to clear it
+     */
+    public void setOnSelectionChangedListener(
+            @Nullable OnSelectionChangedListener listener) {
+        selectionListener = listener;
+    }
+
+    /** @return the currently selected piece, or {@code null}. */
+    @Nullable
+    public TangramPiece getSelectedPiece() {
+        return selectedPiece;
+    }
+
+    /**
+     * Change the selection, notifying {@link #selectionListener} only when
+     * the selected piece actually changes.
+     */
+    private void setSelectedPiece(@Nullable TangramPiece piece) {
+        if (selectedPiece != piece) {
+            selectedPiece = piece;
+            if (selectionListener != null)
+                selectionListener.onSelectionChanged(piece);
+        }
+    }
+
+    /**
+     * Flip the selected piece over, if one is selected and it can be
+     * flipped (only the parallelogram can); otherwise does nothing.
+     */
+    public void flipSelectedPiece() {
+        if (selectedPiece != null && selectedPiece.canFlip()) {
+            selectedPiece.flip();
+            invalidate();
+        }
     }
 
     /**
@@ -492,7 +549,7 @@ public class PlayTableView extends View {
                 mapTouchToPuzzle(
                         event.getX(pointerIndex), event.getY(pointerIndex));
                 TangramPiece hit = pieceAt(touchBuffer[0], touchBuffer[1]);
-                selectedPiece = hit;
+                setSelectedPiece(hit);
                 if (hit == null) {
                     activePointerId = MotionEvent.INVALID_POINTER_ID;
                     invalidate();
@@ -729,7 +786,7 @@ public class PlayTableView extends View {
             Collections.addAll(pieces, ss.pieces);
         userZoom = ss.userZoom;
         // Any in-flight gesture is meaningless after a restore.
-        selectedPiece = null;
+        setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
         // fitScale is recomputed on the next onSizeChanged; rebuild now so
