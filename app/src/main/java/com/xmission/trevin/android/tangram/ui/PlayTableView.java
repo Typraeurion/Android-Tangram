@@ -24,6 +24,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -41,6 +43,7 @@ import com.xmission.trevin.android.tangram.data.TangramPiece;
 import com.xmission.trevin.android.tangram.data.TangramPuzzle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -135,11 +138,19 @@ public class PlayTableView extends View {
     private final List<TangramPiece> pieces = new ArrayList<>();
 
     /**
-     * The playfield extent in puzzle units, used to fit the board to the
-     * view.  Defaults to the standard puzzle size until {@link #setPuzzle}
-     * (or a future configuration setter) overrides it.
+     * Default playfield extent, in puzzle units, used for free-play /
+     * sketch mode when no goal puzzle sets a size of its own.  This is
+     * the size of nine (3&times;3) compact squares, matching
+     * {@link TangramPuzzle}&rsquo;s default.
      */
-    private float playfieldSize = 36f;
+    private static final float DEFAULT_PLAYFIELD_SIZE = 36f;
+
+    /**
+     * The playfield extent in puzzle units, used to fit the board to the
+     * view.  Defaults to {@link #DEFAULT_PLAYFIELD_SIZE} until
+     * {@link #setPuzzle} or {@link #setSolution} overrides it.
+     */
+    private float playfieldSize = DEFAULT_PLAYFIELD_SIZE;
 
     /** Reusable buffer for mapping a touch point into puzzle space. */
     private final float[] touchBuffer = new float[2];
@@ -160,6 +171,25 @@ public class PlayTableView extends View {
      * finger while dragging.
      */
     private float grabOffsetX, grabOffsetY;
+
+    /**
+     * The id of the second pointer that, together with
+     * {@link #activePointerId}, drives a two-finger rotation of
+     * {@link #selectedPiece}, or {@link MotionEvent#INVALID_POINTER_ID}
+     * when no rotation gesture is in progress.  While a rotation is in
+     * progress the piece spins about its centroid and translation (drag)
+     * is suspended.
+     */
+    private int rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+
+    /**
+     * Angle, in degrees, of the vector from the {@link #activePointerId}
+     * pointer to the {@link #rotationPointerId} pointer as of the most
+     * recent motion event.  The change in this angle between events is
+     * applied to {@link #selectedPiece} via
+     * {@link TangramPiece#fineRotateDegrees(float)}.
+     */
+    private float lastRotationAngle;
 
     public PlayTableView(Context context) {
         super(context);
@@ -197,6 +227,56 @@ public class PlayTableView extends View {
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         computeFitScale();
         rebuildTransform();
+        invalidate();
+    }
+
+    /**
+     * Set the goal puzzle the player is trying to reproduce (or
+     * {@code null} for free-play / sketch mode) and adopt its playfield
+     * size, <em>without</em> placing any of its pieces: in a goal puzzle
+     * the pieces start in the tray and the player drags them in.  The
+     * goal is retained so it can later be drawn as a target silhouette
+     * and used to check the solution.
+     *
+     * @param puzzle the goal puzzle, or {@code null} for free play
+     */
+    public void setSolution(@Nullable TangramPuzzle puzzle) {
+        solution = puzzle;
+        playfieldSize = (puzzle != null)
+                ? puzzle.getSize() : DEFAULT_PLAYFIELD_SIZE;
+        pieces.clear();
+        selectedPiece = null;
+        activePointerId = MotionEvent.INVALID_POINTER_ID;
+        rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+        computeFitScale();
+        rebuildTransform();
+        invalidate();
+    }
+
+    /** @return the current goal puzzle, or {@code null} in free play. */
+    @Nullable
+    public TangramPuzzle getSolution() {
+        return solution;
+    }
+
+    /**
+     * Add a piece to the play field at a point given in this view&rsquo;s
+     * pixel coordinates, e.g. where the player dropped it from the tray.
+     * The piece&rsquo;s centroid is placed at that point, it is put on top
+     * of the z-order, and it becomes the current selection.
+     *
+     * @param piece the piece to add
+     * @param viewX the drop X coordinate, in view (pixel) space
+     * @param viewY the drop Y coordinate, in view (pixel) space
+     */
+    public void addPieceAtViewLocation(
+            @NonNull TangramPiece piece, float viewX, float viewY) {
+        mapTouchToPuzzle(viewX, viewY);
+        piece.setPosition(new TPoint(touchBuffer[0], 0, touchBuffer[1], 0));
+        pieces.add(piece);
+        selectedPiece = piece;
+        activePointerId = MotionEvent.INVALID_POINTER_ID;
+        rotationPointerId = MotionEvent.INVALID_POINTER_ID;
         invalidate();
     }
 
@@ -428,9 +508,46 @@ public class PlayTableView extends View {
                 return true;
             }
 
-            case MotionEvent.ACTION_MOVE: {
+            case MotionEvent.ACTION_POINTER_DOWN: {
+                // A second finger touched down.  If a piece is being
+                // dragged, promote the gesture to a two-finger rotation
+                // about that piece's centroid.
                 if (selectedPiece == null
                         || activePointerId == MotionEvent.INVALID_POINTER_ID)
+                    return true;
+                int pointerIndex = event.getActionIndex();
+                int newId = event.getPointerId(pointerIndex);
+                if (rotationPointerId == MotionEvent.INVALID_POINTER_ID
+                        && newId != activePointerId) {
+                    rotationPointerId = newId;
+                    lastRotationAngle = angleBetweenPointers(
+                            event, activePointerId, rotationPointerId);
+                }
+                return true;
+            }
+
+            case MotionEvent.ACTION_MOVE: {
+                if (selectedPiece == null)
+                    return false;
+                if (rotationPointerId != MotionEvent.INVALID_POINTER_ID) {
+                    // Two-finger rotation: spin the piece about its centroid
+                    // by however much the finger-to-finger angle changed.
+                    // Translation is suspended for the duration.
+                    float current = angleBetweenPointers(
+                            event, activePointerId, rotationPointerId);
+                    if (!Float.isNaN(current)) {
+                        float delta = current - lastRotationAngle;
+                        while (delta > 180f)
+                            delta -= 360f;
+                        while (delta <= -180f)
+                            delta += 360f;
+                        selectedPiece.fineRotateDegrees(delta);
+                        lastRotationAngle = current;
+                        invalidate();
+                    }
+                    return true;
+                }
+                if (activePointerId == MotionEvent.INVALID_POINTER_ID)
                     return false;
                 int pointerIndex = event.findPointerIndex(activePointerId);
                 if (pointerIndex < 0)
@@ -446,12 +563,23 @@ public class PlayTableView extends View {
             }
 
             case MotionEvent.ACTION_POINTER_UP: {
-                // If the dragging finger lifted, stop dragging but keep the
-                // selection.  (A second held pointer is where two-finger
-                // rotation will hook in.)
                 int pointerIndex = event.getActionIndex();
-                if (event.getPointerId(pointerIndex) == activePointerId)
+                int liftedId = event.getPointerId(pointerIndex);
+                if (rotationPointerId != MotionEvent.INVALID_POINTER_ID) {
+                    // Dropping from a two-finger rotation back to one finger.
+                    // Do NOT snap the angle yet (that is deferred until a
+                    // piece can attach to a neighbor); simply resume dragging
+                    // with whichever finger is still down.
+                    if (liftedId == rotationPointerId)
+                        resumeDragWith(event, activePointerId);
+                    else if (liftedId == activePointerId)
+                        resumeDragWith(event, rotationPointerId);
+                    // else a third finger lifted; keep rotating on the pair.
+                } else if (liftedId == activePointerId) {
+                    // The dragging finger lifted; keep the selection but stop
+                    // dragging.
                     activePointerId = MotionEvent.INVALID_POINTER_ID;
+                }
                 return true;
             }
 
@@ -460,8 +588,11 @@ public class PlayTableView extends View {
                 // fall through
             case MotionEvent.ACTION_CANCEL:
                 activePointerId = MotionEvent.INVALID_POINTER_ID;
+                rotationPointerId = MotionEvent.INVALID_POINTER_ID;
                 // To Do: snap the released piece's vertices/edges to its
-                // neighbors (and to the solution outline) here.
+                // neighbors (and to the solution outline) here, and only
+                // then snap its rotation to the nearest 45° via
+                // TangramPiece.coarseRotate.
                 return true;
         }
         return super.onTouchEvent(event);
@@ -471,6 +602,50 @@ public class PlayTableView extends View {
     public boolean performClick() {
         super.performClick();
         return true;
+    }
+
+    /**
+     * Compute the angle, in degrees, of the vector from the pointer with
+     * id {@code fromId} to the pointer with id {@code toId} in view (pixel)
+     * space.  Because {@link #puzzleToView} is a uniform scale plus a
+     * translation with no reflection, this screen-space angle changes by
+     * the same amount as the puzzle-space angle, and a clockwise turn on
+     * screen is a clockwise turn of the piece.
+     *
+     * @return the angle in degrees, or {@link Float#NaN} if either pointer
+     * is not present in this event
+     */
+    private float angleBetweenPointers(
+            @NonNull MotionEvent event, int fromId, int toId) {
+        int fromIndex = event.findPointerIndex(fromId);
+        int toIndex = event.findPointerIndex(toId);
+        if (fromIndex < 0 || toIndex < 0)
+            return Float.NaN;
+        float dx = event.getX(toIndex) - event.getX(fromIndex);
+        float dy = event.getY(toIndex) - event.getY(fromIndex);
+        return (float) Math.toDegrees(Math.atan2(dy, dx));
+    }
+
+    /**
+     * End any two-finger rotation and resume single-finger dragging of
+     * {@link #selectedPiece} with the given pointer, recomputing the grab
+     * offset from that pointer&rsquo;s current position so the piece does
+     * not jump.
+     *
+     * @param event the current motion event (the pointer must still be down)
+     * @param pointerId the id of the pointer to keep dragging with
+     */
+    private void resumeDragWith(@NonNull MotionEvent event, int pointerId) {
+        rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+        int pointerIndex = event.findPointerIndex(pointerId);
+        if (pointerIndex < 0 || selectedPiece == null) {
+            activePointerId = MotionEvent.INVALID_POINTER_ID;
+            return;
+        }
+        activePointerId = pointerId;
+        mapTouchToPuzzle(event.getX(pointerIndex), event.getY(pointerIndex));
+        grabOffsetX = selectedPiece.getPosition().getX() - touchBuffer[0];
+        grabOffsetY = selectedPiece.getPosition().getY() - touchBuffer[1];
     }
 
     /**
@@ -531,6 +706,78 @@ public class PlayTableView extends View {
                 return false;
         }
         return true;
+    }
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        SavedState state = new SavedState(super.onSaveInstanceState());
+        state.pieces = pieces.toArray(new TangramPiece[0]);
+        state.userZoom = userZoom;
+        return state;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        pieces.clear();
+        if (ss.pieces != null)
+            Collections.addAll(pieces, ss.pieces);
+        userZoom = ss.userZoom;
+        // Any in-flight gesture is meaningless after a restore.
+        selectedPiece = null;
+        activePointerId = MotionEvent.INVALID_POINTER_ID;
+        rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+        // fitScale is recomputed on the next onSizeChanged; rebuild now so
+        // the restored zoom is applied if we already have a size.
+        rebuildTransform();
+        invalidate();
+    }
+
+    /**
+     * Saved state for a {@link PlayTableView}: the placed pieces (in
+     * back-to-front draw / hit-test order) and the user zoom multiplier.
+     * The goal puzzle is <em>not</em> saved here&mdash;it is restored from
+     * the launching intent&mdash;so the playfield size follows from it.
+     */
+    private static class SavedState extends BaseSavedState {
+
+        TangramPiece[] pieces;
+        float userZoom = 1f;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        SavedState(Parcel in) {
+            super(in);
+            pieces = in.createTypedArray(TangramPiece.CREATOR);
+            userZoom = in.readFloat();
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeTypedArray(pieces, flags);
+            out.writeFloat(userZoom);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    @Override
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    @Override
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
     }
 
 }

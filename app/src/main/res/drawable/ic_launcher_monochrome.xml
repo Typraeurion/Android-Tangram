@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The basic application icon is the Tangram square that all the pieces are cut from. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="170.65482"
+    android:viewportHeight="170.65482">
+  <group android:scaleX="0.6"
+      android:scaleY="0.6"
+      android:translateX="34.130962"
+      android:translateY="34.130962">
+      <group>
+          <path android:strokeWidth="2"
+              android:strokeColor="@color/white"
+              android:strokeLineJoin="round"
+              android:fillColor="@color/black"
+              android:pathData="M 85.3274042711567822,85.3274042711567822 L 165.3274042711567822,165.3274042711567822 L 5.3274042711567822,165.3274042711567822 Z"/>
+          <path android:strokeWidth="2"
+              android:strokeColor="@color/white"
+              android:strokeLineJoin="round"
+              android:fillColor="@color/black"
+              android:pathData="M 85.3274042711567822,85.3274042711567822 L 5.3274042711567822,165.3274042711567822 L 5.3274042711567822,5.3274042711567822 Z"/>
+          <path android:strokeWidth="2"
+              android:strokeColor="@color/white"
+              android:strokeLineJoin="round"
+              android:fillColor="@color/black"
+              android:pathData="M 165.3274042711567822,5.3274042711567822 L 165.3274042711567822,85.3274042711567822 L 85.3274042711567822,5.3274042711567822 Z"/>
+          <path android:strokeWidth="2"
+              android:strokeColor="@color/white"
+              android:strokeLineJoin="round"
+              android:fillColor="@color/black"
+              android:pathData="M 5.3274042711567822,5.3274042711567822 L 85.3274042711567822,5.3274042711567822 L 125.3274042711567822,45.3274042711567822 L 45.3274042711567822,45.3274042711567822 Z"/>
+          <path android:strokeWidth="2"
+              android:strokeColor="@color/white"
+              android:strokeLineJoin="round"
+              android:fillColor="@color/black"
+              android:pathData="M 125.3274042711567822,45.3274042711567822 L 165.3274042711567822,85.3274042711567822 L 125.3274042711567822,125.3274042711567822 L 85.3274042711567822,85.3274042711567822 Z"/>
+          <path android:strokeWidth="2"
+              android:strokeColor="@color/white"
+              android:strokeLineJoin="round"
+              android:fillColor="@color/black"
+              android:pathData="M 45.3274042711567822,45.3274042711567822 L 125.3274042711567822,45.3274042711567822 L 85.3274042711567822,85.3274042711567822 Z"/>
+          <path android:strokeWidth="2"
+              android:strokeColor="@color/white"
+              android:strokeLineJoin="round"
+              android:fillColor="@color/black"
+              android:pathData="M 165.3274042711567822,85.3274042711567822 L 165.3274042711567822,165.3274042711567822 L 125.3274042711567822,125.3274042711567822 Z"/>
+      </group>
+  </group>
+</vector>

@@ -16,6 +16,10 @@
  */
 package com.xmission.trevin.android.tangram.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.json.JSONArray;
@@ -29,7 +33,7 @@ import java.util.Map;
  * Container for a Tangram.  This names a puzzle and provides the
  * placement of its pieces.
  */
-public class TangramPuzzle {
+public class TangramPuzzle implements Parcelable {
 
     /** JSON key for the name of the puzzle */
     public static final String JSON_NAME = "name";
@@ -88,6 +92,15 @@ public class TangramPuzzle {
             pieces[i] = TangramPiece.fromJSON(jsonPieces.getJSONObject(i));
         if (!isValid())
             throw new InvalidPuzzleException("Invalid puzzle: " + name);
+    }
+
+    /**
+     * Create a puzzle from a {@link Parcel}.
+     */
+    private TangramPuzzle(Parcel in) {
+        name = in.readString();
+        size = in.readFloat();
+        pieces = in.createTypedArray(TangramPiece.CREATOR);
     }
 
     /** @return the number of pieces in the puzzle (normally 7) */
@@ -156,6 +169,48 @@ public class TangramPuzzle {
             jsonPieces.put(pieces[i].toJSON());
         json.put(JSON_PIECES, jsonPieces);
         return json;
+    }
+
+    /**
+     * Save this puzzle as a {@link Parcel} to pass it between activities.
+     *
+     * @param dest The {@link Parcel} in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     * This class does not use any flags.
+     */
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeFloat(size);
+        // Use writeTypedArray (paired with createTypedArray in our CREATOR):
+        // the element type is known from TangramPiece.CREATOR, so this omits
+        // the redundant per-element class name that writeParcelableArray adds.
+        dest.writeTypedArray(pieces, flags);
+    }
+
+    /**
+     * Create a puzzle from a {@link Parcel}.
+     */
+    public static final Creator<TangramPuzzle> CREATOR =
+            new Creator<TangramPuzzle>() {
+                @Override
+                public TangramPuzzle createFromParcel(Parcel in) {
+                    return new TangramPuzzle(in);
+                }
+                @Override
+                public TangramPuzzle[] newArray(int size) {
+                    return new TangramPuzzle[size];
+                }
+            };
+
+    /**
+     * The {@link Parcel} for this object contains no special objects.
+     *
+     * @return 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
 }

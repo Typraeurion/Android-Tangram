@@ -18,6 +18,9 @@ package com.xmission.trevin.android.tangram.data;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.ParcelFormatException;
+import android.os.Parcelable;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -34,7 +37,7 @@ import org.json.JSONObject;
  * <i>y</i> coordinates where both <i>a</i> and <i>b</i> are
  * relative to the closest point to the centroid of the polygon.
  */
-public abstract class TangramPiece {
+public abstract class TangramPiece implements Parcelable {
 
     /** JSON key for the name of the piece **/
     public static final String JSON_NAME = "name";
@@ -182,7 +185,7 @@ public abstract class TangramPiece {
     /**
      * @return the ID of the Android drawable used to draw this piece.
      */
-    protected abstract int getDrawableId();
+    public abstract int getDrawableId();
 
     /**
      * @return the ID of the theme attribute (e.g.
@@ -249,6 +252,71 @@ public abstract class TangramPiece {
             piece.isMirrored = json.getBoolean(JSON_MIRRORED);
         piece.rotation = (float) json.getDouble(JSON_ROTATION);
         return piece;
+    }
+
+    /**
+     * Save this piece in a {@link Parcel} as part of a {@link TangramPuzzle}.
+     *
+     * @param dest The {@link Parcel} in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     * This class does not use any flags.
+     */
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        // Since this is an abstract class, we MUST write
+        // the type of child class first so that when reading
+        // it back we know which implementation to create.
+        dest.writeString(getJsonName());
+        // Write the point's fields directly (paired with
+        // TPoint.CREATOR.createFromParcel in our CREATOR below).  Do NOT
+        // use writeParcelable here: that would prepend the creator class
+        // name, which createFromParcel does not read back.
+        position.writeToParcel(dest, flags);
+        dest.writeFloat(rotation);
+        dest.writeByte((byte) (isMirrored ? 1 : 0));
+    }
+
+    /**
+     * Create a piece from a {@link Parcel}.  We can do this here in the
+     * abstract class because none of the concrete implementations add
+     * any of their own fields.
+     */
+    public static final Creator<TangramPiece> CREATOR =
+            new Creator<TangramPiece>() {
+                @Override
+                public TangramPiece createFromParcel(Parcel in) {
+                    String name = in.readString();
+                    TangramPiece piece = (name == null) ? null : switch(name) {
+                        case TangramSmallTriangle.JSON_NAME -> new TangramSmallTriangle();
+                        case TangramSquare.JSON_NAME -> new TangramSquare();
+                        case TangramParallelogram.JSON_NAME -> new TangramParallelogram();
+                        case TangramMediumTriangle.JSON_NAME -> new TangramMediumTriangle();
+                        case TangramLargeTriangle.JSON_NAME -> new TangramLargeTriangle();
+                        default -> null;
+                    };
+                    if (piece == null)
+                        throw new ParcelFormatException(name == null
+                                ? "Missing piece name"
+                                : "Unknown piece name: " + name);
+                    piece.position = TPoint.CREATOR.createFromParcel(in);
+                    piece.rotation = in.readFloat();
+                    piece.isMirrored = in.readByte() != 0;
+                    return piece;
+                }
+                @Override
+                public TangramPiece[] newArray(int size) {
+                    return new TangramPiece[size];
+                }
+            };
+
+    /**
+     * The {@link Parcel} for this object contains no special objects.
+     *
+     * @return 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
 }

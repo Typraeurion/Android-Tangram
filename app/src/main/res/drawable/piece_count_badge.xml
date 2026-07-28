@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2026 Trevin Beattie
+  ~
+  ~ Pill-shaped backing for the piece-count badge, so the number stays
+  ~ legible over any piece color.
+  -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#B0121212" />
+    <corners android:radius="10dp" />
+</shape>

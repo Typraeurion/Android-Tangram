@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2026 Trevin Beattie
+  ~
+  ~ The contents of a single piece-tray slot: the piece image filling the
+  ~ slot, with a small count badge in the top-trailing corner.  Inflated
+  ~ into a PieceTrayItemView (a FrameLayout) via <merge>.
+  -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/piece_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:padding="6dp"
+        android:scaleType="fitCenter"
+        android:importantForAccessibility="no" />
+
+    <TextView
+        android:id="@+id/piece_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:background="@drawable/piece_count_badge"
+        android:gravity="center"
+        android:minWidth="20dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textColor="@color/white_smoke"
+        android:textStyle="bold"
+        android:importantForAccessibility="no"
+        tools:ignore="SmallSp"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:textSize="12sp" />
+
+</merge>

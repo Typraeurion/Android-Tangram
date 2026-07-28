@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Size of one square slot in the piece tray. -->
+    <dimen name="piece_tray_item_size">72dp</dimen>
+    <!-- Gap around each slot in the piece tray. -->
+    <dimen name="piece_tray_item_margin">6dp</dimen>
+    <!-- Padding inside the tray strip, around the row/column of slots. -->
+    <dimen name="piece_tray_padding">4dp</dimen>
+</resources>

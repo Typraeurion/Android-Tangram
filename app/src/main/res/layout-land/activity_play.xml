@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © 2026 Trevin Beattie
+  ~
+  ~ Landscape play screen: the play surface fills the main area and the
+  ~ tray of available pieces runs down the trailing side, ordered
+  ~ smallest (top) to largest (bottom).
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <com.xmission.trevin.android.tangram.ui.PlayTableView
+        android:id="@+id/play_table"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/gray7"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/piece_tray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/piece_tray_padding">
+
+            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+                android:id="@+id/tray_small_triangle"
+                android:layout_width="@dimen/piece_tray_item_size"
+                android:layout_height="@dimen/piece_tray_item_size"
+                android:layout_margin="@dimen/piece_tray_item_margin"
+                app:pieceType="smallTriangle"
+                app:pieceCount="2" />
+
+            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+                android:id="@+id/tray_square"
+                android:layout_width="@dimen/piece_tray_item_size"
+                android:layout_height="@dimen/piece_tray_item_size"
+                android:layout_margin="@dimen/piece_tray_item_margin"
+                app:pieceType="square"
+                app:pieceCount="1" />
+
+            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+                android:id="@+id/tray_parallelogram"
+                android:layout_width="@dimen/piece_tray_item_size"
+                android:layout_height="@dimen/piece_tray_item_size"
+                android:layout_margin="@dimen/piece_tray_item_margin"
+                app:pieceType="parallelogram"
+                app:pieceCount="1" />
+
+            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+                android:id="@+id/tray_medium_triangle"
+                android:layout_width="@dimen/piece_tray_item_size"
+                android:layout_height="@dimen/piece_tray_item_size"
+                android:layout_margin="@dimen/piece_tray_item_margin"
+                app:pieceType="mediumTriangle"
+                app:pieceCount="1" />
+
+            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+                android:id="@+id/tray_large_triangle"
+                android:layout_width="@dimen/piece_tray_item_size"
+                android:layout_height="@dimen/piece_tray_item_size"
+                android:layout_margin="@dimen/piece_tray_item_margin"
+                app:pieceType="largeTriangle"
+                app:pieceCount="2" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

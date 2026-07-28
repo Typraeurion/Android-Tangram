@@ -19,4 +19,19 @@
         <attr name="tangramMediumTriangleColor" />
         <attr name="tangramLargeTriangleColor" />
     </declare-styleable>
+
+    <!-- Lets a piece-tray slot declare, in the layout, which kind of piece
+         it dispenses and how many are available to start.  The enum values
+         are ordered smallest to largest (also rainbow order in the default
+         theme) and their order must match PieceTrayItemView.PieceType. -->
+    <declare-styleable name="PieceTrayItemView">
+        <attr name="pieceType" format="enum">
+            <enum name="smallTriangle" value="0" />
+            <enum name="square" value="1" />
+            <enum name="parallelogram" value="2" />
+            <enum name="mediumTriangle" value="3" />
+            <enum name="largeTriangle" value="4" />
+        </attr>
+        <attr name="pieceCount" format="integer" />
+    </declare-styleable>
 </resources>

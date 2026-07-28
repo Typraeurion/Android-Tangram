@@ -16,6 +16,9 @@
  */
 package com.xmission.trevin.android.tangram.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
 import org.json.JSONException;
@@ -29,7 +32,7 @@ import org.json.JSONObject;
  * <i>b</i> is one diagonal length of the same.  This object is
  * immutable; operations on it will return a new point.
  */
-public class TPoint {
+public class TPoint implements Parcelable {
 
     public static final double SQRT2 = Math.sqrt(2);
 
@@ -57,6 +60,16 @@ public class TPoint {
         xb = bx;
         ya = ay;
         yb = by;
+    }
+
+    /**
+     * Construct a point from a {@link Parcel}.
+     */
+    private TPoint(Parcel in) {
+        xa = in.readFloat();
+        xb = in.readFloat();
+        ya = in.readFloat();
+        yb = in.readFloat();
     }
 
     /**
@@ -226,6 +239,47 @@ public class TPoint {
         if (yb != 0)
             json.put(JSON_Y_B, yb);
         return json;
+    }
+
+    /**
+     * Save this point to a {@link Parcel} (typically as part of a
+     * {@link TangramPiece}.
+     *
+     * @param dest The {@link Parcel} in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     * This class does not use any flags.
+     */
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeFloat(xa);
+        dest.writeFloat(xb);
+        dest.writeFloat(ya);
+        dest.writeFloat(yb);
+    }
+
+    /**
+     * Create a point from a {@link Parcel}.
+     */
+    public static final Creator<TPoint> CREATOR =
+            new Creator<TPoint>() {
+                @Override
+                public TPoint createFromParcel(Parcel in) {
+                    return new TPoint(in);
+                }
+                @Override
+                public TPoint[] newArray(int size) {
+                    return new TPoint[size];
+                }
+            };
+
+    /**
+     * The {@link Parcel} for this object contains no special objects.
+     *
+     * @return 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
 }
