@@ -29,13 +29,11 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseIntArray;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StyleableRes;
 
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.TPoint;
@@ -61,12 +59,14 @@ import java.util.Locale;
  */
 public class PlayTableView extends View {
 
+    private static final String LOG_TAG = "PlayTableView";
+
     /**
      * Reference to the current puzzle the player is trying to solve,
      * or {@code null} if the player is working in freestyle / sketch mode.
      */
     @Nullable
-    TangramPuzzle solution;
+    private TangramPuzzle solution;
 
     /** Paint used to fill the interior of each piece. */
     private final Paint fillPaint = new Paint();
@@ -178,6 +178,23 @@ public class PlayTableView extends View {
     }
 
     /**
+     * Notified when a piece is dragged off the play field, so a host can
+     * return it to the tray instead of letting it be lost.
+     */
+    @Nullable
+    private OnPieceReturnedListener pieceReturnedListener;
+
+    /**
+     * Callback for a piece that has left the play field.
+     */
+    public interface OnPieceReturnedListener {
+        /**
+         * @param piece the piece that was removed from the field
+         */
+        void onPieceReturnedToTray(@NonNull TangramPiece piece);
+    }
+
+    /**
      * The id of the pointer currently dragging {@link #selectedPiece},
      * or {@link MotionEvent#INVALID_POINTER_ID} when nothing is dragging.
      */
@@ -236,7 +253,7 @@ public class PlayTableView extends View {
      *
      * @param puzzle the puzzle to load; must not be {@code null}
      */
-    public void setPuzzle(TangramPuzzle puzzle) {
+    public void setPuzzle(@NonNull TangramPuzzle puzzle) {
         playfieldSize = puzzle.getSize();
         pieces.clear();
         for (int i = 0; i < puzzle.getPieceCount(); i++)
@@ -315,6 +332,39 @@ public class PlayTableView extends View {
     }
 
     /**
+     * Register a listener to hear when a piece is dragged off the field.
+     *
+     * @param listener the listener, or {@code null} to clear it
+     */
+    public void setOnPieceReturnedListener(
+            @Nullable OnPieceReturnedListener listener) {
+        pieceReturnedListener = listener;
+    }
+
+    /**
+     * If the selected piece&rsquo;s centroid has been dragged outside the
+     * visible play area, remove it from the field and hand it back to the
+     * tray (via {@link #pieceReturnedListener}) so it is not lost.  Called
+     * when a drag ends.
+     */
+    private void returnSelectedPieceIfOffField() {
+        if (selectedPiece == null)
+            return;
+        pointBuffer[0] = selectedPiece.getPosition().getX();
+        pointBuffer[1] = selectedPiece.getPosition().getY();
+        puzzleToView.mapPoints(pointBuffer);
+        float x = pointBuffer[0], y = pointBuffer[1];
+        if (x >= 0 && x <= getWidth() && y >= 0 && y <= getHeight())
+            return; // centroid still on the field; keep the piece
+        TangramPiece removed = selectedPiece;
+        pieces.remove(removed);
+        setSelectedPiece(null);
+        invalidate();
+        if (pieceReturnedListener != null)
+            pieceReturnedListener.onPieceReturnedToTray(removed);
+    }
+
+    /**
      * Change the selection, notifying {@link #selectionListener} only when
      * the selected piece actually changes.
      */
@@ -345,13 +395,12 @@ public class PlayTableView extends View {
      */
     public void refreshThemeCache() {
 
-        TypedArray a = getContext().getTheme().obtainStyledAttributes(
-                R.styleable.PlayTableView);
-        try {
+        try (TypedArray a = getContext().getTheme().obtainStyledAttributes(
+                        R.styleable.PlayTableView)) {
             outlineColor = a.getColor(
                     R.styleable.PlayTableView_tangramOutlineColor, Color.BLACK);
-            outlineWidthPx = resolveDimension(a,
-                    R.styleable.PlayTableView_tangramOutlineWidth);
+            outlineWidthPx = a.getDimension(
+                    R.styleable.PlayTableView_tableOutlineWidth, 0f);
             fillColors.clear();
             fillColors.put(R.attr.tangramSmallTriangleColor, a.getColor(
                     R.styleable.PlayTableView_tangramSmallTriangleColor, Color.GRAY));
@@ -363,30 +412,8 @@ public class PlayTableView extends View {
                     R.styleable.PlayTableView_tangramMediumTriangleColor, Color.GRAY));
             fillColors.put(R.attr.tangramLargeTriangleColor, a.getColor(
                     R.styleable.PlayTableView_tangramLargeTriangleColor, Color.GRAY));
-        } finally {
-            a.recycle();
         }
         invalidate();
-    }
-
-    /**
-     * Resolve a theme value that may be authored either as a true
-     * dimension (e.g. {@code 2dp}) or as a bare number (treated as dp).
-     *
-     * @return the value in pixels
-     */
-    private float resolveDimension(TypedArray a, @StyleableRes int index) {
-        float density = getResources().getDisplayMetrics().density;
-        TypedValue tv = a.peekValue(index);
-        if (tv == null)
-            return 0f;
-        if (tv.type == TypedValue.TYPE_DIMENSION)
-            return a.getDimension(index, 0f);
-        if (tv.type == TypedValue.TYPE_FLOAT)
-            return tv.getFloat() * density;
-        if (tv.type >= TypedValue.TYPE_FIRST_INT && tv.type <= TypedValue.TYPE_LAST_INT)
-            return tv.data * density;
-        return 0f;
     }
 
     /** @return the current display scale in pixels per puzzle unit. */
@@ -450,7 +477,7 @@ public class PlayTableView extends View {
 
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d(getClass().getSimpleName(), String.format(Locale.US,
+        Log.d(LOG_TAG, String.format(Locale.US,
                 "onSizeChanged(%d×%d → %d×%d)", oldw, oldh, w, h));
         super.onSizeChanged(w, h, oldw, oldh);
         computeFitScale();
@@ -493,7 +520,7 @@ public class PlayTableView extends View {
         canvas.drawColor(bgColor);
 
         // Nothing to draw until we have pieces and a measured size.
-        if (pieces.isEmpty() || fitScale <= 0f)
+        if (pieces.isEmpty() || (fitScale <= 0f))
             return;
 
         float scale = getUnitScale();
@@ -646,6 +673,9 @@ public class PlayTableView extends View {
             case MotionEvent.ACTION_CANCEL:
                 activePointerId = MotionEvent.INVALID_POINTER_ID;
                 rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+                // A piece dragged off the visible field goes back to the
+                // tray rather than being lost off-screen.
+                returnSelectedPieceIfOffField();
                 // To Do: snap the released piece's vertices/edges to its
                 // neighbors (and to the solution outline) here, and only
                 // then snap its rotation to the nearest 45° via
@@ -775,11 +805,10 @@ public class PlayTableView extends View {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {
+        if (!(state instanceof SavedState ss)) {
             super.onRestoreInstanceState(state);
             return;
         }
-        SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         pieces.clear();
         if (ss.pieces != null)

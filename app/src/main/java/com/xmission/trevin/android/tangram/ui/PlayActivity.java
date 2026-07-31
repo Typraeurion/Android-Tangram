@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -78,6 +79,7 @@ public class PlayActivity extends AppCompatActivity {
         Log.d(LOG_TAG, String.format(Locale.US,
                 "onCreate(%s)", savedInstanceState == null ? "" : "saved state"));
         setContentView(R.layout.activity_play);
+        WindowInsetsUtil.applySafeAreaPadding(this);
 
         playTableView = findViewById(R.id.play_table);
         TangramPuzzle goal = IntentCompat.getParcelableExtra(
@@ -85,6 +87,21 @@ public class PlayActivity extends AppCompatActivity {
         playTableView.setSolution(goal);
         setUpDropTarget();
         setUpOverlayControls(goal != null);
+        configureTraySlots();
+    }
+
+    /**
+     * Give each tray slot the play field&rsquo;s scale so a dragged piece
+     * previews at the size it will have once dropped.
+     */
+    private void configureTraySlots() {
+        ViewGroup tray = findViewById(R.id.piece_tray);
+        for (int i = 0; i < tray.getChildCount(); i++) {
+            View child = tray.getChildAt(i);
+            if (child instanceof PieceTrayItemView)
+                ((PieceTrayItemView) child).setUnitScaleProvider(
+                        playTableView::getUnitScale);
+        }
     }
 
     /**
@@ -150,5 +167,28 @@ public class PlayActivity extends AppCompatActivity {
                     return false;
             }
         });
+
+        // A piece dragged off the field comes back to its tray slot.
+        playTableView.setOnPieceReturnedListener(this::returnPieceToTray);
+    }
+
+    /**
+     * Return a piece that was dragged off the play field to its tray slot,
+     * bumping that slot&rsquo;s available count back up.
+     *
+     * @param piece the piece that left the field
+     */
+    private void returnPieceToTray(@NonNull TangramPiece piece) {
+        ViewGroup tray = findViewById(R.id.piece_tray);
+        for (int i = 0; i < tray.getChildCount(); i++) {
+            View child = tray.getChildAt(i);
+            if (child instanceof PieceTrayItemView) {
+                PieceTrayItemView slot = (PieceTrayItemView) child;
+                if (slot.accepts(piece)) {
+                    slot.setCount(slot.getCount() + 1);
+                    return;
+                }
+            }
+        }
     }
 }

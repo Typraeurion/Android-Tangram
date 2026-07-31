@@ -19,11 +19,17 @@ package com.xmission.trevin.android.tangram.ui;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.SparseArray;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.*;
@@ -58,29 +65,51 @@ public class PieceTrayItemView extends FrameLayout {
         @NonNull TangramPiece create();
     }
 
+    /** Supplies the play field&rsquo;s current scale, in px per puzzle unit. */
+    public interface UnitScaleProvider {
+        float getUnitScale();
+    }
+
     /**
      * The kinds of piece a tray slot can dispense.  The order MUST match
      * the {@code pieceType} enum in {@code attrs.xml}, since the attribute
      * value indexes into {@link #values()}.
      */
     public enum PieceType {
-        SMALL_TRIANGLE(TangramSmallTriangle::new, R.string.piece_small_triangle),
-        SQUARE(TangramSquare::new, R.string.piece_square),
-        PARALLELOGRAM(TangramParallelogram::new, R.string.piece_parallelogram),
-        MEDIUM_TRIANGLE(TangramMediumTriangle::new, R.string.piece_medium_triangle),
-        LARGE_TRIANGLE(TangramLargeTriangle::new, R.string.piece_large_triangle);
+        SMALL_TRIANGLE(TangramSmallTriangle.class,
+                TangramSmallTriangle::new, R.string.piece_small_triangle),
+        SQUARE(TangramSquare.class,
+                TangramSquare::new, R.string.piece_square),
+        PARALLELOGRAM(TangramParallelogram.class,
+                TangramParallelogram::new, R.string.piece_parallelogram),
+        MEDIUM_TRIANGLE(TangramMediumTriangle.class,
+                TangramMediumTriangle::new, R.string.piece_medium_triangle),
+        LARGE_TRIANGLE(TangramLargeTriangle.class,
+                TangramLargeTriangle::new, R.string.piece_large_triangle);
 
+        final Class<? extends TangramPiece> pieceClass;
         final PieceFactory factory;
         @StringRes final int nameRes;
 
-        PieceType(PieceFactory factory, @StringRes int nameRes) {
+        PieceType(@NonNull Class<? extends TangramPiece> pieceClass,
+                  @NonNull PieceFactory factory, @StringRes int nameRes) {
+            this.pieceClass = pieceClass;
             this.factory = factory;
             this.nameRes = nameRes;
+        }
+
+        /** @return whether {@code piece} is of this kind. */
+        boolean matches(@NonNull TangramPiece piece) {
+            return pieceClass.isInstance(piece);
         }
     }
 
     private ImageView pieceImage;
     private TextView countText;
+
+    /** The kind of piece this slot dispenses, or {@code null} if unset. */
+    @Nullable
+    private PieceType pieceType;
 
     /** Factory for the kind of piece this slot dispenses. */
     @Nullable
@@ -92,6 +121,14 @@ public class PieceTrayItemView extends FrameLayout {
 
     /** How many pieces of this kind remain available to add. */
     private int count;
+
+    /**
+     * Supplies the play field&rsquo;s scale so the drag shadow can match
+     * the size the piece will have once dropped.  May be {@code null}, in
+     * which case the drag falls back to a tray-sized shadow.
+     */
+    @Nullable
+    private UnitScaleProvider unitScaleProvider;
 
     public PieceTrayItemView(@NonNull Context context) {
         super(context);
@@ -132,6 +169,7 @@ public class PieceTrayItemView extends FrameLayout {
      * @param count the initial number available to add
      */
     public void setPieceType(@NonNull PieceType type, int count) {
+        this.pieceType = type;
         this.factory = type.factory;
         this.pieceName = getResources().getText(type.nameRes);
         // A sample instance tells us which drawable to display.  The
@@ -167,6 +205,24 @@ public class PieceTrayItemView extends FrameLayout {
         setCount(count - 1);
     }
 
+    /**
+     * @return whether this slot dispenses the same kind of piece as the
+     * given one, i.e. a piece returned from the field belongs here
+     */
+    public boolean accepts(@NonNull TangramPiece piece) {
+        return pieceType != null && pieceType.matches(piece);
+    }
+
+    /**
+     * Provide the play field&rsquo;s scale so a dragged piece can be shown
+     * at its eventual on-field size.
+     *
+     * @param provider the scale source, or {@code null} to clear it
+     */
+    public void setUnitScaleProvider(@Nullable UnitScaleProvider provider) {
+        unitScaleProvider = provider;
+    }
+
     /** Create a fresh piece of this slot&rsquo;s kind. */
     @NonNull
     public TangramPiece createPiece() {
@@ -193,17 +249,113 @@ public class PieceTrayItemView extends FrameLayout {
     private void startPieceDrag() {
         ClipData clip = ClipData.newPlainText(
                 pieceName == null ? "" : pieceName, "");
-        View.DragShadowBuilder shadow = new View.DragShadowBuilder(pieceImage);
+        View.DragShadowBuilder shadow = buildDragShadow();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
             startDragAndDrop(clip, shadow, this, 0);
         else
             startDrag(clip, shadow, this, 0);
     }
 
+    /**
+     * Build the drag shadow.  When the play field&rsquo;s scale is known,
+     * the shadow is the piece&rsquo;s polygon drawn at that scale&mdash;the
+     * same geometry and size {@link PlayTableView} will give it&mdash;so it
+     * doesn&rsquo;t change size when dropped.  Otherwise it falls back to
+     * the tray-sized image.
+     */
+    @NonNull
+    private View.DragShadowBuilder buildDragShadow() {
+        float unitScale = (unitScaleProvider != null)
+                ? unitScaleProvider.getUnitScale() : 0f;
+        if (factory == null || unitScale <= 0f)
+            return new View.DragShadowBuilder(pieceImage);
+
+        // A fresh piece is at its default orientation with its centroid at
+        // the origin, so its vertices are centred on (0, 0).
+        TangramPiece piece = factory.create();
+        TPoint[] vertices = piece.getVertices();
+        float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
+        float maxX = -Float.MAX_VALUE, maxY = -Float.MAX_VALUE;
+        for (TPoint v : vertices) {
+            minX = Math.min(minX, v.getX());
+            maxX = Math.max(maxX, v.getX());
+            minY = Math.min(minY, v.getY());
+            maxY = Math.max(maxY, v.getY());
+        }
+        Path path = new Path();
+        for (int i = 0; i < vertices.length; i++) {
+            float px = (vertices[i].getX() - minX) * unitScale;
+            float py = (vertices[i].getY() - minY) * unitScale;
+            if (i == 0)
+                path.moveTo(px, py);
+            else
+                path.lineTo(px, py);
+        }
+        path.close();
+
+        int width = Math.max(1, Math.round((maxX - minX) * unitScale));
+        int height = Math.max(1, Math.round((maxY - minY) * unitScale));
+        // The centroid is the vertex origin, so its offset within the shadow
+        // is (-min * scale).  Anchoring the finger there means dropping the
+        // piece leaves its centroid under the finger (matching
+        // PlayTableView.addPieceAtViewLocation).
+        int touchX = Math.round(-minX * unitScale);
+        int touchY = Math.round(-minY * unitScale);
+        int color = resolveThemeColor(piece.getColorAttr());
+        return new PiecePolygonShadow(path, width, height, touchX, touchY, color);
+    }
+
+    /** Resolve a theme color attribute to an ARGB value. */
+    private int resolveThemeColor(int attrRes) {
+        TypedValue tv = new TypedValue();
+        if (getContext().getTheme().resolveAttribute(attrRes, tv, true)) {
+            if (tv.resourceId != 0)
+                return ContextCompat.getColor(getContext(), tv.resourceId);
+            return tv.data;
+        }
+        return Color.GRAY;
+    }
+
     @Override
     public boolean performClick() {
         super.performClick();
         return true;
+    }
+
+    /**
+     * A drag shadow that paints the piece as a filled polygon at a fixed
+     * pixel size&mdash;used to preview a tray piece at its eventual
+     * on-field size while it is being dragged.
+     */
+    private static class PiecePolygonShadow extends View.DragShadowBuilder {
+
+        private final Path path;
+        private final int width, height, touchX, touchY;
+        private final Paint paint;
+
+        PiecePolygonShadow(@NonNull Path path, int width, int height,
+                           int touchX, int touchY, int color) {
+            this.path = path;
+            this.width = width;
+            this.height = height;
+            this.touchX = touchX;
+            this.touchY = touchY;
+            paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(color);
+        }
+
+        @Override
+        public void onProvideShadowMetrics(@NonNull Point outShadowSize,
+                                           @NonNull Point outShadowTouchPoint) {
+            outShadowSize.set(width, height);
+            outShadowTouchPoint.set(touchX, touchY);
+        }
+
+        @Override
+        public void onDrawShadow(@NonNull Canvas canvas) {
+            canvas.drawPath(path, paint);
+        }
     }
 
     /*

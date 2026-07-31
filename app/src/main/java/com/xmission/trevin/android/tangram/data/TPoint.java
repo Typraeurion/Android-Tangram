@@ -176,7 +176,7 @@ public class TPoint implements Parcelable {
             case 3 -> new TPoint(-xb - yb, -xa / 2 - ya / 2,
                     xb - yb, xa / 2 - ya / 2);
             case 4 -> new TPoint(-xa, -xb, -ya, -yb);
-            case 5 -> new TPoint(-xb - yb, -xa / 2 - ya / 2,
+            case 5 -> new TPoint(yb - xb, ya / 2 - xa / 2,
                     -xb - yb, -xa / 2 - ya / 2);
             case 6 -> new TPoint(ya, yb, -xa, -xb);
             case 7 -> new TPoint(xb + yb, xa / 2 + ya / 2,
