@@ -29,6 +29,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 /**
  * Superclass of all pieces of a Tangram.  These are polygons whose
  * angles are in multiples of 45&deg;.  Vertices of the polygon are
@@ -38,6 +40,8 @@ import org.json.JSONObject;
  * relative to the closest point to the centroid of the polygon.
  */
 public abstract class TangramPiece implements Parcelable {
+
+    public static final String LOG_TAG = "TangramPiece";
 
     /** JSON key for the name of the piece **/
     public static final String JSON_NAME = "name";
@@ -205,8 +209,8 @@ public abstract class TangramPiece implements Parcelable {
         Drawable drawable = AppCompatResources.getDrawable(
                 context, getDrawableId());
         if (drawable == null) {
-            Log.e(getClass().getSimpleName(),
-                    "No drawable with ID " + getDrawableId());
+            Log.e(LOG_TAG, String.format(Locale.US,
+                    "No drawable with ID %d", getDrawableId()));
             // Use a non-zero fallback size
             return 10;
         }

@@ -19,6 +19,7 @@ https://opensource.org/license/gpl-3.0 for more details.\n
 </string>
     <string name="app_name">Tangram</string>
     <string name="ButtonSave">Save Pattern</string>
+    <string name="InfoButtonOK">OK</string>
     <string name="MenuAbout">About&#8230;</string>
     <string name="MenuLibrary">Puzzle Library</string>
     <string name="MenuPreferences">Preferences</string>
@@ -26,7 +27,14 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="MenuSketch">Free-form</string>
     <string name="ModeFree">Free-form</string>
     <string name="ModePuzzle">Random Puzzle</string>
-
+    <string name="PrefsTextHintLevel">Hint Level: </string>
+    <string name="PrefsTextHintNone">No Hints</string>
+    <string name="PrefsTextHintOutline">Outline Pieces</string>
+    <string name="PrefsTextHintSolve">Colored Pieces</string>
+    <string name="PrefsTextThemeDark">Dark</string>
+    <string name="PrefsTextThemeDefault">System Default</string>
+    <string name="PrefsTextThemeLight">Light</string>
+    <string name="PrefsTextUITheme">UI Theme: </string>
     <!-- Piece names, used for the tray slots' accessibility descriptions -->
     <string name="piece_large_triangle">Large triangle</string>
     <string name="piece_medium_triangle">Medium triangle</string>

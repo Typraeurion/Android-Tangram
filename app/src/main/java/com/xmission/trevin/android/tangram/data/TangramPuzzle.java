@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -88,8 +89,18 @@ public class TangramPuzzle implements Parcelable {
         size = (float) json.getDouble(JSON_SIZE);
         JSONArray jsonPieces = json.getJSONArray(JSON_PIECES);
         pieces = new TangramPiece[jsonPieces.length()];
-        for (int i = 0; i < pieces.length; i++)
+        for (int i = 0; i < pieces.length; i++) try {
             pieces[i] = TangramPiece.fromJSON(jsonPieces.getJSONObject(i));
+        } catch (JSONException e) {
+            JSONException wrappedException = new JSONException(
+                    String.format(Locale.US,
+                    "Invalid piece in puzzle \"%s\" at index ",
+                    name, i));
+            // We have to do this separate from the constructor since
+            // older Android SDK's did not implement the 2-arg constructor.
+            wrappedException.initCause(e);
+            throw wrappedException;
+        }
         if (!isValid())
             throw new InvalidPuzzleException("Invalid puzzle: " + name);
     }
@@ -150,6 +161,8 @@ public class TangramPuzzle implements Parcelable {
         Map<Class<? extends TangramPiece>, Integer> counts = new HashMap<>();
         for (TangramPiece piece : pieces) {
             Class<? extends TangramPiece> pieceClass = piece.getClass();
+            if (!counts.containsKey(pieceClass))
+                counts.put(pieceClass, 0);
             counts.put(pieceClass, counts.get(pieceClass) + 1);
         }
         return counts.equals(EXPECTED_PIECES);

@@ -42,7 +42,7 @@ public class TangramPuzzleTests {
      * (normally packaged with the APK).
      *
      * @param assetName the name of the file in the
-     * &ldquo;asserts/&rdquo; folder
+     * &ldquo;assets/&rdquo; folder
      *
      * @return the file contents as a String
      *

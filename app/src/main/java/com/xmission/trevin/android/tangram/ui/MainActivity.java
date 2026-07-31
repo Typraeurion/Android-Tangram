@@ -26,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.xmission.trevin.android.tangram.R;
+import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 
 import java.util.Locale;
 
@@ -39,9 +40,23 @@ public class MainActivity extends AppCompatActivity {
         Log.d(LOG_TAG, String.format(Locale.US,
                 "onCreate(%s)", savedInstanceState == null ? "" : "saved state"));
         setContentView(R.layout.activity_main);
+        WindowInsetsUtil.applySafeAreaPadding(this);
 
         Button button = findViewById(R.id.MainButtonLibrary);
-        button.setOnClickListener(new OnLibrarySelected());
+        // Verify whether there are any puzzles available
+        PuzzleLibrary library = PuzzleLibrary.getInstance();
+        if (!library.isInitialized()) try {
+            library.loadPuzzles(this);
+            if (library.size() > 0)
+                button.setOnClickListener(new OnLibrarySelected());
+            else
+                // No puzzles found; hide the library button
+                button.setVisibility(View.GONE);
+        } catch (Exception e) {
+            // The error should have been logged by the library;
+            // just hide the library button
+            button.setVisibility(View.GONE);
+        }
         button = findViewById(R.id.MainButtonSketch);
         button.setOnClickListener(new OnFreePlaySelected());
         button = findViewById(R.id.MainButtonPreferences);
@@ -69,6 +84,18 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnFreePlaySelected.onClick");
             Intent intent = PlayActivity.createIntent(MainActivity.this, null);
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * Called when the user selects &ldquo;Resume Puzzle In Progress&rdquo;
+     */
+    private class OnResumeSelected implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Log.d(LOG_TAG, "OnResumeSelected.onClick");
+            // To Do: Start PlayActivity with the saved puzzle
         }
     }
 
@@ -79,7 +106,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnPreferencesSelected.onClick");
-            // To Do: Start the PreferencesActivity
+            Intent prefsIntent = new Intent(MainActivity.this,
+                    PreferencesActivity.class);
+            startActivity(prefsIntent);
         }
     }
 
@@ -90,7 +119,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnAboutSelected.onClick");
-            // To Do: Display an About... dialog
+            new AboutDialogFragment().show(
+                    getSupportFragmentManager(), AboutDialogFragment.TAG);
         }
     }
 

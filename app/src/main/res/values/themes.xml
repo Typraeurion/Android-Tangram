@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.Tangram" parent="Theme.AppCompat">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Tangram" parent="Theme.AppCompat.NoActionBar">
+        <!-- No system title bar; each screen supplies its own chrome, and
+             the app lays out edge-to-edge (see WindowInsetsUtil).  Extend
+             into a display cutout on the short edges; control elements are
+             kept clear of it by padding for the cutout insets. -->
+        <item name="android:windowLayoutInDisplayCutoutMode"
+            tools:ignore="UnusedAttribute">shortEdges</item>
+
         <!-- Default styles for previewing the vector drawables;
              this is the same as easy / solution mode. -->
         <item name="tangramOutlineWidth">1</item>
+        <item name="tableOutlineWidth">1dp</item>
         <item name="tangramOutlineColor">@color/gray7</item>
         <item name="tangramSmallTriangleColor">@color/crimson</item>
         <item name="tangramSmallSquareColor">@color/gold</item>
@@ -16,6 +24,7 @@
     <!-- The default puzzle mode is all black, no outlines -->
     <style name="Theme.Tangram.Puzzle" parent="Theme.Tangram">
         <item name="tangramOutlineWidth">0</item>
+        <item name="tableOutlineWidth">0dp</item>
         <item name="tangramOutlineColor">@color/gray7</item>
         <item name="tangramSmallTriangleColor">@color/gray7</item>
         <item name="tangramSmallSquareColor">@color/gray7</item>
@@ -27,6 +36,7 @@
     <!-- For a light hint, we add a white outline -->
     <style name="Theme.Tangram.Hinted" parent="Theme.Tangram">
         <item name="tangramOutlineWidth">1</item>
+        <item name="tableOutlineWidth">1dp</item>
         <item name="tangramOutlineColor">@color/white_smoke</item>
         <item name="tangramSmallTriangleColor">@color/gray7</item>
         <item name="tangramSmallSquareColor">@color/gray7</item>

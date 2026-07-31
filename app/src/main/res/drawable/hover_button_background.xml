@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright © 2026 Trevin Beattie
-  ~
   ~ Circular translucent backing so an icon control stays legible while
   ~ hovering over the play surface.
   -->

@@ -1,64 +1,65 @@
 [
-    {
-	"name": "Square",
-	"size": 12,
-	"pieces": [
-	    {
-		"name": "large_triangle",
-		"rotation": 0,
-		"position": {
-		    "xa": 0,
-		    "ya": 4
-		}
-	    },
-	    {
-		"name": "large_triangle",
-		"rotation:": 6,
-		"position": {
-		    "xa": -4,
-		    "ya": 0
-		}
-	    },
-	    {
-		"name": "medium_triangle",
-		"rotation": 7,
-		"position": {
-		    "xa": 4,
-		    "ya": -4
-		}
-	    },
-	    {
-		"name": "parallelogram",
-		"rotation": 2,
-		"position": {
-		    "xa": -1.5,
-		    "ya": -4.5
-		}
-	    },
-	    {
-		"name": "square",
-		"rotation": 1,
-		"position": {
-		    "xa": 3,
-		    "ya": 0
-		}
-	    },
-	    {
-		"name": "small_triangle",
-		"rotation": 4,
-		"position": {
-		    "xa": 0,
-		    "ya": -2
-		}
-	    },
-	    {
-		"name": "small_triangle",
-		"rotation": 2,
-		"position": {
-		    "xa": 5,
-		    "ya": 3
-		}
-	    }
-	]
-    }
+  {
+    "name": "Square",
+    "size": 12,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 4
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 6,
+        "position": {
+          "xa": -4,
+          "ya": 0
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 7,
+        "position": {
+          "xa": 4,
+          "ya": -4
+        }
+      },
+      {
+        "name": "parallelogram",
+        "rotation": 2,
+        "position": {
+          "xa": -1.5,
+          "ya": -4.5
+        },
+        "isMirrored": false
+      },
+      {
+        "name": "square",
+        "rotation": 1,
+        "position": {
+          "xa": 3,
+          "ya": 0
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 4,
+        "position": {
+          "xa": 0,
+          "ya": -2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 2,
+        "position": {
+          "xa": 5,
+          "ya": 3
+        }
+      }
+    ]
+  }
 ]

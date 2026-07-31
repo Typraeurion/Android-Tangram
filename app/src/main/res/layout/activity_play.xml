@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright © 2026 Trevin Beattie
-  ~
   ~ Portrait play screen: the play surface fills the top (with hovering
   ~ controls layered over it) and the tray of available pieces runs along
   ~ the bottom, ordered smallest to largest.

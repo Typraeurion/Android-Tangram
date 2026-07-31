@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/PrefsTextUITheme"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textAlignment="center"/>
+        <RadioGroup android:id="@+id/PreferencesRadioGroupUITheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+            <RadioButton android:id="@+id/PreferencesRadioButtonUILight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/PrefsTextThemeLight" />
+            <RadioButton android:id="@+id/PreferencesRadioButtonUIDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/PrefsTextThemeDark" />
+            <RadioButton android:id="@+id/PreferencesRadioButtonUIDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/PrefsTextThemeDefault" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/PrefsTextHintLevel"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:textAlignment="center"/>
+        <RadioGroup android:id="@+id/PreferencesRadioGroupHintLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2">
+            <RadioButton android:id="@+id/PreferencesRadioButtonHintNone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/PrefsTextHintNone" />
+            <RadioButton android:id="@+id/PreferencesRadioButtonHintOutline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/PrefsTextHintOutline" />
+            <RadioButton android:id="@+id/PreferencesRadioButtonHintSolve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/PrefsTextHintSolve" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <ImageButton android:id="@+id/PreferencesButtonBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_arrow_back" />
+
+</LinearLayout>

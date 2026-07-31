@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="tangramOutlineWidth" format="dimension|reference" />
+    <!-- The outline width here MUST be dimensionless; it is used in vector paths. -->
+    <attr name="tangramOutlineWidth" format="float|reference" />
+    <!-- This should be the equivalent width to use in view contexts. -->
+    <attr name="tableOutlineWidth" format="dimension|reference" />
     <attr name="tangramOutlineColor" format="color|reference" />
     <attr name="tangramSmallTriangleColor" format="color|reference" />
     <attr name="tangramSmallSquareColor" format="color|reference" />
@@ -11,7 +14,7 @@
     <!-- Groups the tangram styling attributes so PlayTableView can read
          them from the theme with generated, type-checked index constants. -->
     <declare-styleable name="PlayTableView">
-        <attr name="tangramOutlineWidth" />
+        <attr name="tableOutlineWidth" />
         <attr name="tangramOutlineColor" />
         <attr name="tangramSmallTriangleColor" />
         <attr name="tangramSmallSquareColor" />

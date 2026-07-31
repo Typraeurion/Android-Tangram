@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright © 2026 Trevin Beattie
-  ~
   ~ The contents of a single piece-tray slot: the piece image filling the
   ~ slot, with a small count badge in the top-trailing corner.  Inflated
   ~ into a PieceTrayItemView (a FrameLayout) via <merge>.

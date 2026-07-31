@@ -74,3 +74,12 @@ dependencies {
 
     testImplementation libs.junit
 }
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.jetbrains.kotlin') {
+            // Force all transient Kotlin dependencies to use the same version
+            details.useVersion '1.8.22'
+        }
+    }
+}
