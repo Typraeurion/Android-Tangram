@@ -6,13 +6,14 @@
              into a display cutout on the short edges; control elements are
              kept clear of it by padding for the cutout insets. -->
         <item name="android:windowLayoutInDisplayCutoutMode"
-            tools:ignore="UnusedAttribute">shortEdges</item>
+            tools:ignore="UnusedAttribute"
+            tools:targetApi="27">shortEdges</item>
 
         <!-- Default styles for previewing the vector drawables;
              this is the same as easy / solution mode. -->
         <item name="tangramOutlineWidth">1</item>
         <item name="tableOutlineWidth">1dp</item>
-        <item name="tangramOutlineColor">@color/gray7</item>
+        <item name="tangramOutlineColor">@color/foreground</item>
         <item name="tangramSmallTriangleColor">@color/crimson</item>
         <item name="tangramSmallSquareColor">@color/gold</item>
         <item name="tangramParallelogramColor">@color/dark_orange</item>
@@ -25,24 +26,24 @@
     <style name="Theme.Tangram.Puzzle" parent="Theme.Tangram">
         <item name="tangramOutlineWidth">0</item>
         <item name="tableOutlineWidth">0dp</item>
-        <item name="tangramOutlineColor">@color/gray7</item>
-        <item name="tangramSmallTriangleColor">@color/gray7</item>
-        <item name="tangramSmallSquareColor">@color/gray7</item>
-        <item name="tangramParallelogramColor">@color/gray7</item>
-        <item name="tangramMediumTriangleColor">@color/gray7</item>
-        <item name="tangramLargeTriangleColor">@color/gray7</item>
+        <item name="tangramOutlineColor">@color/foreground</item>
+        <item name="tangramSmallTriangleColor">@color/foreground</item>
+        <item name="tangramSmallSquareColor">@color/foreground</item>
+        <item name="tangramParallelogramColor">@color/foreground</item>
+        <item name="tangramMediumTriangleColor">@color/foreground</item>
+        <item name="tangramLargeTriangleColor">@color/foreground</item>
     </style>
 
     <!-- For a light hint, we add a white outline -->
     <style name="Theme.Tangram.Hinted" parent="Theme.Tangram">
         <item name="tangramOutlineWidth">1</item>
         <item name="tableOutlineWidth">1dp</item>
-        <item name="tangramOutlineColor">@color/white_smoke</item>
-        <item name="tangramSmallTriangleColor">@color/gray7</item>
-        <item name="tangramSmallSquareColor">@color/gray7</item>
-        <item name="tangramParallelogramColor">@color/gray7</item>
-        <item name="tangramMediumTriangleColor">@color/gray7</item>
-        <item name="tangramLargeTriangleColor">@color/gray7</item>
+        <item name="tangramOutlineColor">@color/background</item>
+        <item name="tangramSmallTriangleColor">@color/foreground</item>
+        <item name="tangramSmallSquareColor">@color/foreground</item>
+        <item name="tangramParallelogramColor">@color/foreground</item>
+        <item name="tangramMediumTriangleColor">@color/foreground</item>
+        <item name="tangramLargeTriangleColor">@color/foreground</item>
     </style>
 
 </resources>

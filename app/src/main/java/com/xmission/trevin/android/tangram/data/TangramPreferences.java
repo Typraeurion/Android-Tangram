@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Wrapper around @link{SharedPreferences} which provides accessors
@@ -52,6 +53,15 @@ public class TangramPreferences
 
     /** Label for the preferences option "Hint Level" */
     public static final String PREF_HINT_LEVEL = "HintLevel";
+
+    /** Label for the preferences option for the back button position */
+    public static final String PREF_BACK_BUTTON_CORNER = "BackButtonCorner";
+
+    /** Label for the preferences option for the puzzle goal position */
+    public static final String PREF_GOAL_CORNER = "GoalCorner";
+
+    /** Label for the preferences option for the "Save Puzzle" button position */
+    public static final String PREF_SAVE_BUTTON_CORNER = "SaveButtonCorner";
 
     /**
      * Label for the preferences option for
@@ -100,6 +110,27 @@ public class TangramPreferences
     /** Cache the old (or default) hint level */
     private HintLevel oldHint = HintLevel.OPAQUE;
 
+    /** Values for corners */
+    public enum Corner {
+        /** Top-left corner */
+        TOP_LEFT,
+        /** Top-right corner */
+        TOP_RIGHT,
+        /** Bottom-left corner */
+        BOTTOM_LEFT,
+        /** Bottom-right corner */
+        BOTTOM_RIGHT
+    }
+
+    /** Cache the old (or default) back button corner */
+    private Corner oldBackButtonCorner = Corner.TOP_LEFT;
+
+    /** Cache the old (or default) goal corner */
+    private Corner oldGoalCorner = Corner.TOP_RIGHT;
+
+    /** Cache the old (or default) save button corner */
+    private Corner oldSaveButtonCorner = Corner.BOTTOM_RIGHT;
+
     /**
      * Definition of a listener to call when the UI theme has changed.
      */
@@ -129,6 +160,20 @@ public class TangramPreferences
     }
 
     /**
+     * Definition of a listener to call when the position of either the
+     * back button, goal, or save button has changed.
+     */
+    public interface OnCornerChangedListener {
+        /**
+         * Called when the position of corner buttons has changed.
+         *
+         * @param key the name of the button/view whose corner has changed.
+         * @param position the corner that it should be in.
+         */
+        void onCornerChanged(@NonNull String key, @NonNull Corner position);
+    }
+
+    /**
      * Registered listeners for changes to the UI theme.
      */
     private final List<OnUIThemeChangedListener> uiThemeListeners =
@@ -138,6 +183,12 @@ public class TangramPreferences
      * Registered listeners for changes to the hint level.
      */
     private final List<OnHintLevelChangedListener> hintLevelListeners =
+            new ArrayList<>();
+
+    /**
+     * Registered listeners for changes to the corner positions.
+     */
+    private final List<OnCornerChangedListener> cornerListeners =
             new ArrayList<>();
 
     /**
@@ -197,7 +248,7 @@ public class TangramPreferences
         try {
             Class<?> looperClass = Class.forName("android.os.Looper");
             Method getMainLooper = looperClass.getDeclaredMethod("getMainLooper");
-            Object looper = getMainLooper.invoke(looperClass);
+            Looper looper = (Looper) getMainLooper.invoke(looperClass);
             Class<?> handlerClass = Class.forName("android.os.Handler");
             Constructor<?> cons = handlerClass.getDeclaredConstructor(Looper.class);
             handler = (Handler) cons.newInstance(looper);
@@ -276,6 +327,42 @@ public class TangramPreferences
         }
 
         /**
+         * Change the corner for the Back button.
+         *
+         * @param corner the corner to use
+         *
+         * @return this Editor for chaining
+         */
+        public Editor setBackButtonCorner(Corner corner) {
+            actualEditor.putString(PREF_BACK_BUTTON_CORNER, corner.name());
+            return this;
+        }
+
+        /**
+         * Change the corner for the puzzle goal.
+         *
+         * @param corner the corner to use
+         *
+         * @return this Editor for chaining
+         */
+        public Editor setGoalCorner(Corner corner) {
+            actualEditor.putString(PREF_GOAL_CORNER, corner.name());
+            return this;
+        }
+
+        /**
+         * Change the corner for the Save button.
+         *
+         * @param corner the corner to use
+         *
+         * @return this Editor for chaining
+         */
+        public Editor setSaveButtonCorner(Corner corner) {
+            actualEditor.putString(PREF_SAVE_BUTTON_CORNER, corner.name());
+            return this;
+        }
+
+        /**
          * Set or change the directory where user-supplied puzzles are stored.
          *
          * @param newDir the directory to set, or {@code null} to clear
@@ -336,6 +423,82 @@ public class TangramPreferences
     }
 
     /**
+     * Change the hint level
+     *
+     * @param level the hint level to use
+     */
+    public void setHintLevel(@NonNull HintLevel level) {
+        edit().setHintLevel(level).finish();
+    }
+
+    /** @return the corner in which to place the Back button in PlayActivity */
+    public @NonNull Corner getBackButtonCorner() {
+        String cornerName = prefs.getString(PREF_BACK_BUTTON_CORNER,
+                Corner.TOP_LEFT.name());
+        try {
+            return Corner.valueOf(cornerName);
+        } catch (IllegalArgumentException e) {
+            Log.w(LOG_TAG, String.format(Locale.US,
+                    "Invalid back button corner (%s) in preferences",
+                    cornerName));
+            return Corner.TOP_LEFT;
+        }
+    }
+
+    /**
+     * Change the corner in which to place the Back button in PlayActivity.
+     *
+     * @param corner the corner to use
+     */
+    public void setBackButtonCorner(@NonNull Corner corner) {
+        edit().setBackButtonCorner(corner).finish();
+    }
+
+    /** @return the corner in which to place the puzzle goal in PlayActivity */
+    public @NonNull Corner getGoalCorner() {
+        String cornerName = prefs.getString(PREF_GOAL_CORNER,
+                Corner.TOP_RIGHT.name());
+        try {
+            return Corner.valueOf(cornerName);
+        } catch (IllegalArgumentException e) {
+            Log.w(LOG_TAG, String.format(Locale.US,
+                    "Invalid goal corner (%s) in preferences", cornerName));
+            return Corner.TOP_RIGHT;
+        }
+    }
+
+    /**
+     * Change the corner in which to place the puzzle goal in PlayActivity.
+     *
+     * @param corner the corner to use
+     */
+    public void setGoalCorner(@NonNull Corner corner) {
+        edit().setGoalCorner(corner).finish();
+    }
+
+    /** @return the corner in which to place the Save button in PlayActivity */
+    public @NonNull Corner getSaveButtonCorner() {
+        String cornerName = prefs.getString(PREF_SAVE_BUTTON_CORNER,
+                Corner.BOTTOM_RIGHT.name());
+        try {
+            return Corner.valueOf(cornerName);
+        } catch (IllegalArgumentException e) {
+            Log.w(LOG_TAG, String.format(Locale.US,
+                    "Invalid save button corner (%s) in preferences", cornerName));
+            return Corner.BOTTOM_RIGHT;
+        }
+    }
+
+    /**
+     * Change the corner in which to place the Save button in PlayActivity.
+     *
+     * @param corner the corner to use
+     */
+    public void setSaveButtonCorner(@NonNull Corner corner) {
+        edit().setSaveButtonCorner(corner).finish();
+    }
+
+    /**
      * @return the directory in which user-supplied puzzles are stored,
      * or {@code null} if no such directory is set.
      */
@@ -393,6 +556,24 @@ public class TangramPreferences
     }
 
     /**
+     * Register a listener for changes to the corner positions.
+     *
+     * @param listener the listener to register
+     */
+    public void registerCornerListener(OnCornerChangedListener listener) {
+        cornerListeners.add(listener);
+    }
+
+    /**
+     * Remove a callback for changes to a corner.
+     *
+     * @param listener the listener to remove
+     */
+    public void unregisterCornerListener(OnCornerChangedListener listener) {
+        cornerListeners.remove(listener);
+    }
+
+    /**
      * Call back the {@code onUIThemeChanged} method of all UI theme listeners.
      */
     private class UIThemeCallbackRunner implements Runnable {
@@ -425,6 +606,26 @@ public class TangramPreferences
             synchronized(hintLevelListeners) {
                 for (OnHintLevelChangedListener listener : hintLevelListeners) {
                     listener.onHintLevelChanged(oldLevel, newLevel);
+                }
+            }
+        }
+    }
+
+    /**
+     * Call back the {@code onCornerChanged} method of all corner listeners.
+     */
+    private class CornerCallbackRunner implements Runnable {
+        private final String key;
+        private final Corner position;
+        CornerCallbackRunner(String key, Corner position) {
+            this.key = key;
+            this.position = position;
+        }
+        @Override
+        public void run() {
+            synchronized(cornerListeners) {
+                for (OnCornerChangedListener listener : cornerListeners) {
+                    listener.onCornerChanged(key, position);
                 }
             }
         }
@@ -466,6 +667,32 @@ public class TangramPreferences
                     oldHint = newHint;
                 }
                 break;
+
+            case PREF_BACK_BUTTON_CORNER:
+            case PREF_GOAL_CORNER:
+            case PREF_SAVE_BUTTON_CORNER:
+                Corner oldCorner = switch(key) {
+                    case PREF_BACK_BUTTON_CORNER -> oldBackButtonCorner;
+                    case PREF_GOAL_CORNER -> oldGoalCorner;
+                    case PREF_SAVE_BUTTON_CORNER -> oldSaveButtonCorner;
+                    // Unreachable
+                    default -> null;
+                };
+                Corner newCorner = switch(key) {
+                    case PREF_BACK_BUTTON_CORNER -> getBackButtonCorner();
+                    case PREF_GOAL_CORNER -> getGoalCorner();
+                    case PREF_SAVE_BUTTON_CORNER -> getSaveButtonCorner();
+                    // Unreachable
+                    default -> null;
+                };
+                if (newCorner != oldCorner) {
+                    CornerCallbackRunner cornerRunner =
+                            new CornerCallbackRunner(key, newCorner);
+                    if (uiHandler == null)
+                        cornerRunner.run();
+                    else
+                        uiHandler.post(cornerRunner);
+                }
 
             case PREF_USER_PUZZLES_DIR:
                 // No callback interface defined at this time.

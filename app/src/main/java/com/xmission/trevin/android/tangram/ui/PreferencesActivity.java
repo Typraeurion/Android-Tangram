@@ -18,11 +18,16 @@ package com.xmission.trevin.android.tangram.ui;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
+import android.widget.RadioGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.xmission.trevin.android.tangram.R;
+import com.xmission.trevin.android.tangram.data.TangramPreferences;
 
 import java.util.Locale;
 
@@ -30,13 +35,135 @@ public class PreferencesActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = "PreferencesActivity";
 
+    private TangramPreferences prefs;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(LOG_TAG, String.format(Locale.US,
-                "onCreate(%s)", savedInstanceState == null ? "" : "saved state"));
+        Log.d(LOG_TAG, String.format(Locale.US, "onCreate(%s)",
+                savedInstanceState == null ? "" : "saved state"));
         setContentView(R.layout.activity_preferences);
         WindowInsetsUtil.applySafeAreaPadding(this);
+
+        prefs = TangramPreferences.getInstance(this);
+
+        RadioGroup uiThemeGroup = findViewById(
+                R.id.PreferencesRadioGroupUITheme);
+        int uiRadioSelection = switch(prefs.getUITheme()) {
+            case LIGHT -> R.id.PreferencesRadioButtonUILight;
+            case DARK -> R.id.PreferencesRadioButtonUIDark;
+            default -> R.id.PreferencesRadioButtonUIDefault;
+        };
+        uiThemeGroup.check(uiRadioSelection);
+        uiThemeGroup.setOnCheckedChangeListener(new UIThemeChangeListener());
+
+        RadioGroup hintLevelGroup = findViewById(
+                R.id.PreferencesRadioGroupHintLevel);
+        int hintRadioSelection = switch(prefs.getHintLevel()) {
+            case OPAQUE -> R.id.PreferencesRadioButtonHintNone;
+            case HINT -> R.id.PreferencesRadioButtonHintOutline;
+            default -> R.id.PreferencesRadioButtonHintSolve;
+        };
+        hintLevelGroup.check(hintRadioSelection);
+        hintLevelGroup.setOnCheckedChangeListener(new HintLevelChangeListener());
+
+        // To Do: Add options for setting the corner controls in the
+        // play activity and for the directory in which to save user puzzles.
+
+        ImageButton backButton = findViewById(R.id.PreferencesButtonBack);
+        backButton.setOnClickListener(v -> finish());
+    }
+
+    /**
+     * Called when the user changes the UI theme
+     */
+    private class UIThemeChangeListener
+            implements RadioGroup.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(@NonNull RadioGroup group, int buttonId) {
+            if (buttonId == -1) {
+                Log.d(LOG_TAG, "UIThemeChangeListener.onCheckedChanged(cleared)");
+                // The selection was cleared; re-select the current option.
+                group.check(switch (prefs.getUITheme()) {
+                    case LIGHT -> R.id.PreferencesRadioButtonUILight;
+                    case DARK -> R.id.PreferencesRadioButtonUIDark;
+                    default -> R.id.PreferencesRadioButtonUIDefault;
+                });
+                return;
+            }
+            // Map the selected button ID to a UI theme
+            TangramPreferences.UITheme checkedTheme;
+            int nightMode;
+            if (buttonId == R.id.PreferencesRadioButtonUILight) {
+                checkedTheme = TangramPreferences.UITheme.LIGHT;
+                nightMode = AppCompatDelegate.MODE_NIGHT_NO;
+            } else if (buttonId == R.id.PreferencesRadioButtonUIDark) {
+                checkedTheme = TangramPreferences.UITheme.DARK;
+                nightMode = AppCompatDelegate.MODE_NIGHT_YES;
+            } else if (buttonId == R.id.PreferencesRadioButtonUIDefault) {
+                checkedTheme = TangramPreferences.UITheme.SYSTEM_DEFAULT;
+                nightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            } else {
+                 Log.d(LOG_TAG, String.format(Locale.US,
+                         "UIThemeChangeListener.onCheckedChanged(%d):"
+                                 + " Ignoring unknown button ID", buttonId));
+                return;
+            }
+            // Only act on a genuine change.  Programmatic check() calls and
+            // view-state restoration re-select the stored preference; applying
+            // the night mode again would recreate the activity and loop forever.
+            if (checkedTheme == prefs.getUITheme()) {
+                Log.d(LOG_TAG, String.format(Locale.US,
+                        "UIThemeChangeListener.onCheckedChanged(%d):"
+                                + " unchanged, ignoring", buttonId));
+                return;
+            }
+            Log.d(LOG_TAG, String.format(Locale.US,
+                    "UIThemeChangeListener.onCheckedChanged(%s)",
+                    checkedTheme));
+            prefs.setUITheme(checkedTheme);
+            AppCompatDelegate.setDefaultNightMode(nightMode);
+        }
+    }
+
+    /**
+     * Called when the user changes the hinting level
+     */
+    private class HintLevelChangeListener
+            implements RadioGroup.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(@NonNull RadioGroup group, int buttonId) {
+            if (buttonId == -1) {
+                Log.d(LOG_TAG, "HintLevelChangeListener.onCheckedChanged(cleared)");
+                // The selection was cleared; re-select the current option.
+                group.check(switch (prefs.getHintLevel()) {
+                    case OPAQUE -> R.id.PreferencesRadioButtonHintNone;
+                    case HINT -> R.id.PreferencesRadioButtonHintOutline;
+                    default -> R.id.PreferencesRadioButtonHintSolve;
+                });
+                return;
+            }
+            // Map the selected button to the hint level
+            TangramPreferences.HintLevel checkedLevel;
+            int appThemeId;
+            if (buttonId == R.id.PreferencesRadioButtonHintNone) {
+                checkedLevel = TangramPreferences.HintLevel.OPAQUE;
+                appThemeId = R.style.Theme_Tangram;
+            } else if (buttonId == R.id.PreferencesRadioButtonHintOutline) {
+                checkedLevel = TangramPreferences.HintLevel.HINT;
+                appThemeId = R.style.Theme_Tangram_Hinted;
+            } else if (buttonId == R.id.PreferencesRadioButtonHintSolve) {
+                checkedLevel = TangramPreferences.HintLevel.SOLVE;
+                appThemeId = R.style.Theme_Tangram_Puzzle;
+            } else {
+                Log.d(LOG_TAG, String.format(Locale.US,
+                        "HintLevelChangeListener.onCheckedChanged(%d):"
+                                + " Ignoring unknown button ID", buttonId));
+                return;
+            }
+            prefs.setHintLevel(checkedLevel);
+            setTheme(appThemeId);
+        }
     }
 
 }
