@@ -27,7 +27,6 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.IntentCompat;
 
 import com.xmission.trevin.android.tangram.R;
@@ -45,7 +44,7 @@ import java.util.Locale;
  * screen either for a chosen goal puzzle (via {@link #createIntent}) or
  * for free-play / sketch mode (with a {@code null} puzzle).</p>
  */
-public class PlayActivity extends AppCompatActivity {
+public class PlayActivity extends TangramActivity {
 
     private static final String LOG_TAG = "PlayActivity";
 
@@ -75,6 +74,8 @@ public class PlayActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        // TangramActivity applies the hint-level theme (piece colors) before
+        // the content view is inflated.
         super.onCreate(savedInstanceState);
         Log.d(LOG_TAG, String.format(Locale.US,
                 "onCreate(%s)", savedInstanceState == null ? "" : "saved state"));
@@ -86,7 +87,7 @@ public class PlayActivity extends AppCompatActivity {
                 getIntent(), EXTRA_PUZZLE_GOAL, TangramPuzzle.class);
         playTableView.setSolution(goal);
         setUpDropTarget();
-        setUpOverlayControls(goal != null);
+        setUpOverlayControls(goal);
         configureTraySlots();
     }
 
@@ -110,15 +111,21 @@ public class PlayActivity extends AppCompatActivity {
      * contextual flip button (shown only while a flippable piece&mdash;the
      * parallelogram&mdash;is selected).
      *
-     * @param hasGoal whether this session has a goal puzzle to display
+     * @param goal the goal puzzle to display if any, or {@code null}
+     * for free-play mode
      */
-    private void setUpOverlayControls(boolean hasGoal) {
+    private void setUpOverlayControls(@Nullable TangramPuzzle goal) {
         findViewById(R.id.button_back).setOnClickListener(v -> finish());
 
         // To Do: render the goal as a target silhouette; for now this is
         // just a placeholder panel that only appears in puzzle mode.
-        findViewById(R.id.goal_view)
-                .setVisibility(hasGoal ? View.VISIBLE : View.GONE);
+        TangramPuzzleView goalView = findViewById(R.id.goal_view);
+        if (goal != null) {
+            goalView.setPuzzle(goal);
+            goalView.setVisibility(View.VISIBLE);
+        } else {
+            goalView.setVisibility(View.GONE);
+        }
 
         ImageButton flipButton = findViewById(R.id.button_flip);
         flipButton.setOnClickListener(v -> playTableView.flipSelectedPiece());

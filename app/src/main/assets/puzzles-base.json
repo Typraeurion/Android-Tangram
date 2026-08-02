@@ -13,7 +13,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 6,
+        "rotation": 2,
         "position": {
           "xa": -4,
           "ya": 0
@@ -21,7 +21,7 @@
       },
       {
         "name": "medium_triangle",
-        "rotation": 7,
+        "rotation": 1,
         "position": {
           "xa": 4,
           "ya": -4
@@ -29,7 +29,7 @@
       },
       {
         "name": "parallelogram",
-        "rotation": 2,
+        "rotation": 0,
         "position": {
           "xa": -1.5,
           "ya": -4.5
@@ -54,7 +54,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 2,
+        "rotation": 6,
         "position": {
           "xa": 5,
           "ya": 3

@@ -1,0 +1,49 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:height="88dp"
+    android:width="88dp"
+    android:viewportHeight="63.5"
+    android:viewportWidth="63.5">
+
+    <path android:fillColor="?attr/tangramLargeTriangleColor"
+        android:pathData="M 37.5,37.5 L 15,60 L 15,37.5 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramLargeTriangleColor"
+        android:pathData="M 15,37.5 L 37.5,15 L 37.5,37.5 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramMediumTriangleColor"
+        android:pathData="M 3.5,48.5 L 15,60 L 15,37.5 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramSmallTriangleColor"
+        android:pathData="M 3.5,48.5 L 15,60 L 3.5,60 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramSmallTriangleColor"
+        android:pathData="M 49,15 L 37.5,26 L 37.5,15 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramSmallSquareColor"
+        android:pathData="M 60,4 L 60,15 L 49,15 L 49,4 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramParallelogramColor"
+        android:pathData="M 49,15 L 49,26 L 37.5,37.5 L 37.5,26 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+</vector>

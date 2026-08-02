@@ -4,6 +4,7 @@
   ~ hovering over the play surface.
   -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+    android:shape="rectangle">
+    <corners android:radius="@dimen/hover_control_padding" />
     <solid android:color="#99121212" />
 </shape>

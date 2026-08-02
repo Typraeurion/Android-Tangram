@@ -35,6 +35,10 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="PrefsTextThemeDefault">System Default</string>
     <string name="PrefsTextThemeLight">Light</string>
     <string name="PrefsTextUITheme">UI Theme: </string>
+    <string name="PlayButtonBackTooltip">Back to main menu</string>
+    <string name="PlayButtonFlipTooltip">Flip the selected piece over</string>
+    <string name="PlayButtonSaveTooltip">Save the completed Tangram</string>
+    <string name="PlayViewGoalTooltip">Puzzle goal</string>
     <!-- Piece names, used for the tray slots' accessibility descriptions -->
     <string name="piece_large_triangle">Large triangle</string>
     <string name="piece_medium_triangle">Medium triangle</string>
@@ -47,8 +51,4 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <!-- Spoken description of a tray slot: name then count available -->
     <string name="piece_tray_item_description">%1$s, %2$d available</string>
 
-    <!-- Hovering play-area controls -->
-    <string name="back_button_description">Back to menu</string>
-    <string name="flip_button_description">Flip the selected piece over</string>
-    <string name="goal_view_description">Puzzle goal</string>
 </resources>

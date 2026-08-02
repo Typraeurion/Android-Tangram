@@ -226,6 +226,40 @@ public class PlayTableView extends View {
      */
     private float lastRotationAngle;
 
+    /**
+     * Pan offset, in pixels, of the puzzle origin from the view center.
+     * Applied by {@link #rebuildTransform()} and adjusted by pinch-zoom and
+     * one-finger scrolling; kept within {@link #clampPan()}.
+     */
+    private float panX = 0f, panY = 0f;
+
+    /**
+     * True while a two-finger field gesture (pinch-zoom, which also pans by
+     * the focal point) is in progress.  Mutually exclusive with rotating a
+     * piece: a field gesture only starts when no piece is being dragged.
+     */
+    private boolean fieldGesturing = false;
+
+    /** The two pointer ids driving the current field (pinch) gesture. */
+    private int pinchPointerId0 = MotionEvent.INVALID_POINTER_ID;
+    private int pinchPointerId1 = MotionEvent.INVALID_POINTER_ID;
+
+    /** Distance between the pinch pointers as of the last motion event. */
+    private float lastPinchDistance;
+
+    /** Focal point (midpoint) of the pinch pointers at the last event. */
+    private float lastFocalX, lastFocalY;
+
+    /**
+     * The id of the pointer scrolling (panning) the field with one finger,
+     * or {@link MotionEvent#INVALID_POINTER_ID} when not scrolling.  Only
+     * used when the field is zoomed in far enough to exceed the viewport.
+     */
+    private int panPointerId = MotionEvent.INVALID_POINTER_ID;
+
+    /** Last one-finger scroll position, in view pixels. */
+    private float lastPanTouchX, lastPanTouchY;
+
     public PlayTableView(Context context) {
         super(context);
         init();
@@ -260,6 +294,7 @@ public class PlayTableView extends View {
             pieces.add(puzzle.getPiece(i));
         setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
+        panX = panY = 0f;
         computeFitScale();
         rebuildTransform();
         invalidate();
@@ -283,6 +318,7 @@ public class PlayTableView extends View {
         setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+        panX = panY = 0f;
         computeFitScale();
         rebuildTransform();
         invalidate();
@@ -436,6 +472,7 @@ public class PlayTableView extends View {
         float clamped = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
         if (clamped != userZoom) {
             userZoom = clamped;
+            clampPan();
             rebuildTransform();
             invalidate();
         }
@@ -463,16 +500,44 @@ public class PlayTableView extends View {
 
     /**
      * Rebuild {@link #puzzleToView} (and its inverse) from the current
-     * view size and display scale.  The puzzle origin maps to the center
-     * of the view; puzzle Y already increases downward, matching the
-     * screen, so no axis is flipped.
+     * view size, display scale, and {@linkplain #panX pan offset}.  The
+     * puzzle origin maps to the center of the view (plus the pan); puzzle Y
+     * already increases downward, matching the screen, so no axis is
+     * flipped.
      */
     private void rebuildTransform() {
         float scale = getUnitScale();
         puzzleToView.reset();
         puzzleToView.postScale(scale, scale);
-        puzzleToView.postTranslate(getWidth() / 2f, getHeight() / 2f);
+        puzzleToView.postTranslate(
+                getWidth() / 2f + panX, getHeight() / 2f + panY);
         puzzleToView.invert(viewToPuzzle);
+    }
+
+    /**
+     * @return the largest pan magnitude, in pixels, along the given view
+     * extent that still keeps the playfield covering the viewport; 0 when
+     * the field is not larger than the viewport (so it stays centered).
+     */
+    private float maxPan(int viewExtent) {
+        float fieldExtent = playfieldSize * getUnitScale();
+        return Math.max(0f, (fieldExtent - viewExtent) / 2f);
+    }
+
+    /** @return whether the field is large enough to be scrolled. */
+    private boolean canPan() {
+        return maxPan(getWidth()) > 0f || maxPan(getHeight()) > 0f;
+    }
+
+    /**
+     * Constrain {@link #panX}/{@link #panY} so the field cannot be scrolled
+     * past its edges (and stays centered on any axis where it fits).
+     */
+    private void clampPan() {
+        float maxX = maxPan(getWidth());
+        float maxY = maxPan(getHeight());
+        panX = Math.max(-maxX, Math.min(maxX, panX));
+        panY = Math.max(-maxY, Math.min(maxY, panY));
     }
 
     @Override
@@ -481,6 +546,7 @@ public class PlayTableView extends View {
                 "onSizeChanged(%d×%d → %d×%d)", oldw, oldh, w, h));
         super.onSizeChanged(w, h, oldw, oldh);
         computeFitScale();
+        clampPan();
         rebuildTransform();
         // Force redrawing the whole puzzle
         invalidate();
@@ -579,12 +645,22 @@ public class PlayTableView extends View {
                 setSelectedPiece(hit);
                 if (hit == null) {
                     activePointerId = MotionEvent.INVALID_POINTER_ID;
+                    // On empty felt: start scrolling the field if it is
+                    // zoomed in far enough to be pannable; otherwise this
+                    // just deselects (a second finger can still start a
+                    // pinch-zoom).
+                    if (canPan()) {
+                        panPointerId = event.getPointerId(pointerIndex);
+                        lastPanTouchX = event.getX(pointerIndex);
+                        lastPanTouchY = event.getY(pointerIndex);
+                    } else {
+                        panPointerId = MotionEvent.INVALID_POINTER_ID;
+                    }
                     invalidate();
-                    // Consume the gesture anyway so a tap on the felt can
-                    // deselect; later this branch can start a background pan.
                     return true;
                 }
                 activePointerId = event.getPointerId(pointerIndex);
+                panPointerId = MotionEvent.INVALID_POINTER_ID;
                 raiseToTop(hit);
                 grabOffsetX = hit.getPosition().getX() - touchBuffer[0];
                 grabOffsetY = hit.getPosition().getY() - touchBuffer[1];
@@ -593,27 +669,35 @@ public class PlayTableView extends View {
             }
 
             case MotionEvent.ACTION_POINTER_DOWN: {
-                // A second finger touched down.  If a piece is being
-                // dragged, promote the gesture to a two-finger rotation
-                // about that piece's centroid.
-                if (selectedPiece == null
-                        || activePointerId == MotionEvent.INVALID_POINTER_ID)
-                    return true;
                 int pointerIndex = event.getActionIndex();
                 int newId = event.getPointerId(pointerIndex);
-                if (rotationPointerId == MotionEvent.INVALID_POINTER_ID
+                if (selectedPiece != null
+                        && activePointerId != MotionEvent.INVALID_POINTER_ID
+                        && rotationPointerId == MotionEvent.INVALID_POINTER_ID
                         && newId != activePointerId) {
+                    // A piece is being dragged: promote to a two-finger
+                    // rotation about that piece's centroid.
                     rotationPointerId = newId;
                     lastRotationAngle = angleBetweenPointers(
                             event, activePointerId, rotationPointerId);
+                } else if (!fieldGesturing
+                        && activePointerId == MotionEvent.INVALID_POINTER_ID
+                        && rotationPointerId == MotionEvent.INVALID_POINTER_ID
+                        && event.getPointerCount() >= 2) {
+                    // No piece is being dragged or rotated: two fingers
+                    // pinch-zoom (and pan by the focal point) the field.
+                    beginFieldGesture(event);
                 }
                 return true;
             }
 
             case MotionEvent.ACTION_MOVE: {
-                if (selectedPiece == null)
-                    return false;
-                if (rotationPointerId != MotionEvent.INVALID_POINTER_ID) {
+                if (fieldGesturing) {
+                    updateFieldGesture(event);
+                    return true;
+                }
+                if (rotationPointerId != MotionEvent.INVALID_POINTER_ID
+                        && selectedPiece != null) {
                     // Two-finger rotation: spin the piece about its centroid
                     // by however much the finger-to-finger angle changed.
                     // Translation is suspended for the duration.
@@ -631,7 +715,23 @@ public class PlayTableView extends View {
                     }
                     return true;
                 }
-                if (activePointerId == MotionEvent.INVALID_POINTER_ID)
+                if (panPointerId != MotionEvent.INVALID_POINTER_ID) {
+                    // One-finger scroll of the field.
+                    int panIndex = event.findPointerIndex(panPointerId);
+                    if (panIndex < 0)
+                        return false;
+                    float x = event.getX(panIndex), y = event.getY(panIndex);
+                    panX += x - lastPanTouchX;
+                    panY += y - lastPanTouchY;
+                    lastPanTouchX = x;
+                    lastPanTouchY = y;
+                    clampPan();
+                    rebuildTransform();
+                    invalidate();
+                    return true;
+                }
+                if (selectedPiece == null
+                        || activePointerId == MotionEvent.INVALID_POINTER_ID)
                     return false;
                 int pointerIndex = event.findPointerIndex(activePointerId);
                 if (pointerIndex < 0)
@@ -649,7 +749,22 @@ public class PlayTableView extends View {
             case MotionEvent.ACTION_POINTER_UP: {
                 int pointerIndex = event.getActionIndex();
                 int liftedId = event.getPointerId(pointerIndex);
-                if (rotationPointerId != MotionEvent.INVALID_POINTER_ID) {
+                if (fieldGesturing) {
+                    // Dropping from a two-finger field gesture back to one
+                    // finger: end the pinch and hand the remaining finger to
+                    // a one-finger scroll (if the field is still pannable).
+                    if (liftedId == pinchPointerId0 || liftedId == pinchPointerId1) {
+                        int remainingId = (liftedId == pinchPointerId0)
+                                ? pinchPointerId1 : pinchPointerId0;
+                        endFieldGesture();
+                        int remainingIndex = event.findPointerIndex(remainingId);
+                        if (remainingIndex >= 0 && canPan()) {
+                            panPointerId = remainingId;
+                            lastPanTouchX = event.getX(remainingIndex);
+                            lastPanTouchY = event.getY(remainingIndex);
+                        }
+                    }
+                } else if (rotationPointerId != MotionEvent.INVALID_POINTER_ID) {
                     // Dropping from a two-finger rotation back to one finger.
                     // Do NOT snap the angle yet (that is deferred until a
                     // piece can attach to a neighbor); simply resume dragging
@@ -663,6 +778,8 @@ public class PlayTableView extends View {
                     // The dragging finger lifted; keep the selection but stop
                     // dragging.
                     activePointerId = MotionEvent.INVALID_POINTER_ID;
+                } else if (liftedId == panPointerId) {
+                    panPointerId = MotionEvent.INVALID_POINTER_ID;
                 }
                 return true;
             }
@@ -673,6 +790,8 @@ public class PlayTableView extends View {
             case MotionEvent.ACTION_CANCEL:
                 activePointerId = MotionEvent.INVALID_POINTER_ID;
                 rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+                panPointerId = MotionEvent.INVALID_POINTER_ID;
+                endFieldGesture();
                 // A piece dragged off the visible field goes back to the
                 // tray rather than being lost off-screen.
                 returnSelectedPieceIfOffField();
@@ -683,6 +802,79 @@ public class PlayTableView extends View {
                 return true;
         }
         return super.onTouchEvent(event);
+    }
+
+    /**
+     * Begin a two-finger field gesture (pinch-zoom, which also scrolls the
+     * field by its focal point) using the first two pointers.
+     */
+    private void beginFieldGesture(@NonNull MotionEvent event) {
+        fieldGesturing = true;
+        panPointerId = MotionEvent.INVALID_POINTER_ID; // superseded
+        pinchPointerId0 = event.getPointerId(0);
+        pinchPointerId1 = event.getPointerId(1);
+        lastPinchDistance = distanceBetweenPointers(
+                event, pinchPointerId0, pinchPointerId1);
+        lastFocalX = (event.getX(0) + event.getX(1)) / 2f;
+        lastFocalY = (event.getY(0) + event.getY(1)) / 2f;
+    }
+
+    /** Clear all two-finger field-gesture state. */
+    private void endFieldGesture() {
+        fieldGesturing = false;
+        pinchPointerId0 = MotionEvent.INVALID_POINTER_ID;
+        pinchPointerId1 = MotionEvent.INVALID_POINTER_ID;
+    }
+
+    /**
+     * Apply one motion event of the pinch gesture: rescale about the fingers&rsquo;
+     * focal point and scroll so the point that was under the previous focal
+     * stays under the current one.
+     */
+    private void updateFieldGesture(@NonNull MotionEvent event) {
+        int index0 = event.findPointerIndex(pinchPointerId0);
+        int index1 = event.findPointerIndex(pinchPointerId1);
+        if (index0 < 0 || index1 < 0)
+            return;
+        float curDistance = distanceBetweenPointers(
+                event, pinchPointerId0, pinchPointerId1);
+        float curFocalX = (event.getX(index0) + event.getX(index1)) / 2f;
+        float curFocalY = (event.getY(index0) + event.getY(index1)) / 2f;
+
+        // Puzzle point currently under the previous focal point.
+        mapTouchToPuzzle(lastFocalX, lastFocalY);
+        float puzzleX = touchBuffer[0], puzzleY = touchBuffer[1];
+
+        if (lastPinchDistance > 0f && curDistance > 0f)
+            userZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM,
+                    userZoom * (curDistance / lastPinchDistance)));
+
+        // Re-anchor: place that puzzle point under the current focal point.
+        float scale = getUnitScale();
+        panX = curFocalX - getWidth() / 2f - puzzleX * scale;
+        panY = curFocalY - getHeight() / 2f - puzzleY * scale;
+        clampPan();
+        rebuildTransform();
+        invalidate();
+
+        lastPinchDistance = curDistance;
+        lastFocalX = curFocalX;
+        lastFocalY = curFocalY;
+    }
+
+    /**
+     * @return the distance in view pixels between two pointers, or 0 if
+     * either is not present in this event
+     */
+    private float distanceBetweenPointers(
+            @NonNull MotionEvent event, int id0, int id1) {
+        int index0 = event.findPointerIndex(id0);
+        int index1 = event.findPointerIndex(id1);
+        if (index0 < 0 || index1 < 0)
+            return 0f;
+        float dx = event.getX(index1) - event.getX(index0);
+        float dy = event.getY(index1) - event.getY(index0);
+        return (float) Math.hypot(dx, dy);
     }
 
     @Override
@@ -800,6 +992,8 @@ public class PlayTableView extends View {
         SavedState state = new SavedState(super.onSaveInstanceState());
         state.pieces = pieces.toArray(new TangramPiece[0]);
         state.userZoom = userZoom;
+        state.panX = panX;
+        state.panY = panY;
         return state;
     }
 
@@ -814,12 +1008,17 @@ public class PlayTableView extends View {
         if (ss.pieces != null)
             Collections.addAll(pieces, ss.pieces);
         userZoom = ss.userZoom;
+        panX = ss.panX;
+        panY = ss.panY;
         // Any in-flight gesture is meaningless after a restore.
         setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+        panPointerId = MotionEvent.INVALID_POINTER_ID;
+        endFieldGesture();
         // fitScale is recomputed on the next onSizeChanged; rebuild now so
         // the restored zoom is applied if we already have a size.
+        clampPan();
         rebuildTransform();
         invalidate();
     }
@@ -834,6 +1033,7 @@ public class PlayTableView extends View {
 
         TangramPiece[] pieces;
         float userZoom = 1f;
+        float panX = 0f, panY = 0f;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -843,6 +1043,8 @@ public class PlayTableView extends View {
             super(in);
             pieces = in.createTypedArray(TangramPiece.CREATOR);
             userZoom = in.readFloat();
+            panX = in.readFloat();
+            panY = in.readFloat();
         }
 
         @Override
@@ -850,6 +1052,8 @@ public class PlayTableView extends View {
             super.writeToParcel(out, flags);
             out.writeTypedArray(pieces, flags);
             out.writeFloat(userZoom);
+            out.writeFloat(panX);
+            out.writeFloat(panY);
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR =

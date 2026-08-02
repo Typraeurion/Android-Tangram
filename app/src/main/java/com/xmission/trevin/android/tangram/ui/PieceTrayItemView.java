@@ -24,6 +24,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -138,17 +139,14 @@ public class PieceTrayItemView extends FrameLayout {
     public PieceTrayItemView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context);
-        TypedArray a = context.obtainStyledAttributes(
-                attrs, R.styleable.PieceTrayItemView);
-        try {
+        try (TypedArray a = context.obtainStyledAttributes(
+                        attrs, R.styleable.PieceTrayItemView)) {
             int typeIndex = a.getInt(R.styleable.PieceTrayItemView_pieceType, 0);
             int initialCount = a.getInt(R.styleable.PieceTrayItemView_pieceCount, 0);
             PieceType[] types = PieceType.values();
             if (typeIndex < 0 || typeIndex >= types.length)
                 typeIndex = 0;
             setPieceType(types[typeIndex], initialCount);
-        } finally {
-            a.recycle();
         }
     }
 
@@ -160,6 +158,60 @@ public class PieceTrayItemView extends FrameLayout {
         // The whole slot is the accessibility target and click target.
         setFocusable(true);
         setClickable(true);
+    }
+
+    /**
+     * Size the slot in the tray.  The {@code LinearLayout} weight fixes one
+     * axis (the width in portrait, the height in landscape); the other
+     * (&ldquo;cross&rdquo;) axis follows the piece image&rsquo;s aspect
+     * ratio, clamped to {@link R.dimen#piece_tray_max_thickness} so the
+     * tray doesn&rsquo;t get too thick on square or large screens.  When
+     * the image has no aspect information (or a square viewport) this
+     * degrades to a square slot.
+     */
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int wMode = MeasureSpec.getMode(widthMeasureSpec);
+        int hMode = MeasureSpec.getMode(heightMeasureSpec);
+        int wSize = MeasureSpec.getSize(widthMeasureSpec);
+        int hSize = MeasureSpec.getSize(heightMeasureSpec);
+        int maxThickness = getResources().getDimensionPixelSize(
+                R.dimen.piece_tray_max_thickness);
+
+        int width, height;
+        if (wMode == MeasureSpec.EXACTLY && hMode != MeasureSpec.EXACTLY) {
+            // Portrait: width fixed by weight, height is the tray thickness.
+            width = wSize;
+            height = Math.min(crossFromPrimary(width, true), maxThickness);
+        } else if (hMode == MeasureSpec.EXACTLY && wMode != MeasureSpec.EXACTLY) {
+            // Landscape: height fixed by weight, width is the tray thickness.
+            height = hSize;
+            width = Math.min(crossFromPrimary(height, false), maxThickness);
+        } else {
+            width = height = Math.min(wSize, hSize);
+        }
+        super.onMeasure(
+                MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+    }
+
+    /**
+     * Cross-axis size that keeps the piece image&rsquo;s aspect ratio for a
+     * given primary-axis size.  Falls back to a square (returns
+     * {@code primary}) when the image aspect is unknown.
+     *
+     * @param primary the primary-axis size in pixels
+     * @param primaryIsWidth whether the primary axis is the width (portrait)
+     */
+    private int crossFromPrimary(int primary, boolean primaryIsWidth) {
+        Drawable image = pieceImage.getDrawable();
+        float iw = (image != null) ? image.getIntrinsicWidth() : 0;
+        float ih = (image != null) ? image.getIntrinsicHeight() : 0;
+        if (iw <= 0 || ih <= 0)
+            return primary; // no aspect info: square
+        return primaryIsWidth
+                ? Math.round(primary * (ih / iw))  // height from width
+                : Math.round(primary * (iw / ih)); // width from height
     }
 
     /**
@@ -191,6 +243,8 @@ public class PieceTrayItemView extends FrameLayout {
         this.count = Math.max(0, count);
         countText.setText(getResources().getString(
                 R.string.piece_count_format, this.count));
+        // Hide the count if there is less than 2 pieces available
+        countText.setVisibility((this.count < 2) ? GONE : VISIBLE);
         // Dim and disable the slot when the player has used all of them.
         boolean available = this.count > 0;
         setEnabled(available);
@@ -245,7 +299,6 @@ public class PieceTrayItemView extends FrameLayout {
     }
 
     /** Begin a drag-and-drop gesture carrying this slot as its state. */
-    @SuppressWarnings("deprecation") // startDrag for minSdk < 24 (N)
     private void startPieceDrag() {
         ClipData clip = ClipData.newPlainText(
                 pieceName == null ? "" : pieceName, "");
@@ -384,11 +437,10 @@ public class PieceTrayItemView extends FrameLayout {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {
+        if (!(state instanceof SavedState ss)) {
             super.onRestoreInstanceState(state);
             return;
         }
-        SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         setCount(ss.count);
     }
@@ -414,7 +466,7 @@ public class PieceTrayItemView extends FrameLayout {
         }
 
         public static final Parcelable.Creator<SavedState> CREATOR =
-                new Parcelable.Creator<SavedState>() {
+                new Parcelable.Creator<>() {
                     @Override
                     public SavedState createFromParcel(Parcel in) {
                         return new SavedState(in);

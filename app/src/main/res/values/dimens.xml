@@ -6,6 +6,9 @@
     <dimen name="piece_tray_item_margin">6dp</dimen>
     <!-- Padding inside the tray strip, around the row/column of slots. -->
     <dimen name="piece_tray_padding">4dp</dimen>
+    <!-- Maximum thickness of the tray (a slot's cross-axis size): caps how
+         big slots grow on square/large screens so the tray stays a strip. -->
+    <dimen name="piece_tray_max_thickness">96dp</dimen>
 
     <!-- Hovering play-area controls (back button, goal preview). -->
     <dimen name="hover_control_size">48dp</dimen>

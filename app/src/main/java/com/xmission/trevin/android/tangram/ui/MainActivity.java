@@ -23,16 +23,17 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends TangramActivity {
 
     private static final String LOG_TAG = "MainActivity";
+
+    private PuzzleLibrary library;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,9 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         Button button = findViewById(R.id.MainButtonLibrary);
         // Verify whether there are any puzzles available
-        PuzzleLibrary library = PuzzleLibrary.getInstance();
-        if (!library.isInitialized()) try {
-            library.loadPuzzles(this);
+        library = PuzzleLibrary.getInstance();
+        try {
+            if (!library.isInitialized())
+                library.loadPuzzles(this);
             if (library.size() > 0)
                 button.setOnClickListener(new OnLibrarySelected());
             else
@@ -72,7 +74,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnLibrarySelected.onClick");
-            // To Do: Start the puzzle library activity
+            // To Do: Start the puzzle library activity.
+            // For now, so long as we have one puzzle in the library, use it.
+            if (library.size() <= 0) {
+                view.setEnabled(false);
+                return;
+            }
+            Intent intent = PlayActivity.createIntent(MainActivity.this,
+                    library.getPuzzle(0));
+            startActivity(intent);
         }
     }
 

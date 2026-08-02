@@ -33,23 +33,37 @@
             android:layout_gravity="top|start"
             android:layout_margin="@dimen/hover_control_margin"
             android:background="@drawable/hover_button_background"
-            android:contentDescription="@string/back_button_description"
+            android:contentDescription="@string/PlayButtonBackTooltip"
             android:elevation="4dp"
             android:padding="@dimen/hover_control_padding"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_arrow_back" />
 
-        <ImageView
+        <com.xmission.trevin.android.tangram.ui.TangramPuzzleView
             android:id="@+id/goal_view"
             android:layout_width="@dimen/goal_view_size"
             android:layout_height="@dimen/goal_view_size"
             android:layout_gravity="top|end"
             android:layout_margin="@dimen/hover_control_margin"
+            android:padding="@dimen/piece_tray_padding"
             android:background="@drawable/hover_panel_background"
-            android:contentDescription="@string/goal_view_description"
+            android:contentDescription="@string/PlayViewGoalTooltip"
             android:elevation="4dp"
+            android:scaleType="fitCenter" />
+
+        <ImageButton
+            android:id="@+id/button_save"
+            android:layout_width="@dimen/hover_control_size"
+            android:layout_height="@dimen/hover_control_size"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/hover_control_margin"
+            android:background="@drawable/hover_button_background"
+            android:contentDescription="@string/PlayButtonSaveTooltip"
+            android:elevation="4dp"
+            android:padding="@dimen/hover_control_padding"
             android:scaleType="fitCenter"
-            android:visibility="gone" />
+            android:src="@drawable/ic_save"
+            android:visibility="gone"/>
 
         <ImageButton
             android:id="@+id/button_flip"
@@ -58,7 +72,7 @@
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="@dimen/flip_button_margin_bottom"
             android:background="@drawable/hover_button_background"
-            android:contentDescription="@string/flip_button_description"
+            android:contentDescription="@string/PlayButtonFlipTooltip"
             android:elevation="4dp"
             android:padding="@dimen/hover_control_padding"
             android:scaleType="fitCenter"
@@ -67,63 +81,60 @@
 
     </FrameLayout>
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/piece_tray"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@color/gray7"
-        android:fillViewport="true"
-        android:scrollbars="none">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/piece_tray_padding"
+        android:weightSum="100">
 
-        <LinearLayout
-            android:id="@+id/piece_tray"
+        <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+            android:id="@+id/tray_small_triangle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/piece_tray_padding">
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/piece_tray_item_margin"
+            android:layout_weight="15.5"
+            app:pieceType="smallTriangle"
+            app:pieceCount="2" />
 
-            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
-                android:id="@+id/tray_small_triangle"
-                android:layout_width="@dimen/piece_tray_item_size"
-                android:layout_height="@dimen/piece_tray_item_size"
-                android:layout_margin="@dimen/piece_tray_item_margin"
-                app:pieceType="smallTriangle"
-                app:pieceCount="2" />
+        <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+            android:id="@+id/tray_square"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/piece_tray_item_margin"
+            android:layout_weight="20.5"
+            app:pieceType="square"
+            app:pieceCount="1" />
 
-            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
-                android:id="@+id/tray_square"
-                android:layout_width="@dimen/piece_tray_item_size"
-                android:layout_height="@dimen/piece_tray_item_size"
-                android:layout_margin="@dimen/piece_tray_item_margin"
-                app:pieceType="square"
-                app:pieceCount="1" />
+        <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+            android:id="@+id/tray_parallelogram"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/piece_tray_item_margin"
+            android:layout_weight="15.5"
+            app:pieceType="parallelogram"
+            app:pieceCount="1" />
 
-            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
-                android:id="@+id/tray_parallelogram"
-                android:layout_width="@dimen/piece_tray_item_size"
-                android:layout_height="@dimen/piece_tray_item_size"
-                android:layout_margin="@dimen/piece_tray_item_margin"
-                app:pieceType="parallelogram"
-                app:pieceCount="1" />
+        <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+            android:id="@+id/tray_medium_triangle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/piece_tray_item_margin"
+            android:layout_weight="20.5"
+            app:pieceType="mediumTriangle"
+            app:pieceCount="1" />
 
-            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
-                android:id="@+id/tray_medium_triangle"
-                android:layout_width="@dimen/piece_tray_item_size"
-                android:layout_height="@dimen/piece_tray_item_size"
-                android:layout_margin="@dimen/piece_tray_item_margin"
-                app:pieceType="mediumTriangle"
-                app:pieceCount="1" />
+        <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
+            android:id="@+id/tray_large_triangle"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/piece_tray_item_margin"
+            android:layout_weight="28"
+            app:pieceType="largeTriangle"
+            app:pieceCount="2" />
 
-            <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
-                android:id="@+id/tray_large_triangle"
-                android:layout_width="@dimen/piece_tray_item_size"
-                android:layout_height="@dimen/piece_tray_item_size"
-                android:layout_margin="@dimen/piece_tray_item_margin"
-                app:pieceType="largeTriangle"
-                app:pieceCount="2" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    </LinearLayout>
 
 </LinearLayout>

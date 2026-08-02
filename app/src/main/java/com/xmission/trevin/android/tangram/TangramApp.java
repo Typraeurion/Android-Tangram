@@ -55,17 +55,10 @@ public class TangramApp extends Application {
             }
             AppCompatDelegate.setDefaultNightMode(nightMode);
 
-            TangramPreferences.HintLevel hinting = prefs.getHintLevel();
-            int appThemeId = R.style.Theme_Tangram;
-            switch (hinting) {
-                case HINT:
-                    appThemeId = R.style.Theme_Tangram_Hinted;
-                    break;
-                case SOLVE:
-                    appThemeId = R.style.Theme_Tangram_Puzzle;
-                    break;
-            }
-            setTheme(appThemeId);
+            // NOTE: the hint level's theme is NOT applied here.  An
+            // Application's theme does not propagate to its activities, so
+            // the piece styling is applied per-activity (see
+            // PlayActivity.themeForHintLevel).
 
             // Read in all available puzzles.
             // To Do: If the amount of puzzles is large,

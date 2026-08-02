@@ -25,7 +25,7 @@
         android:minWidth="20dp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
-        android:textColor="@color/white_smoke"
+        android:textColor="@color/foreground"
         android:textStyle="bold"
         android:importantForAccessibility="no"
         tools:ignore="SmallSp"

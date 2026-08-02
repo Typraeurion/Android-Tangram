@@ -1,53 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <!-- To Do: Make the word "TANGRAM" out of tangrams for the app title.
          See: https://www.shutterstock.com/search/tangram-alphabet
          for a number of examples of how letters can be created;
          https://www.shutterstock.com/image-vector/alphabet-font-abc-tangram-collection-vector-2270175397
          may be the best one. -->
-    <TextView
-        android:text="@string/app_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:fontFamily="casual"
-        android:textStyle="bold"
-        android:textSize="36sp"
-        android:paddingVertical="18dp"/>
+        <TextView
+            android:text="@string/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:fontFamily="casual"
+            android:textStyle="bold"
+            android:textSize="36sp"
+            android:paddingVertical="18dp"/>
 
-    <!-- To Do: Make this a designer button. -->
-    <Button android:id="@+id/MainButtonLibrary"
-        android:text="@string/MenuLibrary"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!-- To Do: Make this a designer button. -->
+        <Button android:id="@+id/MainButtonLibrary"
+            android:text="@string/MenuLibrary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <!-- To Do: Make this a designer button. -->
-    <Button android:id="@+id/MainButtonSketch"
-        android:text="@string/MenuSketch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!-- To Do: Make this a designer button. -->
+        <Button android:id="@+id/MainButtonSketch"
+            android:text="@string/MenuSketch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     <!-- This button should be hidden unless there is a game in progress
          and the user has navigated back to the main screen. -->
-    <Button android:id="@+id/MainButtonResume"
-        android:text="@string/MenuResume"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <Button android:id="@+id/MainButtonResume"
+            android:text="@string/MenuResume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <!-- To Do: Make this an image button using the "wrench" tangram. -->
-    <Button android:id="@+id/MainButtonPreferences"
-        android:text="@string/MenuPreferences"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!-- To Do: Make this an image button using the "wrench" tangram. -->
+        <Button android:id="@+id/MainButtonPreferences"
+            android:text="@string/MenuPreferences"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <!-- To Do: Make this an image button using an "(i)" icon. -->
-    <Button android:id="@+id/MainButtonAbout"
-        android:text="@string/MenuAbout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <!-- To Do: Make this an image button using an "(i)" icon. -->
+        <Button android:id="@+id/MainButtonAbout"
+            android:text="@string/MenuAbout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

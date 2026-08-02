@@ -23,7 +23,6 @@ import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.xmission.trevin.android.tangram.R;
@@ -31,7 +30,7 @@ import com.xmission.trevin.android.tangram.data.TangramPreferences;
 
 import java.util.Locale;
 
-public class PreferencesActivity extends AppCompatActivity {
+public class PreferencesActivity extends TangramActivity {
 
     private static final String LOG_TAG = "PreferencesActivity";
 
@@ -145,24 +144,35 @@ public class PreferencesActivity extends AppCompatActivity {
             }
             // Map the selected button to the hint level
             TangramPreferences.HintLevel checkedLevel;
-            int appThemeId;
             if (buttonId == R.id.PreferencesRadioButtonHintNone) {
                 checkedLevel = TangramPreferences.HintLevel.OPAQUE;
-                appThemeId = R.style.Theme_Tangram;
             } else if (buttonId == R.id.PreferencesRadioButtonHintOutline) {
                 checkedLevel = TangramPreferences.HintLevel.HINT;
-                appThemeId = R.style.Theme_Tangram_Hinted;
             } else if (buttonId == R.id.PreferencesRadioButtonHintSolve) {
                 checkedLevel = TangramPreferences.HintLevel.SOLVE;
-                appThemeId = R.style.Theme_Tangram_Puzzle;
             } else {
                 Log.d(LOG_TAG, String.format(Locale.US,
                         "HintLevelChangeListener.onCheckedChanged(%d):"
                                 + " Ignoring unknown button ID", buttonId));
                 return;
             }
+            // Only act on a genuine change.  Programmatic check() calls and
+            // view-state restoration re-select the stored level; recreating
+            // again would loop forever.
+            if (checkedLevel == prefs.getHintLevel()) {
+                Log.d(LOG_TAG, String.format(Locale.US,
+                        "HintLevelChangeListener.onCheckedChanged(%d):"
+                                + " unchanged, ignoring", buttonId));
+                return;
+            }
+            Log.d(LOG_TAG, String.format(Locale.US,
+                    "HintLevelChangeListener.onCheckedChanged(%s)",
+                    checkedLevel));
             prefs.setHintLevel(checkedLevel);
-            setTheme(appThemeId);
+            // The hint theme is applied per-activity by TangramActivity;
+            // re-create so this (and every later) screen picks it up.  A
+            // plain setTheme() can't re-style an already-inflated activity.
+            recreate();
         }
     }
 
