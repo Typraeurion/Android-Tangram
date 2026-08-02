@@ -1,0 +1,50 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:autoMirrored="true"
+    android:height="88dp"
+    android:width="88dp"
+    android:viewportHeight="51.5"
+    android:viewportWidth="51.5">
+
+    <path android:fillColor="?attr/tangramLargeTriangleColor"
+        android:pathData="M 3.5,26 L 26,3.5 L 26,26 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramLargeTriangleColor"
+        android:pathData="M 48.5,14.75 L 26,37.25 L 26,14.75 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramMediumTriangleColor"
+        android:pathData="M 37.25,26 L 26,37.25 L 48.5,37.25 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramSmallTriangleColor"
+        android:pathData="M 37.25,3.5 L 26,14.75 L 26,3.5 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramSmallTriangleColor"
+        android:pathData="M 14.75,37.25 L 3.5,26 L 14.75,26 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramSmallSquareColor"
+        android:pathData="M 14.75,26 L 26,26 L 26,37.25 L 14.75,37.25 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+    <path android:fillColor="?attr/tangramParallelogramColor"
+        android:pathData="M 14.75,37.25 L 26,37.25 L 37.25,48.5 L 26,48.5 Z"
+        android:strokeColor="?attr/tangramOutlineColor"
+        android:strokeLineJoin="round"
+        android:strokeWidth="?attr/tangramOutlineWidth"/>
+
+</vector>

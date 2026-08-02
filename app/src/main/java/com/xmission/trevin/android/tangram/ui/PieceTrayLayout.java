@@ -1,0 +1,233 @@
+/*
+ * Copyright © 2026 Trevin Beattie
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.xmission.trevin.android.tangram.ui;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.xmission.trevin.android.tangram.R;
+
+/**
+ * Lays out the piece tray so every {@link PieceTrayItemView} is drawn at a
+ * single shared scale&mdash;keeping the pieces&rsquo; relative sizes
+ * correct in both orientations and on every screen shape.
+ *
+ * <p>Each piece is sized to its natural (drawable) dimensions times one
+ * scale factor
+ * <pre>s = min( (availableLength &minus; gaps) / &Sigma;(piece length) ,
+ *          maxThickness / max(piece thickness) )</pre>
+ * The first term fits the row/column into the tray; the second caps the
+ * tray&rsquo;s thickness so it stays a slim strip on square or large
+ * screens.  Because it&rsquo;s one factor for all pieces, their proportions
+ * are preserved.  When the thickness cap wins, the pieces take less than
+ * the full length and are centered, which shortens the tray on near-square
+ * displays.</p>
+ *
+ * <p>Set {@code android:orientation} (horizontal for the portrait tray,
+ * vertical for the landscape one).  Inter-piece spacing is
+ * {@code piece_tray_item_margin} and the cap is
+ * {@code piece_tray_max_thickness}.</p>
+ */
+public class PieceTrayLayout extends ViewGroup {
+
+    public static final int HORIZONTAL = 0;
+    public static final int VERTICAL = 1;
+
+    /** Layout direction of the tray; see {@link #HORIZONTAL}/{@link #VERTICAL}. */
+    private int orientation = HORIZONTAL;
+
+    /** Gap between adjacent pieces, in pixels. */
+    private int gap;
+
+    /** Maximum thickness of the tray (a piece's cross extent), in pixels. */
+    private int maxThickness;
+
+    public PieceTrayLayout(@NonNull Context context) {
+        super(context);
+        init(context, null);
+    }
+
+    public PieceTrayLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs);
+    }
+
+    private void init(@NonNull Context context, @Nullable AttributeSet attrs) {
+        gap = getResources().getDimensionPixelSize(R.dimen.piece_tray_item_margin);
+        maxThickness = getResources().getDimensionPixelSize(
+                R.dimen.piece_tray_max_thickness);
+        if (attrs != null) {
+            try (TypedArray a = context.obtainStyledAttributes(
+                    attrs, new int[]{android.R.attr.orientation})) {
+                orientation = a.getInt(0, HORIZONTAL);
+            }
+        }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final boolean horizontal = orientation == HORIZONTAL;
+        final int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        final int paddingH = getPaddingLeft() + getPaddingRight();
+        final int paddingV = getPaddingTop() + getPaddingBottom();
+        final int paddingPrimary = horizontal ? paddingH : paddingV;
+        final int paddingCross = horizontal ? paddingV : paddingH;
+        final int primaryMode = horizontal ? widthMode : heightMode;
+        final int crossMode = horizontal ? heightMode : widthMode;
+        final int primarySize = horizontal ? widthSize : heightSize;
+        final int crossSize = horizontal ? heightSize : widthSize;
+
+        // Sum the pieces' natural primary extents; find the largest cross.
+        int visibleCount = 0;
+        float sumPrimaryNatural = 0f;
+        float maxCrossNatural = 0f;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == GONE)
+                continue;
+            sumPrimaryNatural += horizontal
+                    ? naturalWidthOf(child) : naturalHeightOf(child);
+            maxCrossNatural = Math.max(maxCrossNatural, horizontal
+                    ? naturalHeightOf(child) : naturalWidthOf(child));
+            visibleCount++;
+        }
+        final int totalGap = gap * Math.max(0, visibleCount - 1);
+
+        // One common scale keeps every piece proportional: the smaller of
+        // the scale that fits the pieces along the tray and the scale that
+        // keeps the thickest piece within the cap (and available cross).
+        float scale = 0f;
+        if (visibleCount > 0 && sumPrimaryNatural > 0f && maxCrossNatural > 0f) {
+            int crossLimit = maxThickness;
+            if (crossMode != MeasureSpec.UNSPECIFIED)
+                crossLimit = Math.min(crossLimit, crossSize - paddingCross);
+            float scaleByThickness = crossLimit / maxCrossNatural;
+            float scaleByLength = Float.MAX_VALUE;
+            if (primaryMode != MeasureSpec.UNSPECIFIED) {
+                int availablePrimary = primarySize - paddingPrimary - totalGap;
+                scaleByLength = availablePrimary / sumPrimaryNatural;
+            }
+            scale = Math.max(0f, Math.min(scaleByThickness, scaleByLength));
+        }
+
+        // Every slot spans the full tray thickness (the largest piece's
+        // cross extent); only the primary extent is proportional.  This way
+        // each slot's corner badge lines up across the whole tray (at the
+        // large piece's level).  The piece image is centered inside its slot
+        // by fitCenter, so pieces still appear centered and proportional.
+        int thickness = Math.max(1, Math.round(maxCrossNatural * scale));
+        int contentPrimary = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == GONE)
+                continue;
+            int primaryPx = Math.max(1, Math.round(scale
+                    * (horizontal ? naturalWidthOf(child)
+                                  : naturalHeightOf(child))));
+            int cw = horizontal ? primaryPx : thickness;
+            int ch = horizontal ? thickness : primaryPx;
+            child.measure(
+                    MeasureSpec.makeMeasureSpec(cw, MeasureSpec.EXACTLY),
+                    MeasureSpec.makeMeasureSpec(ch, MeasureSpec.EXACTLY));
+            contentPrimary += primaryPx;
+        }
+        contentPrimary += totalGap;
+        int contentCross = thickness;
+
+        int desiredW = (horizontal ? contentPrimary : contentCross) + paddingH;
+        int desiredH = (horizontal ? contentCross : contentPrimary) + paddingV;
+        setMeasuredDimension(
+                resolveSize(desiredW, widthMeasureSpec),
+                resolveSize(desiredH, heightMeasureSpec));
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        final boolean horizontal = orientation == HORIZONTAL;
+        final int innerLeft = getPaddingLeft();
+        final int innerTop = getPaddingTop();
+        final int innerRight = (r - l) - getPaddingRight();
+        final int innerBottom = (b - t) - getPaddingBottom();
+        final int availablePrimary = horizontal
+                ? innerRight - innerLeft : innerBottom - innerTop;
+        final int availableCross = horizontal
+                ? innerBottom - innerTop : innerRight - innerLeft;
+
+        // Total primary extent of the (already measured) pieces plus gaps.
+        int contentPrimary = 0, visibleCount = 0;
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == GONE)
+                continue;
+            contentPrimary += horizontal
+                    ? child.getMeasuredWidth() : child.getMeasuredHeight();
+            visibleCount++;
+        }
+        contentPrimary += gap * Math.max(0, visibleCount - 1);
+
+        // Center the whole group of pieces along the tray.
+        int cursor = (horizontal ? innerLeft : innerTop)
+                + Math.max(0, (availablePrimary - contentPrimary) / 2);
+
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == GONE)
+                continue;
+            int cw = child.getMeasuredWidth();
+            int ch = child.getMeasuredHeight();
+            if (horizontal) {
+                int top = innerTop + Math.max(0, (availableCross - ch) / 2);
+                child.layout(cursor, top, cursor + cw, top + ch);
+                cursor += cw + gap;
+            } else {
+                int left = innerLeft + Math.max(0, (availableCross - cw) / 2);
+                child.layout(left, cursor, left + cw, cursor + ch);
+                cursor += ch + gap;
+            }
+        }
+    }
+
+    /** @return the child's natural width in px (at least 1). */
+    private static int naturalWidthOf(@NonNull View child) {
+        if (child instanceof PieceTrayItemView) {
+            int nw = ((PieceTrayItemView) child).getNaturalWidth();
+            if (nw > 0)
+                return nw;
+        }
+        return 1;
+    }
+
+    /** @return the child's natural height in px (at least 1). */
+    private static int naturalHeightOf(@NonNull View child) {
+        if (child instanceof PieceTrayItemView) {
+            int nh = ((PieceTrayItemView) child).getNaturalHeight();
+            if (nh > 0)
+                return nh;
+        }
+        return 1;
+    }
+}

@@ -35,7 +35,7 @@
             android:elevation="4dp"
             android:padding="@dimen/hover_control_padding"
             android:scaleType="fitCenter"
-            android:src="@drawable/ic_arrow_back" />
+            android:src="@drawable/ic_back" />
 
         <com.xmission.trevin.android.tangram.ui.TangramPuzzleView
             android:id="@+id/goal_view"
@@ -79,60 +79,48 @@
 
     </FrameLayout>
 
-    <LinearLayout
+    <com.xmission.trevin.android.tangram.ui.PieceTrayLayout
         android:id="@+id/piece_tray"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:padding="@dimen/piece_tray_padding"
-        android:weightSum="100">
+        android:padding="@dimen/piece_tray_padding">
 
         <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
             android:id="@+id/tray_small_triangle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/piece_tray_item_margin"
-            android:layout_weight="15.5"
             app:pieceType="smallTriangle"
             app:pieceCount="2" />
 
         <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
             android:id="@+id/tray_square"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/piece_tray_item_margin"
-            android:layout_weight="11.5"
             app:pieceType="square"
             app:pieceCount="1" />
 
         <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
             android:id="@+id/tray_parallelogram"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/piece_tray_item_margin"
-            android:layout_weight="22.5"
             app:pieceType="parallelogram"
             app:pieceCount="1" />
 
         <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
             android:id="@+id/tray_medium_triangle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/piece_tray_item_margin"
-            android:layout_weight="21"
             app:pieceType="mediumTriangle"
             app:pieceCount="1" />
 
         <com.xmission.trevin.android.tangram.ui.PieceTrayItemView
             android:id="@+id/tray_large_triangle"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/piece_tray_item_margin"
-            android:layout_weight="29.5"
             app:pieceType="largeTriangle"
             app:pieceCount="2" />
 
-    </LinearLayout>
+    </com.xmission.trevin.android.tangram.ui.PieceTrayLayout>
 
 </LinearLayout>

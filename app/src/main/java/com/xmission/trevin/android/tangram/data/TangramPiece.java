@@ -90,6 +90,16 @@ public abstract class TangramPiece implements Parcelable {
     }
 
     /**
+     * Set the orientation of this piece as a multiple of 45&deg;
+     * or <sup>&pi;</sup>&#8260;<sub>4</sub> radians.
+     *
+     * @param orientation the new orientation [0&ndash;8)
+     */
+    public void setRotation(float orientation) {
+        rotation = (float) (orientation - 8 * Math.floor(orientation / 8));
+    }
+
+    /**
      * Rotate this piece by a multiple of 45&deg;.
      *
      * @param steps the number of 45&deg; steps by which to
@@ -111,8 +121,7 @@ public abstract class TangramPiece implements Parcelable {
      * in degrees.  May be negative to rotate counter-clockwise.
      */
     public void fineRotateDegrees(float degreesClockwise) {
-        rotation += degreesClockwise / 45.0f;
-        rotation = (float) (rotation - 8 * Math.floor(rotation / 8));
+        setRotation(rotation + degreesClockwise / 45.0f);
     }
 
     /**

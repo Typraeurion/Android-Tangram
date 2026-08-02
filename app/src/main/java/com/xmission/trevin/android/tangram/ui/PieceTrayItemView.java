@@ -161,57 +161,22 @@ public class PieceTrayItemView extends FrameLayout {
     }
 
     /**
-     * Size the slot in the tray.  The {@code LinearLayout} weight fixes one
-     * axis (the width in portrait, the height in landscape); the other
-     * (&ldquo;cross&rdquo;) axis follows the piece image&rsquo;s aspect
-     * ratio, clamped to {@link R.dimen#piece_tray_max_thickness} so the
-     * tray doesn&rsquo;t get too thick on square or large screens.  When
-     * the image has no aspect information (or a square viewport) this
-     * degrades to a square slot.
+     * @return the natural (drawable intrinsic) width of the piece image in
+     * pixels, or 0 if unknown.  {@link PieceTrayLayout} uses this and
+     * {@link #getNaturalHeight()} to size every slot at one shared scale.
      */
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int wMode = MeasureSpec.getMode(widthMeasureSpec);
-        int hMode = MeasureSpec.getMode(heightMeasureSpec);
-        int wSize = MeasureSpec.getSize(widthMeasureSpec);
-        int hSize = MeasureSpec.getSize(heightMeasureSpec);
-        int maxThickness = getResources().getDimensionPixelSize(
-                R.dimen.piece_tray_max_thickness);
-
-        int width, height;
-        if (wMode == MeasureSpec.EXACTLY && hMode != MeasureSpec.EXACTLY) {
-            // Portrait: width fixed by weight, height is the tray thickness.
-            width = wSize;
-            height = Math.min(crossFromPrimary(width, true), maxThickness);
-        } else if (hMode == MeasureSpec.EXACTLY && wMode != MeasureSpec.EXACTLY) {
-            // Landscape: height fixed by weight, width is the tray thickness.
-            height = hSize;
-            width = Math.min(crossFromPrimary(height, false), maxThickness);
-        } else {
-            width = height = Math.min(wSize, hSize);
-        }
-        super.onMeasure(
-                MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-                MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+    public int getNaturalWidth() {
+        Drawable image = pieceImage.getDrawable();
+        return (image != null) ? image.getIntrinsicWidth() : 0;
     }
 
     /**
-     * Cross-axis size that keeps the piece image&rsquo;s aspect ratio for a
-     * given primary-axis size.  Falls back to a square (returns
-     * {@code primary}) when the image aspect is unknown.
-     *
-     * @param primary the primary-axis size in pixels
-     * @param primaryIsWidth whether the primary axis is the width (portrait)
+     * @return the natural (drawable intrinsic) height of the piece image in
+     * pixels, or 0 if unknown.
      */
-    private int crossFromPrimary(int primary, boolean primaryIsWidth) {
+    public int getNaturalHeight() {
         Drawable image = pieceImage.getDrawable();
-        float iw = (image != null) ? image.getIntrinsicWidth() : 0;
-        float ih = (image != null) ? image.getIntrinsicHeight() : 0;
-        if (iw <= 0 || ih <= 0)
-            return primary; // no aspect info: square
-        return primaryIsWidth
-                ? Math.round(primary * (ih / iw))  // height from width
-                : Math.round(primary * (iw / ih)); // width from height
+        return (image != null) ? image.getIntrinsicHeight() : 0;
     }
 
     /**

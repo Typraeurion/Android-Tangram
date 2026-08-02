@@ -65,9 +65,15 @@
     </LinearLayout>
 
     <ImageButton android:id="@+id/PreferencesButtonBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/hover_control_size"
+        android:layout_height="@dimen/hover_control_size"
         android:layout_gravity="center"
-        android:src="@drawable/ic_arrow_back" />
+        android:layout_margin="@dimen/hover_control_margin"
+        android:background="@drawable/hover_button_background"
+        android:contentDescription="@string/PlayButtonBackTooltip"
+        android:elevation="4dp"
+        android:padding="@dimen/hover_control_padding"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_back" />
 
 </LinearLayout>
