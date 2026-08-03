@@ -44,6 +44,9 @@ import java.util.Locale;
  * A static view of a Tangram puzzle showing its final shape.
  * This is used for both showing the library of available puzzles
  * and showing the goal of a game in progress.
+ *
+ * @author Trevin Beattie, based on {@link PlayTableView} code by
+ * Claude Opus 4.8
  */
 public class TangramPuzzleView extends View {
 

@@ -31,6 +31,8 @@ import org.json.JSONObject;
  * piece, i.e. <i>a</i> is one side length of a small triangle and
  * <i>b</i> is one diagonal length of the same.  This object is
  * immutable; operations on it will return a new point.
+ *
+ * @author Trevin Beattie
  */
 public class TPoint implements Parcelable {
 

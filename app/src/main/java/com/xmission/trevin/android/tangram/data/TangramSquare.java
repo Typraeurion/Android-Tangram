@@ -22,6 +22,8 @@ import com.xmission.trevin.android.tangram.R;
  * A square which is the size of two {@link TangramSmallTriangle}s
  * placed face-to-face.  This has a length of 3&#8730;2&#773; on each
  * side.  It&rsquo;s default orientation is orthogonal to the axes.
+ *
+ * @author Trevin Beattie
  */
 public class TangramSquare extends TangramPiece {
 

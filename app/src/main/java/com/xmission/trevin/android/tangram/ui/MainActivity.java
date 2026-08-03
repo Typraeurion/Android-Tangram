@@ -29,6 +29,13 @@ import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 
 import java.util.Locale;
 
+/**
+ * The front page of the app, where the user can choose to look through
+ * the library of available Tangram puzzles, start playing without any
+ * particular goal, resume a previous game, or change the app settings.
+ *
+ * @author Trevin Beattie
+ */
 public class MainActivity extends TangramActivity {
 
     private static final String LOG_TAG = "MainActivity";

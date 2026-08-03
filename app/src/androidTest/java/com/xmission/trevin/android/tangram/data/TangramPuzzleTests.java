@@ -34,6 +34,8 @@ import org.junit.Test;
 
 /**
  * Test that we're able to parse the puzzle files.
+ *
+ * @author Trevin Beattie
  */
 public class TangramPuzzleTests {
 

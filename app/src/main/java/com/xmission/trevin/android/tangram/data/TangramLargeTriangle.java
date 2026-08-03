@@ -24,6 +24,8 @@ import com.xmission.trevin.android.tangram.R;
  * This has a length of 6&#8730;2&#773; on the orthogonal sides
  * and 12 on the hypotenuse.  It&rsquo;s default orientation
  * is with the hypotenuse on the bottom.
+ *
+ * @author Trevin Beattie
  */
 public class TangramLargeTriangle extends TangramPiece {
 

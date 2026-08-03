@@ -25,6 +25,8 @@ import com.xmission.trevin.android.tangram.R;
  * on the short edge and 6 on the long edge.  It&rsquo;s default
  * orientation is with the long edge on top and bottom, and angled
  * 45&deg; counter-clockwise.
+ *
+ * @author Trevin Beattie
  */
 public class TangramParallelogram extends TangramPiece {
 

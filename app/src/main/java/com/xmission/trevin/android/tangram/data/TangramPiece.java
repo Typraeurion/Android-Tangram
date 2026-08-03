@@ -38,6 +38,8 @@ import java.util.Locale;
  * <i>a</i> + <i>b</i>&#8730;2&#773; for each of the <i>x</i> and
  * <i>y</i> coordinates where both <i>a</i> and <i>b</i> are
  * relative to the closest point to the centroid of the polygon.
+ *
+ * @author Trevin Beattie
  */
 public abstract class TangramPiece implements Parcelable {
 

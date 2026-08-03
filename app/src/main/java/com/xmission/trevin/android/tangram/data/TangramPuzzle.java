@@ -33,6 +33,8 @@ import java.util.Map;
 /**
  * Container for a Tangram.  This names a puzzle and provides the
  * placement of its pieces.
+ *
+ * @author Trevin Beattie
  */
 public class TangramPuzzle implements Parcelable {
 

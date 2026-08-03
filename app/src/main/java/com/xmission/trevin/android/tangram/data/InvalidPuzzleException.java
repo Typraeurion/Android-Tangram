@@ -21,6 +21,8 @@ package com.xmission.trevin.android.tangram.data;
  * contain the exact set of pieces needed in a Tangram
  * (two small triangles, one square, one parallelogram, one
  * medium triangle, and two large triangles).
+ *
+ * @author Trevin Beattie
  */
 public class InvalidPuzzleException extends IllegalArgumentException {
 

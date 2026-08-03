@@ -30,6 +30,12 @@ import com.xmission.trevin.android.tangram.data.TangramPreferences;
 
 import java.util.Locale;
 
+/**
+ * Lets the user manage customizable settings, such as the UI theme,
+ * layout, hint level, and directory for user-generated puzzles.
+ *
+ * @author Trevin Beattie
+ */
 public class PreferencesActivity extends TangramActivity {
 
     private static final String LOG_TAG = "PreferencesActivity";

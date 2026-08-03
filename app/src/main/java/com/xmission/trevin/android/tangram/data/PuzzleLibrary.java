@@ -39,6 +39,8 @@ import java.util.regex.Pattern;
 /**
  * This class manages the collection of puzzles available from the
  * application assets.
+ *
+ * @author Trevin Beattie
  */
 public class PuzzleLibrary {
 
