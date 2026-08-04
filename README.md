@@ -13,6 +13,11 @@ _Planned for release on F-Droid…_
 This application is free to use and modify according to the terms of
 the [Gnu General Public License (GPL) Version 3](doc/gpl-3.0.txt).
 
+Parts of this program were generated or medified by Claude Code (Opus
+4.8) which has been indispensible in making sure the app follows
+modern Android development guidelines, figuring out the maths involved
+in rendering interactive tangram pieces, and troubleshooting bugs.
+
 Instructions for building the application from source on the to-do list…
 
 ## [Keep Android Open](https://keepandroidopen.org/)

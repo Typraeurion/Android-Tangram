@@ -26,6 +26,8 @@ import androidx.annotation.Nullable;
 
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
+import com.xmission.trevin.android.tangram.data.TangramPreferences;
+import com.xmission.trevin.android.tangram.data.TangramPreferences.HintLevel;
 
 import java.util.Locale;
 
@@ -42,6 +44,8 @@ public class MainActivity extends TangramActivity {
 
     private PuzzleLibrary library;
 
+    private TangramPreferences prefs;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +53,9 @@ public class MainActivity extends TangramActivity {
                 "onCreate(%s)", savedInstanceState == null ? "" : "saved state"));
         setContentView(R.layout.activity_main);
         WindowInsetsUtil.applySafeAreaPadding(this);
+
+        prefs = TangramPreferences.getInstance(this);
+        prefs.registerHintLevelListener(new HintLevelChangeListener());
 
         Button button = findViewById(R.id.MainButtonLibrary);
         // Verify whether there are any puzzles available
@@ -72,6 +79,20 @@ public class MainActivity extends TangramActivity {
         button.setOnClickListener(new OnPreferencesSelected());
         button = findViewById(R.id.MainButtonAbout);
         button.setOnClickListener(new OnAboutSelected());
+    }
+
+    /**
+     * Called when the hint level preference has changed.
+     * This requires us to re-create the activity so that the
+     * hint theme is applied to our tangram title and icons.
+     */
+    private class HintLevelChangeListener
+            implements TangramPreferences.OnHintLevelChangedListener {
+        @Override
+        public void onHintLevelChanged(HintLevel oldLevel, HintLevel newLevel) {
+            if (newLevel != oldLevel)
+                recreate();
+        }
     }
 
     /**

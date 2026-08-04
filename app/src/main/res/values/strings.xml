@@ -39,6 +39,7 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="PlayButtonFlipTooltip">Flip the selected piece over</string>
     <string name="PlayButtonSaveTooltip">Save the completed Tangram</string>
     <string name="PlayViewGoalTooltip">Puzzle goal</string>
+    <string name="TitleTooltip">Tangram</string>
     <!-- Piece names, used for the tray slots' accessibility descriptions -->
     <string name="piece_large_triangle">Large triangle</string>
     <string name="piece_medium_triangle">Medium triangle</string>
