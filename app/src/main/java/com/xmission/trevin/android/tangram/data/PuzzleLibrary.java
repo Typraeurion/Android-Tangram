@@ -161,7 +161,7 @@ public class PuzzleLibrary {
     }
 
     /**
-     * Get a puzzle from the library
+     * Get a specific puzzle from the library
      *
      * @param index the index of the puzzle to retrieve
      *
@@ -172,6 +172,18 @@ public class PuzzleLibrary {
      */
     public TangramPuzzle getPuzzle(int index) {
         return puzzles.get(index);
+    }
+
+    /**
+     * Get a random puzzle from the library.
+     *
+     * @return a puzzle if any are available, or {@code null}
+     * if the library is empty.
+     */
+    public TangramPuzzle getRandomPuzzle() {
+        if (puzzles.isEmpty())
+            return null;
+        return puzzles.get((int) (Math.random() * puzzles.size()));
     }
 
 }

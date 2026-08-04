@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -119,23 +120,23 @@ public class PlayActivity extends TangramActivity {
     private void setUpOverlayControls(@Nullable TangramPuzzle goal) {
         findViewById(R.id.button_back).setOnClickListener(v -> finish());
 
-        // To Do: render the goal as a target silhouette; for now this is
-        // just a placeholder panel that only appears in puzzle mode.
+        FrameLayout goalFrame = findViewById(R.id.goal_view_frame);
         TangramPuzzleView goalView = findViewById(R.id.goal_view);
         if (goal != null) {
             goalView.setPuzzle(goal);
-            goalView.setVisibility(View.VISIBLE);
+            goalFrame.setVisibility(View.VISIBLE);
         } else {
-            goalView.setVisibility(View.GONE);
+            goalFrame.setVisibility(View.GONE);
         }
 
+        final FrameLayout flipFrame = findViewById(R.id.button_flip_frame);
         ImageButton flipButton = findViewById(R.id.button_flip);
         flipButton.setOnClickListener(v -> playTableView.flipSelectedPiece());
         playTableView.setOnSelectionChangedListener(selected ->
-                flipButton.setVisibility(canFlip(selected)
+                flipFrame.setVisibility(canFlip(selected)
                         ? View.VISIBLE : View.GONE));
         // Reflect the current selection (normally none on a fresh start).
-        flipButton.setVisibility(
+        flipFrame.setVisibility(
                 canFlip(playTableView.getSelectedPiece())
                         ? View.VISIBLE : View.GONE);
     }
@@ -161,8 +162,7 @@ public class PlayActivity extends TangramActivity {
 
                 case DragEvent.ACTION_DROP:
                     Object state = event.getLocalState();
-                    if (state instanceof PieceTrayItemView) {
-                        PieceTrayItemView slot = (PieceTrayItemView) state;
+                    if (state instanceof PieceTrayItemView slot) {
                         if (slot.getCount() > 0) {
                             TangramPiece piece = slot.createPiece();
                             playTableView.addPieceAtViewLocation(
@@ -191,8 +191,7 @@ public class PlayActivity extends TangramActivity {
         ViewGroup tray = findViewById(R.id.piece_tray);
         for (int i = 0; i < tray.getChildCount(); i++) {
             View child = tray.getChildAt(i);
-            if (child instanceof PieceTrayItemView) {
-                PieceTrayItemView slot = (PieceTrayItemView) child;
+            if (child instanceof PieceTrayItemView slot) {
                 if (slot.accepts(piece)) {
                     slot.setCount(slot.getCount() + 1);
                     return;

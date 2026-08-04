@@ -262,17 +262,16 @@ public class TPoint implements Parcelable {
     /**
      * Create a point from a {@link Parcel}.
      */
-    public static final Creator<TPoint> CREATOR =
-            new Creator<TPoint>() {
-                @Override
-                public TPoint createFromParcel(Parcel in) {
-                    return new TPoint(in);
-                }
-                @Override
-                public TPoint[] newArray(int size) {
-                    return new TPoint[size];
-                }
-            };
+    public static final Creator<TPoint> CREATOR =new Creator<>() {
+        @Override
+        public TPoint createFromParcel(Parcel in) {
+            return new TPoint(in);
+        }
+        @Override
+        public TPoint[] newArray(int size) {
+            return new TPoint[size];
+        }
+    };
 
     /**
      * The {@link Parcel} for this object contains no special objects.

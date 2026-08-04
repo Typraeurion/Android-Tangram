@@ -44,15 +44,11 @@ public class TangramApp extends Application {
             // and apply them to the application's theme
             TangramPreferences prefs = TangramPreferences.getInstance(this);
             TangramPreferences.UITheme theme = prefs.getUITheme();
-            int nightMode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
-            switch (theme) {
-                case LIGHT:
-                    nightMode = AppCompatDelegate.MODE_NIGHT_NO;
-                    break;
-                case DARK:
-                    nightMode = AppCompatDelegate.MODE_NIGHT_YES;
-                    break;
-            }
+            int nightMode = switch (theme) {
+                case LIGHT -> AppCompatDelegate.MODE_NIGHT_NO;
+                case DARK -> AppCompatDelegate.MODE_NIGHT_YES;
+                default -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+            };
             AppCompatDelegate.setDefaultNightMode(nightMode);
 
             // NOTE: the hint level's theme is NOT applied here.  An

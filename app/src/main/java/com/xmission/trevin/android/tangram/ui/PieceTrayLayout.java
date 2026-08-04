@@ -158,10 +158,9 @@ public class PieceTrayLayout extends ViewGroup {
             contentPrimary += primaryPx;
         }
         contentPrimary += totalGap;
-        int contentCross = thickness;
 
-        int desiredW = (horizontal ? contentPrimary : contentCross) + paddingH;
-        int desiredH = (horizontal ? contentCross : contentPrimary) + paddingV;
+        int desiredW = (horizontal ? contentPrimary : thickness) + paddingH;
+        int desiredH = (horizontal ? thickness : contentPrimary) + paddingV;
         setMeasuredDimension(
                 resolveSize(desiredW, widthMeasureSpec),
                 resolveSize(desiredH, heightMeasureSpec));

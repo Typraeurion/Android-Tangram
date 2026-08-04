@@ -2,4 +2,6 @@
 <resources>
     <color name="foreground">@color/white_smoke</color>
     <color name="background">@color/gray7</color>
+    <color name="shadow_background">#99121212</color>
+    <color name="translucent_background">#33121212</color>
 </resources>

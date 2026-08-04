@@ -21,7 +21,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.xmission.trevin.android.tangram.R;
@@ -44,8 +46,6 @@ public class MainActivity extends TangramActivity {
 
     private PuzzleLibrary library;
 
-    private TangramPreferences prefs;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,27 +54,34 @@ public class MainActivity extends TangramActivity {
         setContentView(R.layout.activity_main);
         WindowInsetsUtil.applySafeAreaPadding(this);
 
-        prefs = TangramPreferences.getInstance(this);
+        TangramPreferences prefs = TangramPreferences.getInstance(this);
         prefs.registerHintLevelListener(new HintLevelChangeListener());
 
         Button button = findViewById(R.id.MainButtonLibrary);
+        Button button2 = findViewById(R.id.MainButtonRandom);
         // Verify whether there are any puzzles available
         library = PuzzleLibrary.getInstance();
         try {
             if (!library.isInitialized())
                 library.loadPuzzles(this);
-            if (library.size() > 0)
+            if (library.size() > 0) {
                 button.setOnClickListener(new OnLibrarySelected());
-            else
+                button2.setOnClickListener(new OnRandomPuzzleSelected());
+            } else {
                 // No puzzles found; hide the library button
                 button.setVisibility(View.GONE);
+                button2.setVisibility(View.GONE);
+            }
         } catch (Exception e) {
             // The error should have been logged by the library;
-            // just hide the library button
+            // just hide the library and random puzzle buttons
             button.setVisibility(View.GONE);
+            button2.setVisibility(View.GONE);
         }
         button = findViewById(R.id.MainButtonSketch);
         button.setOnClickListener(new OnFreePlaySelected());
+        button = findViewById(R.id.MainButtonResume);
+        button.setOnClickListener(new OnResumeSelected());
         button = findViewById(R.id.MainButtonPreferences);
         button.setOnClickListener(new OnPreferencesSelected());
         button = findViewById(R.id.MainButtonAbout);
@@ -89,9 +96,8 @@ public class MainActivity extends TangramActivity {
     private class HintLevelChangeListener
             implements TangramPreferences.OnHintLevelChangedListener {
         @Override
-        public void onHintLevelChanged(HintLevel oldLevel, HintLevel newLevel) {
-            if (newLevel != oldLevel)
-                recreate();
+        public void onHintLevelChanged(@NonNull HintLevel newLevel) {
+            recreate();
         }
     }
 
@@ -103,13 +109,25 @@ public class MainActivity extends TangramActivity {
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnLibrarySelected.onClick");
             // To Do: Start the puzzle library activity.
-            // For now, so long as we have one puzzle in the library, use it.
+            Toast.makeText(MainActivity.this,
+                    "Library not yet implemented",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Called when the user selects a random puzzle
+     */
+    private class OnRandomPuzzleSelected implements View.OnClickListener {
+        @Override
+        public void onClick(View view) {
+            Log.d(LOG_TAG, "OnRandomPuzzleSelected.onClick");
             if (library.size() <= 0) {
                 view.setEnabled(false);
                 return;
             }
-            Intent intent = PlayActivity.createIntent(MainActivity.this,
-                    library.getPuzzle(0));
+            Intent intent = PlayActivity.createIntent(
+                    MainActivity.this, library.getRandomPuzzle());
             startActivity(intent);
         }
     }
@@ -121,7 +139,8 @@ public class MainActivity extends TangramActivity {
         @Override
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnFreePlaySelected.onClick");
-            Intent intent = PlayActivity.createIntent(MainActivity.this, null);
+            Intent intent = PlayActivity.createIntent(
+                    MainActivity.this, null);
             startActivity(intent);
         }
     }
@@ -134,6 +153,9 @@ public class MainActivity extends TangramActivity {
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnResumeSelected.onClick");
             // To Do: Start PlayActivity with the saved puzzle
+            Toast.makeText(MainActivity.this,
+                    "Resuming prior game not yet implemented",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

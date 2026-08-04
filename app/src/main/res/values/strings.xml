@@ -1,6 +1,6 @@
 <resources>
     <string name="InfoPopupText">Tangram\n
-version 0.1 (2026.07.23)\n
+version 0.1 (2026.08.04)\n
 by Trevin Beattie\n
 \n
 Documentation for this app can be found on its GitHub project page
@@ -21,12 +21,11 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="ButtonSave">Save Pattern</string>
     <string name="InfoButtonOK">OK</string>
     <string name="MenuAbout">About&#8230;</string>
-    <string name="MenuLibrary">Puzzle Library</string>
+    <string name="MenuLibrary">Browse Library</string>
     <string name="MenuPreferences">Preferences</string>
+    <string name="MenuRandom">Random Puzzle</string>
     <string name="MenuResume">Resume Puzzle In Progress</string>
     <string name="MenuSketch">Free-form</string>
-    <string name="ModeFree">Free-form</string>
-    <string name="ModePuzzle">Random Puzzle</string>
     <string name="PrefsTextHintLevel">Hint Level: </string>
     <string name="PrefsTextHintNone">No Hints</string>
     <string name="PrefsTextHintOutline">Outline Pieces</string>
@@ -35,9 +34,13 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="PrefsTextThemeDefault">System Default</string>
     <string name="PrefsTextThemeLight">Light</string>
     <string name="PrefsTextUITheme">UI Theme: </string>
+    <string name="PlayButtonBackText">Exit</string>
     <string name="PlayButtonBackTooltip">Back to main menu</string>
+    <string name="PlayButtonFlipText">Flip</string>
     <string name="PlayButtonFlipTooltip">Flip the selected piece over</string>
+    <string name="PlayButtonSaveText">Save</string>
     <string name="PlayButtonSaveTooltip">Save the completed Tangram</string>
+    <string name="PlayViewGoalText">Goal</string>
     <string name="PlayViewGoalTooltip">Puzzle goal</string>
     <string name="TitleTooltip">Tangram</string>
     <!-- Piece names, used for the tray slots' accessibility descriptions -->

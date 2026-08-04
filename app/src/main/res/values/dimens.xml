@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Size of one square slot in the piece tray. -->
-    <dimen name="piece_tray_item_size">72dp</dimen>
     <!-- Gap around each slot in the piece tray. -->
     <dimen name="piece_tray_item_margin">6dp</dimen>
     <!-- Padding inside the tray strip, around the row/column of slots. -->
@@ -13,8 +11,11 @@
     <!-- Hovering play-area controls (back button, goal preview). -->
     <dimen name="hover_control_size">48dp</dimen>
     <dimen name="hover_control_margin">12dp</dimen>
-    <dimen name="hover_control_padding">10dp</dimen>
+    <dimen name="hover_control_padding">6dp</dimen>
+    <dimen name="hover_control_background_radius">16dp</dimen>
     <dimen name="goal_view_size">88dp</dimen>
+    <dimen name="hover_text_padding">2dp</dimen>
+    <dimen name="hover_text_background_radius">8dp</dimen>
 
     <!-- Contextual flip button, centered near the bottom of the play area. -->
     <dimen name="flip_button_size">56dp</dimen>

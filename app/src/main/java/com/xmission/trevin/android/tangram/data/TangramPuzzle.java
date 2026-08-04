@@ -53,7 +53,7 @@ public class TangramPuzzle implements Parcelable {
      * The value must be at least 12, which is the size of the
      * square the Tangram pieces are cut from.
      */
-    protected float size = 12;
+    protected float size;
     protected TangramPiece[] pieces;
 
     /**
@@ -96,7 +96,7 @@ public class TangramPuzzle implements Parcelable {
         } catch (JSONException e) {
             JSONException wrappedException = new JSONException(
                     String.format(Locale.US,
-                    "Invalid piece in puzzle \"%s\" at index ",
+                    "Invalid piece in puzzle \"%s\" at index %d",
                     name, i));
             // We have to do this separate from the constructor since
             // older Android SDK's did not implement the 2-arg constructor.
@@ -180,8 +180,8 @@ public class TangramPuzzle implements Parcelable {
         json.put(JSON_NAME, name);
         json.put(JSON_SIZE, size);
         JSONArray jsonPieces = new JSONArray();
-        for (int i = 0; i < pieces.length; i++)
-            jsonPieces.put(pieces[i].toJSON());
+        for (TangramPiece piece : pieces)
+            jsonPieces.put(piece.toJSON());
         json.put(JSON_PIECES, jsonPieces);
         return json;
     }
@@ -206,17 +206,16 @@ public class TangramPuzzle implements Parcelable {
     /**
      * Create a puzzle from a {@link Parcel}.
      */
-    public static final Creator<TangramPuzzle> CREATOR =
-            new Creator<TangramPuzzle>() {
-                @Override
-                public TangramPuzzle createFromParcel(Parcel in) {
-                    return new TangramPuzzle(in);
-                }
-                @Override
-                public TangramPuzzle[] newArray(int size) {
-                    return new TangramPuzzle[size];
-                }
-            };
+    public static final Creator<TangramPuzzle> CREATOR = new Creator<>() {
+        @Override
+        public TangramPuzzle createFromParcel(Parcel in) {
+            return new TangramPuzzle(in);
+        }
+        @Override
+        public TangramPuzzle[] newArray(int size) {
+            return new TangramPuzzle[size];
+        }
+    };
 
     /**
      * The {@link Parcel} for this object contains no special objects.

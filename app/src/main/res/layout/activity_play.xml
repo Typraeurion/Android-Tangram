@@ -27,58 +27,122 @@
         <!-- Hovering controls.  Back and goal default to opposite top
              corners; their placement is intended to become user-
              customizable (handedness / preference) later. -->
-        <ImageButton
-            android:id="@+id/button_back"
+        <FrameLayout
+            android:id="@+id/button_back_frame"
             android:layout_width="@dimen/hover_control_size"
             android:layout_height="@dimen/hover_control_size"
             android:layout_gravity="top|start"
-            android:layout_margin="@dimen/hover_control_margin"
-            android:background="@drawable/hover_button_background"
-            android:contentDescription="@string/PlayButtonBackTooltip"
-            android:elevation="4dp"
-            android:padding="@dimen/hover_control_padding"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_back" />
+            android:layout_margin="@dimen/hover_control_margin">
+            <ImageButton
+                android:id="@+id/button_back"
+                android:layout_width="@dimen/hover_control_size"
+                android:layout_height="@dimen/hover_control_size"
+                android:background="@drawable/hover_button_background"
+                android:contentDescription="@string/PlayButtonBackTooltip"
+                android:elevation="4dp"
+                android:padding="@dimen/hover_control_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_back"
+                android:stateListAnimator="@null"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:padding="@dimen/hover_text_padding"
+                android:elevation="5dp"
+                android:background="@drawable/hover_text_background"
+                android:textColor="@color/foreground"
+                android:text="@string/PlayButtonBackText"
+                android:clickable="false"
+                android:focusable="false" />
+        </FrameLayout>
 
-        <com.xmission.trevin.android.tangram.ui.TangramPuzzleView
-            android:id="@+id/goal_view"
+        <FrameLayout
+            android:id="@+id/goal_view_frame"
             android:layout_width="@dimen/goal_view_size"
             android:layout_height="@dimen/goal_view_size"
             android:layout_gravity="top|end"
-            android:layout_margin="@dimen/hover_control_margin"
-            android:padding="@dimen/piece_tray_padding"
-            android:background="@drawable/hover_panel_background"
-            android:contentDescription="@string/PlayViewGoalTooltip"
-            android:elevation="4dp"
-            android:scaleType="fitCenter" />
+            android:layout_margin="@dimen/hover_control_margin">
+            <com.xmission.trevin.android.tangram.ui.TangramPuzzleView
+                android:id="@+id/goal_view"
+                android:layout_width="@dimen/goal_view_size"
+                android:layout_height="@dimen/goal_view_size"
+                android:padding="@dimen/piece_tray_padding"
+                android:contentDescription="@string/PlayViewGoalTooltip"
+                android:elevation="4dp"
+                android:scaleType="fitCenter" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:padding="@dimen/hover_text_padding"
+                android:elevation="5dp"
+                android:background="@drawable/hover_text_background"
+                android:textColor="@color/foreground"
+                android:text="@string/PlayViewGoalText"
+                android:clickable="false"
+                android:focusable="false" />
+        </FrameLayout>
 
-        <ImageButton
-            android:id="@+id/button_save"
+        <FrameLayout
+            android:id="@+id/button_save_frame"
             android:layout_width="@dimen/hover_control_size"
             android:layout_height="@dimen/hover_control_size"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/hover_control_margin"
-            android:background="@drawable/hover_button_background"
-            android:contentDescription="@string/PlayButtonSaveTooltip"
-            android:elevation="4dp"
-            android:padding="@dimen/hover_control_padding"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_save"
-            android:visibility="gone"/>
+            android:visibility="gone">
+            <ImageButton
+                android:id="@+id/button_save"
+                android:layout_width="@dimen/hover_control_size"
+                android:layout_height="@dimen/hover_control_size"
+                android:background="@drawable/hover_button_background"
+                android:contentDescription="@string/PlayButtonSaveTooltip"
+                android:elevation="4dp"
+                android:padding="@dimen/hover_control_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_save"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:padding="@dimen/hover_text_padding"
+                android:elevation="5dp"
+                android:background="@drawable/hover_text_background"
+                android:textColor="@color/foreground"
+                android:text="@string/PlayButtonSaveText"
+                android:clickable="false"
+                android:focusable="false" />
+        </FrameLayout>
 
-        <ImageButton
-            android:id="@+id/button_flip"
+        <FrameLayout
+            android:id="@+id/button_flip_frame"
             android:layout_width="@dimen/flip_button_size"
             android:layout_height="@dimen/flip_button_size"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginBottom="@dimen/flip_button_margin_bottom"
-            android:background="@drawable/hover_button_background"
-            android:contentDescription="@string/PlayButtonFlipTooltip"
-            android:elevation="4dp"
-            android:padding="@dimen/hover_control_padding"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_flip_parallelogram"
-            android:visibility="gone" />
+            android:visibility="gone" >
+            <ImageButton
+                android:id="@+id/button_flip"
+                android:layout_width="@dimen/flip_button_size"
+                android:layout_height="@dimen/flip_button_size"
+                android:background="@drawable/hover_button_background"
+                android:contentDescription="@string/PlayButtonFlipTooltip"
+                android:elevation="4dp"
+                android:padding="@dimen/hover_control_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_flip_parallelogram" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:padding="@dimen/hover_text_padding"
+                android:elevation="5dp"
+                android:background="@drawable/hover_text_background"
+                android:textColor="@color/foreground"
+                android:text="@string/PlayButtonFlipText"
+                android:clickable="false"
+                android:focusable="false" />
+        </FrameLayout>
 
     </FrameLayout>
 

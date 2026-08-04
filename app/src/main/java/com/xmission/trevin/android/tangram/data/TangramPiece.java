@@ -296,33 +296,32 @@ public abstract class TangramPiece implements Parcelable {
      * abstract class because none of the concrete implementations add
      * any of their own fields.
      */
-    public static final Creator<TangramPiece> CREATOR =
-            new Creator<TangramPiece>() {
-                @Override
-                public TangramPiece createFromParcel(Parcel in) {
-                    String name = in.readString();
-                    TangramPiece piece = (name == null) ? null : switch(name) {
-                        case TangramSmallTriangle.JSON_NAME -> new TangramSmallTriangle();
-                        case TangramSquare.JSON_NAME -> new TangramSquare();
-                        case TangramParallelogram.JSON_NAME -> new TangramParallelogram();
-                        case TangramMediumTriangle.JSON_NAME -> new TangramMediumTriangle();
-                        case TangramLargeTriangle.JSON_NAME -> new TangramLargeTriangle();
-                        default -> null;
-                    };
-                    if (piece == null)
-                        throw new ParcelFormatException(name == null
-                                ? "Missing piece name"
-                                : "Unknown piece name: " + name);
-                    piece.position = TPoint.CREATOR.createFromParcel(in);
-                    piece.rotation = in.readFloat();
-                    piece.isMirrored = in.readByte() != 0;
-                    return piece;
-                }
-                @Override
-                public TangramPiece[] newArray(int size) {
-                    return new TangramPiece[size];
-                }
+    public static final Creator<TangramPiece> CREATOR = new Creator<>() {
+        @Override
+        public TangramPiece createFromParcel(Parcel in) {
+            String name = in.readString();
+            TangramPiece piece = (name == null) ? null : switch(name) {
+                case TangramSmallTriangle.JSON_NAME -> new TangramSmallTriangle();
+                case TangramSquare.JSON_NAME -> new TangramSquare();
+                case TangramParallelogram.JSON_NAME -> new TangramParallelogram();
+                case TangramMediumTriangle.JSON_NAME -> new TangramMediumTriangle();
+                case TangramLargeTriangle.JSON_NAME -> new TangramLargeTriangle();
+                default -> null;
             };
+            if (piece == null)
+                throw new ParcelFormatException(name == null
+                        ? "Missing piece name"
+                        : "Unknown piece name: " + name);
+            piece.position = TPoint.CREATOR.createFromParcel(in);
+            piece.rotation = in.readFloat();
+            piece.isMirrored = in.readByte() != 0;
+            return piece;
+        }
+        @Override
+        public TangramPiece[] newArray(int size) {
+            return new TangramPiece[size];
+        }
+    };
 
     /**
      * The {@link Parcel} for this object contains no special objects.

@@ -1,79 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     android:fillViewport="true">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp">
 
     <!-- The title is the word "TANGRAM" made out of tangrams.
          See: https://www.shutterstock.com/search/tangram-alphabet
          for a number of examples of how letters can be created;
          https://www.shutterstock.com/image-vector/alphabet-font-abc-tangram-collection-vector-2270175397
          may be the best one. -->
-        <!-- FIXME: this should be sized at 90% of the screen height, not 90% of its width. -->
         <ImageView
             android:id="@+id/app_title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:src="@drawable/title"
+            android:adjustViewBounds="true"
+            android:src="@drawable/title_rotated"
             android:contentDescription="@string/TitleTooltip"
-            app:layout_constraintWidth_max="320dp"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintWidth_percent="0.9"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_max="320dp"
+            app:layout_constraintHeight_percent="0.9"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintDimensionRatio="394:65" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttons_view"/>
 
-        <!-- To Do: Make this a designer button. -->
-        <Button android:id="@+id/MainButtonLibrary"
-            android:text="@string/MenuLibrary"
-            android:layout_width="0dp"
+    <ScrollView
+        android:id="@+id/buttons_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintWidth_max="320dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/app_title"
+        app:layout_constraintStart_toEndOf="@+id/app_title"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/app_title"
-            app:layout_constraintEnd_toEndOf="@id/app_title"
-            app:layout_constraintTop_toBottomOf="@id/app_title" />
+            android:orientation="vertical">
+            <!-- To Do: Make this a designer button. -->
+            <Button
+                android:id="@+id/MainButtonLibrary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MenuLibrary" />
 
-        <!-- To Do: Make this a designer button. -->
-        <Button android:id="@+id/MainButtonSketch"
-            android:text="@string/MenuSketch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/app_title"
-            app:layout_constraintEnd_toEndOf="@id/app_title"
-            app:layout_constraintTop_toBottomOf="@id/MainButtonLibrary" />
+            <!-- To Do: Make this a designer button. -->
+            <Button
+                android:id="@+id/MainButtonRandom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MenuRandom" />
 
-    <!-- This button should be hidden unless there is a game in progress
+            <!-- To Do: Make this a designer button. -->
+            <Button
+                android:id="@+id/MainButtonSketch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MenuSketch" />
+
+            <!-- This button should be hidden unless there is a game in progress
          and the user has navigated back to the main screen. -->
-        <Button android:id="@+id/MainButtonResume"
-            android:text="@string/MenuResume"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/app_title"
-            app:layout_constraintEnd_toEndOf="@id/app_title"
-            app:layout_constraintTop_toBottomOf="@id/MainButtonSketch" />
+            <Button
+                android:id="@+id/MainButtonResume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MenuResume" />
 
-        <!-- To Do: Make this an image button using the "wrench" tangram. -->
-        <Button android:id="@+id/MainButtonPreferences"
-            android:text="@string/MenuPreferences"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/app_title"
-            app:layout_constraintEnd_toEndOf="@id/app_title"
-            app:layout_constraintTop_toBottomOf="@id/MainButtonResume" />
+            <!-- To Do: Make this an image button using the "wrench" tangram. -->
+            <Button
+                android:id="@+id/MainButtonPreferences"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MenuPreferences" />
 
-        <!-- To Do: Make this an image button using an "(i)" icon. -->
-        <Button android:id="@+id/MainButtonAbout"
-            android:text="@string/MenuAbout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@id/app_title"
-            app:layout_constraintEnd_toEndOf="@id/app_title"
-            app:layout_constraintTop_toBottomOf="@id/MainButtonPreferences" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+            <!-- To Do: Make this an image button using an "(i)" icon. -->
+            <Button
+                android:id="@+id/MainButtonAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/MenuAbout" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

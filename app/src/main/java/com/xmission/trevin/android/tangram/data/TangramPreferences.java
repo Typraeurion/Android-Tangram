@@ -30,7 +30,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Wrapper around @link{SharedPreferences} which provides accessors
@@ -138,11 +137,9 @@ public class TangramPreferences
         /**
          * Called when the UI theme has been changed.
          *
-         * @param oldTheme the previous setting for the theme
          * @param newTheme the theme that was set
          */
-        void onUIThemeChanged(@NonNull UITheme oldTheme,
-                              @NonNull UITheme newTheme);
+        void onUIThemeChanged(@NonNull UITheme newTheme);
     }
 
     /**
@@ -152,11 +149,9 @@ public class TangramPreferences
         /**
          * Called when the hint level has been changed.
          *
-         * @param oldHint the previous setting for the hint level
          * @param newHint the hint level that was set
          */
-        void onHintLevelChanged(@NonNull HintLevel oldHint,
-                                @NonNull HintLevel newHint);
+        void onHintLevelChanged(@NonNull HintLevel newHint);
     }
 
     /**
@@ -577,16 +572,15 @@ public class TangramPreferences
      * Call back the {@code onUIThemeChanged} method of all UI theme listeners.
      */
     private class UIThemeCallbackRunner implements Runnable {
-        private final UITheme oldTheme, newTheme;
-        UIThemeCallbackRunner(UITheme oldTheme, UITheme newTheme) {
-            this.oldTheme = oldTheme;
+        private final UITheme newTheme;
+        UIThemeCallbackRunner(UITheme newTheme) {
             this.newTheme = newTheme;
         }
         @Override
         public void run() {
             synchronized(uiThemeListeners) {
                 for (OnUIThemeChangedListener listener : uiThemeListeners) {
-                    listener.onUIThemeChanged(oldTheme, newTheme);
+                    listener.onUIThemeChanged(newTheme);
                 }
             }
         }
@@ -596,16 +590,15 @@ public class TangramPreferences
      * Call back the {@code onHintLevelChanged} method of all hint level listeners.
      */
     private class HintLevelCallbackRunner implements Runnable {
-        private final HintLevel oldLevel, newLevel;
-        HintLevelCallbackRunner(HintLevel oldLevel, HintLevel newLevel) {
-            this.oldLevel = oldLevel;
+        private final HintLevel newLevel;
+        HintLevelCallbackRunner(HintLevel newLevel) {
             this.newLevel = newLevel;
         }
         @Override
         public void run() {
             synchronized(hintLevelListeners) {
                 for (OnHintLevelChangedListener listener : hintLevelListeners) {
-                    listener.onHintLevelChanged(oldLevel, newLevel);
+                    listener.onHintLevelChanged(newLevel);
                 }
             }
         }
@@ -646,7 +639,7 @@ public class TangramPreferences
                 UITheme newTheme = getUITheme();
                 if (newTheme != oldTheme) {
                     UIThemeCallbackRunner uiRunner =
-                            new UIThemeCallbackRunner(oldTheme, newTheme);
+                            new UIThemeCallbackRunner(newTheme);
                     if (uiHandler == null)
                         uiRunner.run();
                     else
@@ -659,7 +652,7 @@ public class TangramPreferences
                 HintLevel newHint = getHintLevel();
                 if (newHint != oldHint) {
                     HintLevelCallbackRunner hintRunner =
-                            new HintLevelCallbackRunner(oldHint, newHint);
+                            new HintLevelCallbackRunner(newHint);
                     if (uiHandler == null)
                         hintRunner.run();
                     else
@@ -692,6 +685,17 @@ public class TangramPreferences
                         cornerRunner.run();
                     else
                         uiHandler.post(cornerRunner);
+                }
+                switch (key) {
+                    case PREF_BACK_BUTTON_CORNER:
+                        oldBackButtonCorner = newCorner;
+                        break;
+                    case PREF_GOAL_CORNER:
+                        oldGoalCorner = newCorner;
+                        break;
+                    case PREF_SAVE_BUTTON_CORNER:
+                        oldSaveButtonCorner = newCorner;
+                        break;
                 }
 
             case PREF_USER_PUZZLES_DIR:
