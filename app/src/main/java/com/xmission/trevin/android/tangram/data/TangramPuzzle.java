@@ -18,6 +18,7 @@ package com.xmission.trevin.android.tangram.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,9 +27,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Container for a Tangram.  This names a puzzle and provides the
@@ -37,6 +40,11 @@ import java.util.Map;
  * @author Trevin Beattie
  */
 public class TangramPuzzle implements Parcelable {
+
+    public static final String LOG_TAG = "TangramPuzzle";
+
+    /** JSON key for the ID of the puzzle */
+    public static final String JSON_ID = "id";
 
     /** JSON key for the name of the puzzle */
     public static final String JSON_NAME = "name";
@@ -47,6 +55,21 @@ public class TangramPuzzle implements Parcelable {
     /** JSON Key for the array of pieces of the puzzle */
     public static final String JSON_PIECES = "pieces";
 
+    /**
+     * The file that the puzzle came from, if any.
+     * Not set if the puzzle is created in-game.
+     */
+    protected @Nullable String sourceFileName;
+
+    /**
+     * Identifier for the puzzle from the JSON file; should be
+     * unique among all puzzles in the same file.  Not set
+     * for puzzles which haven&rsquo;t been read from a file
+     * or stored to a file yet.
+     */
+    protected @Nullable String id;
+
+    /** Display name of the puzzle.  This may be a translation. */
     protected @Nullable String name;
     /**
      * The larger of width or height of the puzzle.
@@ -54,7 +77,7 @@ public class TangramPuzzle implements Parcelable {
      * square the Tangram pieces are cut from.
      */
     protected float size;
-    protected TangramPiece[] pieces;
+    protected @NonNull TangramPiece[] pieces;
 
     /**
      * Default constructor.  The puzzle is unnamed and will have
@@ -86,6 +109,7 @@ public class TangramPuzzle implements Parcelable {
      */
     public TangramPuzzle(JSONObject json)
             throws InvalidPuzzleException, JSONException {
+        id = json.getString(JSON_ID);
         name = json.getString(JSON_NAME);
         // To Do: Check for a translation table
         size = (float) json.getDouble(JSON_SIZE);
@@ -111,9 +135,64 @@ public class TangramPuzzle implements Parcelable {
      * Create a puzzle from a {@link Parcel}.
      */
     private TangramPuzzle(Parcel in) {
+        sourceFileName = in.readString();
+        id = in.readString();
         name = in.readString();
         size = in.readFloat();
-        pieces = in.createTypedArray(TangramPiece.CREATOR);
+        TangramPiece[] piecesIn = in.createTypedArray(TangramPiece.CREATOR);
+        if (piecesIn != null) {
+            pieces = piecesIn;
+        } else {
+            Log.e(LOG_TAG, "TangramPuzzle parcel has no pieces!");
+            pieces = new TangramPiece[0];
+        }
+    }
+
+    /**
+     * @return the file that the puzzle came from, or
+     * {@code null} if the puzzle was created in-game.
+     */
+    public @Nullable String getSourceFileName() {
+        return sourceFileName;
+    }
+
+    /**
+     * Set the name of the file that the puzzle came from.
+     */
+    public void setSourceFileName(@NonNull String fileName) {
+        sourceFileName = fileName;
+    }
+
+    /**
+     * @return the ID of the puzzle, or {@code null}
+     * if the puzzle has no ID yet.
+     */
+    public @Nullable String getId() {
+        return id;
+    }
+
+    /**
+     * Set the ID of the puzzle
+     *
+     * @param newId the ID to set
+     */
+    public void setId(@NonNull String newId) {
+        id = newId;
+    }
+
+    /**
+     * @return the display name of the puzzle, or
+     * an empty string if it has no name.
+     */
+    public @NonNull String getName() {
+        return (name == null) ? "" : name;
+    }
+
+    /**
+     * Set the display name of the puzzle
+     */
+    public void setName(@NonNull String newName) {
+        name = newName;
     }
 
     /** @return the number of pieces in the puzzle (normally 7) */
@@ -156,6 +235,18 @@ public class TangramPuzzle implements Parcelable {
      *     <li>1 square</li>
      *     <li>2 small triangles</li>
      * </ul>
+     * and all pieces must be touching and not overlap.
+     * Ideally the pieces should be oriented at multiples of 45&deg;
+     * (or in a few cases a multiple of 22.5&deg;), aligned to
+     * puzzle grid units, and centered around the origin, but this
+     * method doesn&rsquo;t impose a hard constraint on that.
+     * <p>
+     *     <i>Note: the method currently doesn&rsquo;t check for
+     *     overlaps or non-touching pieces, while we&rsquo;re working
+     *     on creating the puzzle library&hellip;</i>
+     * </p>
+     *
+     * @return true if all expected pieces are present, false otherwise
      */
     public boolean isValid() {
         if (pieces.length != 7)
@@ -177,6 +268,7 @@ public class TangramPuzzle implements Parcelable {
      */
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
+        json.put(JSON_ID, id);
         json.put(JSON_NAME, name);
         json.put(JSON_SIZE, size);
         JSONArray jsonPieces = new JSONArray();
@@ -195,6 +287,8 @@ public class TangramPuzzle implements Parcelable {
      */
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(sourceFileName);
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeFloat(size);
         // Use writeTypedArray (paired with createTypedArray in our CREATOR):
@@ -225,6 +319,65 @@ public class TangramPuzzle implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(getClass().getSimpleName())
+                .append('[');
+        if (sourceFileName != null)
+            sb.append("source=\"").append(sourceFileName).append("\", ");
+        if (id != null)
+            sb.append("id=\"").append(id).append("\", ");
+        if (name != null)
+            sb.append("name=\"").append(name).append("\", ");
+        sb.append("size=").append(size);
+        sb.append(']');
+        return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        if (sourceFileName != null)
+            hash += sourceFileName.hashCode();
+        hash *= 31;
+        if (id != null)
+            hash += id.hashCode();
+        hash *= 31;
+        if (name != null)
+            hash += name.hashCode();
+        hash *= 31;
+        hash += Float.hashCode(size);
+        hash *= 31;
+        for (TangramPiece piece : pieces)
+            hash += piece.hashCode();
+        return hash;
+    }
+
+    /**
+     * For two TangramPuzzles to be the same, they must have the same
+     * source, ID, and pieces.  We&rsquo;ll let the names be different
+     * because one may be translated differently than the other, and
+     * the sizes are only advisory.
+     *
+     * @param o the other object to compare this to
+     *
+     * @return {@code true} if the object is a TangramPuzzle identical to
+     * this one, {@code false} otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof TangramPuzzle p2) {
+            if (!Objects.equals(sourceFileName, p2.sourceFileName))
+                return false;
+            if (!Objects.equals(id, p2.id))
+                return false;
+            return Arrays.equals(pieces, p2.pieces);
+
+        }
+        return false;
     }
 
 }

@@ -23,8 +23,8 @@ import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -92,6 +92,19 @@ public class PlayActivity extends TangramActivity {
         setUpDropTarget();
         setUpOverlayControls(goal);
         configureTraySlots();
+
+        // If we have a goal, show a temporary toast giving
+        // the name of the puzzle.  This is chiefly used during
+        // development to identify malformed puzzles.
+        if (goal != null) {
+            if (!goal.getName().isEmpty()) {
+                Log.d(LOG_TAG, "Goal: " + goal.getName());
+                Toast.makeText(this, goal.getName(), Toast.LENGTH_LONG)
+                        .show();
+            } else {
+                Log.d(LOG_TAG, "Unnamed goal provided:" + goal);
+            }
+        }
     }
 
     /**
@@ -120,7 +133,7 @@ public class PlayActivity extends TangramActivity {
     private void setUpOverlayControls(@Nullable TangramPuzzle goal) {
         findViewById(R.id.button_back).setOnClickListener(v -> finish());
 
-        FrameLayout goalFrame = findViewById(R.id.goal_view_frame);
+        ViewGroup goalFrame = findViewById(R.id.goal_view_frame);
         TangramPuzzleView goalView = findViewById(R.id.goal_view);
         if (goal != null) {
             goalView.setPuzzle(goal);
@@ -129,7 +142,7 @@ public class PlayActivity extends TangramActivity {
             goalFrame.setVisibility(View.GONE);
         }
 
-        final FrameLayout flipFrame = findViewById(R.id.button_flip_frame);
+        final ViewGroup flipFrame = findViewById(R.id.button_flip_frame);
         ImageButton flipButton = findViewById(R.id.button_flip);
         flipButton.setOnClickListener(v -> playTableView.flipSelectedPiece());
         playTableView.setOnSelectionChangedListener(selected ->

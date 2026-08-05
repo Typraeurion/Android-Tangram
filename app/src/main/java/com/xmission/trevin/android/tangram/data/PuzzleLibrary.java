@@ -125,7 +125,9 @@ public class PuzzleLibrary {
             }
             if (json instanceof JSONArray jsonArray) {
                 for (int i = 0; i < jsonArray.length(); i++) try {
-                    TangramPuzzle puzzle = new TangramPuzzle(jsonArray.getJSONObject(i));
+                    TangramPuzzle puzzle = new TangramPuzzle(
+                            jsonArray.getJSONObject(i));
+                    puzzle.setSourceFileName("assets/" + assetName);
                     puzzles.add(puzzle);
                 } catch (InvalidPuzzleException | JSONException e) {
                     Log.w(LOG_TAG, String.format(Locale.US,
@@ -134,6 +136,7 @@ public class PuzzleLibrary {
                 }
             } else if (json instanceof JSONObject jsonObject) try {
                 TangramPuzzle puzzle = new TangramPuzzle(jsonObject);
+                puzzle.setSourceFileName("asset/" + assetName);
                 puzzles.add(puzzle);
             } catch (InvalidPuzzleException | JSONException e) {
                 Log.w(LOG_TAG, String.format(Locale.US,

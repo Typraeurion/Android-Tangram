@@ -16,20 +16,14 @@
  */
 package com.xmission.trevin.android.tangram.data;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.ParcelFormatException;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.content.res.AppCompatResources;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 /**
  * Superclass of all pieces of a Tangram.  These are polygons whose
@@ -211,25 +205,6 @@ public abstract class TangramPiece implements Parcelable {
     public abstract int getColorAttr();
 
     /**
-     * @param context the context in which to load the drawable
-     *
-     * @return the size (width &amp; height) of the image needed to
-     * render the drawable for this piece at any orientation.
-     */
-    public int getDrawableSize(Context context) {
-        Drawable drawable = AppCompatResources.getDrawable(
-                context, getDrawableId());
-        if (drawable == null) {
-            Log.e(LOG_TAG, String.format(Locale.US,
-                    "No drawable with ID %d", getDrawableId()));
-            // Use a non-zero fallback size
-            return 10;
-        }
-        return Math.max(drawable.getMinimumWidth(),
-                drawable.getMinimumHeight());
-    }
-
-    /**
      * Map this piece to a JSON object for saving to a file.
      *
      * @return the JSON object
@@ -252,6 +227,28 @@ public abstract class TangramPiece implements Parcelable {
      */
     public static TangramPiece fromJSON(JSONObject json) throws JSONException {
         String name = json.getString(JSON_NAME);
+        TangramPiece piece = getTangramPiece(name);
+        piece.position = new TPoint(json.getJSONObject(JSON_POSITION));
+        if (piece.canFlip())
+            piece.isMirrored = json.getBoolean(JSON_MIRRORED);
+        // Make sure the rotation is normalized to [0-8).
+        piece.setRotation((float) json.getDouble(JSON_ROTATION));
+        return piece;
+    }
+
+    /**
+     * Given the JSON name of a TangramPiece,
+     * return a new instance of its class.
+     *
+     * @param name the JSON name of the piece
+     *
+     * @return the corresponding TangramPiece instance (uninitialized)
+     *
+     * @throws JSONException if the name is not one of the
+     * recognized piece names
+     */
+    @NonNull
+    private static TangramPiece getTangramPiece(String name) throws JSONException {
         TangramPiece piece = switch(name) {
             case TangramSmallTriangle.JSON_NAME -> new TangramSmallTriangle();
             case TangramSquare.JSON_NAME -> new TangramSquare();
@@ -262,10 +259,6 @@ public abstract class TangramPiece implements Parcelable {
         };
         if (piece == null)
             throw new JSONException("Unknown piece name: " + name);
-        piece.position = new TPoint(json.getJSONObject(JSON_POSITION));
-        if (piece.canFlip())
-            piece.isMirrored = json.getBoolean(JSON_MIRRORED);
-        piece.rotation = (float) json.getDouble(JSON_ROTATION);
         return piece;
     }
 
@@ -331,6 +324,43 @@ public abstract class TangramPiece implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder(getClass().getSimpleName())
+                .append('[');
+        if (canFlip())
+            sb.append("mirrored=").append(isMirrored).append(", ");
+        sb.append("rotation=").append(rotation).append(", ");
+        sb.append("position=").append(position);
+        sb.append(']');
+        return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = Float.hashCode(rotation);
+        hash = hash * 31 + position.hashCode();
+        hash = hash * 31 + Boolean.hashCode(isMirrored);
+        return hash;
+    }
+
+    /**
+     * Compare this piece with another for equality.  Pieces are equal
+     * only if they are the same type (subclass), have the same orientation,
+     * and their positions have the same coefficients for each coordinate.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof TangramPiece p2) {
+            if (p2.getClass() != getClass())
+                return false;
+            return p2.rotation == rotation && p2.position.equals(position)
+                    && p2.isMirrored == isMirrored;
+        }
+        return false;
     }
 
 }

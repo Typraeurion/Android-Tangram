@@ -128,6 +128,11 @@ public class TPoint implements Parcelable {
                 * 31 + Float.hashCode(ya)) * 31 + Float.hashCode(yb);
     }
 
+    /**
+     * Compare this TPoint with another for equality.  TPoints are equal
+     * only if both coefficients of each coordinate are equal; this does
+     * not consider the final computed value of each coordinate.
+     */
     @Override
     public boolean equals(Object o) {
         if (o instanceof TPoint p2) {
