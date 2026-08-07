@@ -30,10 +30,10 @@ public class TangramSquare extends TangramPiece {
     public static final String JSON_NAME = "square";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new TPoint(0, -1.5f, 0, -1.5f),
-            new TPoint(0,  1.5f, 0, -1.5f),
-            new TPoint(0,  1.5f, 0,  1.5f),
-            new TPoint(0, -1.5f, 0,  1.5f)
+            new ImmutableTPoint(0, -1.5f, 0, -1.5f),
+            new ImmutableTPoint(0,  1.5f, 0, -1.5f),
+            new ImmutableTPoint(0,  1.5f, 0,  1.5f),
+            new ImmutableTPoint(0, -1.5f, 0,  1.5f)
     };
 
     public String getJsonName() {

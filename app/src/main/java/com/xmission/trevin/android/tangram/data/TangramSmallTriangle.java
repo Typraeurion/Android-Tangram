@@ -32,9 +32,9 @@ public class TangramSmallTriangle extends TangramPiece {
     public static final String JSON_NAME = "small_triangle";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new TPoint( 0, 0, -2, 0),
-            new TPoint( 3, 0,  1, 0),
-            new TPoint(-3, 0,  1, 0)
+            new ImmutableTPoint( 0, 0, -2, 0),
+            new ImmutableTPoint( 3, 0,  1, 0),
+            new ImmutableTPoint(-3, 0,  1, 0)
     };
 
     public String getJsonName() {

@@ -59,6 +59,9 @@ public class PlayActivity extends TangramActivity {
 
     private PlayTableView playTableView;
 
+    /** Reference to the puzzle name toast if we show one, otherwise null */
+    private Toast puzzleToast = null;
+
     /**
      * Build an intent to start this activity.
      *
@@ -99,8 +102,9 @@ public class PlayActivity extends TangramActivity {
         if (goal != null) {
             if (!goal.getName().isEmpty()) {
                 Log.d(LOG_TAG, "Goal: " + goal.getName());
-                Toast.makeText(this, goal.getName(), Toast.LENGTH_LONG)
-                        .show();
+                puzzleToast = Toast.makeText(this,
+                                goal.getName(), Toast.LENGTH_LONG);
+                puzzleToast.show();
             } else {
                 Log.d(LOG_TAG, "Unnamed goal provided:" + goal);
             }
@@ -131,7 +135,11 @@ public class PlayActivity extends TangramActivity {
      * for free-play mode
      */
     private void setUpOverlayControls(@Nullable TangramPuzzle goal) {
-        findViewById(R.id.button_back).setOnClickListener(v -> finish());
+        findViewById(R.id.button_back).setOnClickListener((v) -> {
+            if (puzzleToast != null)
+                puzzleToast.cancel();
+            finish();
+        });
 
         ViewGroup goalFrame = findViewById(R.id.goal_view_frame);
         TangramPuzzleView goalView = findViewById(R.id.goal_view);

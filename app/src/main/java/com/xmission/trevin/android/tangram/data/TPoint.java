@@ -27,142 +27,65 @@ import org.json.JSONObject;
 /**
  * A point in Tangram space.  Numbers in the coordinate system are
  * given in the form <i>a</i> + <i>b</i>&#8730;2&#773; where both
- * <i>a</i> and <i>b</i> are in units of the smallest Tangram
- * piece, i.e. <i>a</i> is one side length of a small triangle and
- * <i>b</i> is one diagonal length of the same.  This object is
- * immutable; operations on it will return a new point.
+ * <i>a</i> and <i>b</i> are in units of one third of the smallest
+ * Tangram piece, i.e. <i>a</i> = 3 is the length of the congruent
+ * sides of a small triangle and <i>b</i> = 3 is the length of its
+ * hypotenuse.  In mathematical terms, this is the
+ * <a href="https://mathworld.wolfram.com/QuadraticField.html">Real
+ * Quadratic Field</a> &#8474;[&#8730;2].
  *
  * @author Trevin Beattie
  */
-public class TPoint implements Parcelable {
+public abstract class TPoint implements Parcelable {
 
-    public static final double SQRT2 = Math.sqrt(2);
+    double SQRT2 = Math.sqrt(2);
 
     /** JSON key for the <i>a</i> coefficient of the X coordinate */
-    public static final String JSON_X_A = "xa";
+    String JSON_X_A = "xa";
 
     /** JSON key for the <i>b</i> coefficient of the X coordinate */
-    public static final String JSON_X_B = "xb";
+    String JSON_X_B = "xb";
 
     /** JSON key for the <i>a</i> coefficient of the Y coordinate */
-    public static final String JSON_Y_A = "ya";
+    String JSON_Y_A = "ya";
 
     /** JSON key for the <i>b</i> coefficient of the Y coordinate */
-    public static final String JSON_Y_B = "yb";
+    String JSON_Y_B = "yb";
 
-    protected final float xa, xb, ya, yb;
+    /** @return the <i>a</i> coefficient of the <i>x</i> coordinate */
+    public abstract float getXa();
 
-    /**
-     * Construct a point with coordinates (<i>a<sub>x</sub></i>
-     * + <i>b<sub>x</sub></i>&#8730;2&#773;) <i>X</i>, (<i>a<sub>y</sub></i>
-     * + <i>b<sub>y</sub></i>&#8730;2&#773;) <i>Y</i>.
-     */
-    public TPoint(float ax, float bx, float ay, float by) {
-        xa = ax;
-        xb = bx;
-        ya = ay;
-        yb = by;
-    }
+    /** @return the <i>b</i> coefficient of the <i>x</i> coordinate */
+    public abstract float getXb();
 
-    /**
-     * Construct a point from a {@link Parcel}.
-     */
-    private TPoint(Parcel in) {
-        xa = in.readFloat();
-        xb = in.readFloat();
-        ya = in.readFloat();
-        yb = in.readFloat();
-    }
+    /** @return the <i>a</i> coefficient of the <i>y</i> coordinate */
+    public abstract float getYa();
 
-    /**
-     * Construct a point from a JSON object.
-     *
-     * @throws JSONException if any of the values in the JSON object
-     * are not valid floating-point numbers.
-     */
-    public TPoint(JSONObject json) throws JSONException {
-        if (json.has(JSON_X_A))
-            xa = (float) json.getDouble(JSON_X_A);
-        else
-            xa = 0;
-        if (json.has(JSON_X_B))
-            xb = (float) json.getDouble(JSON_X_B);
-        else
-            xb = 0;
-        if (json.has(JSON_Y_A))
-            ya = (float) json.getDouble(JSON_Y_A);
-        else
-            ya = 0;
-        if (json.has(JSON_Y_B))
-            yb = (float) json.getDouble(JSON_Y_B);
-        else
-            yb = 0;
-    }
-
-    /** The origin of the puzzle space. */
-    public static final TPoint ORIGIN = new TPoint(0f, 0f, 0f, 0f);
-
-    @Override
-    public @NonNull String toString() {
-        StringBuilder sb = new StringBuilder("TPoint(");
-        if (xb == 0)
-            sb.append(xa);
-        else if (xa == 0)
-            sb.append(xb).append("√2\u0305");
-        else
-            sb.append(xa).append('+').append(xb).append("√2\u0305");
-        sb.append("x, ");
-        if (yb == 0)
-            sb.append(ya);
-        else if (ya == 0)
-            sb.append(yb).append("√2\u0305");
-        else
-            sb.append(ya).append('+').append(yb).append("√2\u0305");
-        sb.append("y)");
-        return sb.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return ((Float.hashCode(xa) * 31 + Float.hashCode(xb))
-                * 31 + Float.hashCode(ya)) * 31 + Float.hashCode(yb);
-    }
-
-    /**
-     * Compare this TPoint with another for equality.  TPoints are equal
-     * only if both coefficients of each coordinate are equal; this does
-     * not consider the final computed value of each coordinate.
-     */
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof TPoint p2) {
-            return p2.xa == xa && p2.xb == xb && p2.ya == ya && p2.yb == yb;
-        }
-        return false;
-    }
+    /** @return the <i>b</i> coefficient of the <i>y</i> coordinate */
+    public abstract float getYb();
 
     /**
      * @return the X coordinate of this point
      */
     public float getX() {
-        return (float) (xa + xb * SQRT2);
+        return (float) (getXa() + getXb() * SQRT2);
     }
 
     /**
      * @return the Y coordinate of this point
      */
     public float getY() {
-        return (float) (ya + yb * SQRT2);
+        return (float) (getYa() + getYb() * SQRT2);
     }
 
     /**
      * Translate this point by a given amount, i.e. add two points together.
      *
      * @param p2 the point to add to this one
+     *
+     * @return the translated point
      */
-    public @NonNull TPoint add(TPoint p2) {
-        return new TPoint(xa + p2.xa, xb + p2.xb, ya + p2.ya, yb + p2.yb);
-    }
+    public abstract @NonNull TPoint add(@NonNull TPoint p2);
 
     /**
      * Rotate this point by a multiple of 45&deg;.  This works by swapping
@@ -174,61 +97,36 @@ public class TPoint implements Parcelable {
      *
      * @return the rotated point
      */
-    public @NonNull TPoint coarseRotate(int steps) {
-        steps = Math.floorMod(steps, 8);
-        return switch (steps) {
-            case 1 -> new TPoint(xb - yb, xa / 2 - ya / 2,
-                    xb + yb, xa / 2 + ya / 2);
-            case 2 -> new TPoint(-ya, -yb, xa, xb);
-            case 3 -> new TPoint(-xb - yb, -xa / 2 - ya / 2,
-                    xb - yb, xa / 2 - ya / 2);
-            case 4 -> new TPoint(-xa, -xb, -ya, -yb);
-            case 5 -> new TPoint(yb - xb, ya / 2 - xa / 2,
-                    -xb - yb, -xa / 2 - ya / 2);
-            case 6 -> new TPoint(ya, yb, -xa, -xb);
-            case 7 -> new TPoint(xb + yb, xa / 2 + ya / 2,
-                    -xb + yb, -xa / 2 + ya / 2);
-            default -> this; // No change
-        };
-    }
+    public abstract @NonNull TPoint coarseRotate(int steps);
 
     /**
-     * Rotate this point by an arbitrary amount.  This adjusts the
+     * Rotate this point by an arbitrary amount.  If {@code degrees} is
+     * at least a multiple of 45&deg;, this uses {@link #coarseRotate(int)}.
+     * For any remaining angle not a multiple of 45&deg;, this adjusts the
      * <i>a</i> and <i>b</i> components of each coordinate separately;
      * the results will not typically be integer values or simple
      * binary fractions.
      *
-     * @param radians the angle to rotate the point about the origin
-     * in radians.
+     * @param degrees the angle to rotate the point about the origin
+     * in degrees.
      *
      * @return the rotated point
      */
-    public @NonNull TPoint fineRotate(double radians) {
-        double cos = Math.cos(radians);
-        double sin = Math.sin(radians);
-        return new TPoint((float) (xa * cos - ya * sin),
-                (float)(xb * cos - yb * sin),
-                (float) (xa * sin + ya * cos),
-                (float) (xb * sin + yb * cos));
-    }
+    public abstract @NonNull TPoint rotate(double degrees);
 
     /**
      * Reverse the X coordinate of this point (horizontal mirror).
      *
      * @return the point at (-X, Y) of this point
      */
-    public @NonNull TPoint mirrorX() {
-        return new TPoint(-xa, -xb, ya, yb);
-    }
+    public abstract @NonNull TPoint mirrorX();
 
     /**
      * Reverse the Y coordinate of this point (vertical mirror).
      *
      * @return the point at (X, -Y) of this point
      */
-    public @NonNull TPoint mirrorY() {
-        return new TPoint(xa, xb, -ya, -yb);
-    }
+    public abstract @NonNull TPoint mirrorY();
 
     /**
      * Map this point to a JSON object for saving to a file.
@@ -237,14 +135,14 @@ public class TPoint implements Parcelable {
      */
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
-        if (xb == 0 || xa != 0)
-            json.put(JSON_X_A, xa);
-        if (xb != 0)
-            json.put(JSON_X_B, xb);
-        if (yb == 0 || ya != 0)
-            json.put(JSON_Y_A, ya);
-        if (yb != 0)
-            json.put(JSON_Y_B, yb);
+        if (getXb() == 0 || getXa() != 0)
+            json.put(JSON_X_A, getXa());
+        if (getXb() != 0)
+            json.put(JSON_X_B, getXb());
+        if (getYb() == 0 || getYa() != 0)
+            json.put(JSON_Y_A, getYa());
+        if (getYb() != 0)
+            json.put(JSON_Y_B, getYb());
         return json;
     }
 
@@ -258,19 +156,29 @@ public class TPoint implements Parcelable {
      */
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeFloat(xa);
-        dest.writeFloat(xb);
-        dest.writeFloat(ya);
-        dest.writeFloat(yb);
+        /*
+         * Since this is an interface, we MUST write the type
+         * of implementing class first so that when reading
+         * it back we know which implementation to create.
+         * We'll use a simple integer to indicate whether it's
+         * an ImmutableTPoint (0) or MutableTPoint (non-0).
+         */
+        dest.writeInt((this instanceof ImmutableTPoint) ? 0 : 1);
+        dest.writeFloat(getXa());
+        dest.writeFloat(getXb());
+        dest.writeFloat(getYa());
+        dest.writeFloat(getYb());
     }
 
     /**
      * Create a point from a {@link Parcel}.
      */
-    public static final Creator<TPoint> CREATOR =new Creator<>() {
+    public static Creator<TPoint> CREATOR = new Creator<>() {
         @Override
-        public TPoint createFromParcel(Parcel in) {
-            return new TPoint(in);
+        public TPoint createFromParcel(android.os.Parcel in) {
+            boolean isMutable = (in.readInt() != 0);
+            return isMutable ? MutableTPoint.CREATOR.createFromParcel(in)
+                    : ImmutableTPoint.CREATOR.createFromParcel(in);
         }
         @Override
         public TPoint[] newArray(int size) {

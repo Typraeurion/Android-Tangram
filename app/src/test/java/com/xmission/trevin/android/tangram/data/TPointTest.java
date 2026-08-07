@@ -36,9 +36,9 @@ public class TPointTest {
      * collapsed the 225&deg; case onto the x=y diagonal.)
      */
     @Test
-    public void coarseRotateMatchesAnalyticRotation() {
+    public void testCoarseRotateMatchesAnalyticRotationImmutable() {
+        TPoint p = new ImmutableTPoint(3, 0, 1, 2);
         // An asymmetric point so x != y and the cases can't alias.
-        TPoint p = new TPoint(3, 0, 1, 0);
         double px = p.getX(), py = p.getY();
         for (int steps = 0; steps < 8; steps++) {
             double theta = Math.toRadians(45.0 * steps);
@@ -53,15 +53,46 @@ public class TPointTest {
         }
     }
 
+    @Test
+    public void testCoarseRotateMatchesAnalyticRotationMutable() {
+        for (int steps = 0; steps < 8; steps++) {
+            TPoint p = new MutableTPoint(3, 0, 1, 2);
+            double px = p.getX(), py = p.getY();
+            double theta = Math.toRadians(45.0 * steps);
+            double cos = Math.cos(theta), sin = Math.sin(theta);
+            double expectedX = px * cos - py * sin;
+            double expectedY = px * sin + py * cos;
+            TPoint rotated = p.coarseRotate(steps);
+            assertEquals("x after " + steps + " steps",
+                    expectedX, rotated.getX(), DELTA);
+            assertEquals("y after " + steps + " steps",
+                    expectedY, rotated.getY(), DELTA);
+        }
+    }
+
     /** A rotation must never collapse a point onto the x=y diagonal. */
     @Test
-    public void coarseRotatePreservesDistinctCoordinates() {
-        TPoint p = new TPoint(3, 0, 1, 0);
+    public void testCoarseRotatePreservesDistinctCoordinatesImmutable() {
+        TPoint p = new ImmutableTPoint(3, 0, 1, 2);
+        final double expected = Math.hypot(p.getX(), p.getY());
         for (int steps = 0; steps < 8; steps++) {
             TPoint rotated = p.coarseRotate(steps);
             double radius = Math.hypot(rotated.getX(), rotated.getY());
             assertEquals("radius preserved after " + steps + " steps",
-                    Math.hypot(p.getX(), p.getY()), radius, DELTA);
+                    expected, radius, DELTA);
         }
     }
+
+    @Test
+    public void testCoarseRotatePreservesDistinctCoordinatesMutable() {
+        for (int steps = 0; steps < 8; steps++) {
+            TPoint p = new ImmutableTPoint(3, 0, 1, 2);
+            double expected = Math.hypot(p.getX(), p.getY());
+            TPoint rotated = p.coarseRotate(steps);
+            double radius = Math.hypot(rotated.getX(), rotated.getY());
+            assertEquals("radius preserved after " + steps + " steps",
+                    expected, radius, DELTA);
+        }
+    }
+
 }

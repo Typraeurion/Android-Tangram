@@ -32,9 +32,9 @@ public class TangramMediumTriangle extends TangramPiece {
     public static final String JSON_NAME = "medium_triangle";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new TPoint(0,  0, 0, -2),
-            new TPoint(0,  3, 0,  1),
-            new TPoint(0, -3, 0,  1)
+            new ImmutableTPoint(0,  0, 0, -2),
+            new ImmutableTPoint(0,  3, 0,  1),
+            new ImmutableTPoint(0, -3, 0,  1)
     };
 
     public String getJsonName() {

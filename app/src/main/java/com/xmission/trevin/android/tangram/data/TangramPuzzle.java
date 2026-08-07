@@ -96,7 +96,7 @@ public class TangramPuzzle implements Parcelable {
         pieces[5] = new TangramLargeTriangle();
         pieces[6] = new TangramLargeTriangle();
         for (int i = 0; i < pieces.length; i++)
-            pieces[i].setPosition(new TPoint(12*i - 36, 0, 24, 0));
+            pieces[i].setPosition(new MutableTPoint(12*i - 36, 0, 24, 0));
     }
 
     /**

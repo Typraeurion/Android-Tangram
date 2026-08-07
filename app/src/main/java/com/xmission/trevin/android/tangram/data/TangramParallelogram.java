@@ -33,10 +33,10 @@ public class TangramParallelogram extends TangramPiece {
     public static final String JSON_NAME = "parallelogram";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new TPoint(-4.5f, 0, -1.5f, 0),
-            new TPoint( 1.5f, 0, -1.5f, 0),
-            new TPoint( 4.5f, 0,  1.5f, 0),
-            new TPoint(-1.5f, 0,  1.5f, 0)
+            new ImmutableTPoint(-4.5f, 0, -1.5f, 0),
+            new ImmutableTPoint( 1.5f, 0, -1.5f, 0),
+            new ImmutableTPoint( 4.5f, 0,  1.5f, 0),
+            new ImmutableTPoint(-1.5f, 0,  1.5f, 0)
     };
 
     public String getJsonName() {

@@ -27,9 +27,10 @@ import org.json.JSONObject;
 
 /**
  * Superclass of all pieces of a Tangram.  These are polygons whose
- * angles are in multiples of 45&deg;.  Vertices of the polygon are
- * given on a unit scale using a two-integer system of the formula
- * <i>a</i> + <i>b</i>&#8730;2&#773; for each of the <i>x</i> and
+ * angles are in multiples of 15&deg; (stored as degrees clockwise
+ * for easier reading).  Vertices of the polygon are given on a
+ * unit scale using a two-integer system of the formula <i>a</i>
+ * + <i>b</i>&#8730;2&#773; for each of the <i>x</i> and
  * <i>y</i> coordinates where both <i>a</i> and <i>b</i> are
  * relative to the closest point to the centroid of the polygon.
  *
@@ -53,11 +54,10 @@ public abstract class TangramPiece implements Parcelable {
 
     /**
      * Current orientation from the baseline around the centroid
-     * in units of 45&deg; or <sup>&pi;</sup>&#8260;<sub>4</sub>
-     * radians.  Normalized values are integers from 0&ndash;7,
-     * but this may take fractional values for in-motion animation
-     * or for certain puzzles where a piece only connects at a
-     * tip (e.g. a candle&rsquo;s flame or cat&rsquo;s tail).
+     * in degrees.  Normally values should be from 0&ndash;345 in
+     * multiples of 15, but this may take fractional values for
+     * in-motion animation or for certain puzzles where a piece only
+     * connects at a tip at an irregular angle.
      */
     protected float rotation = 0;
 
@@ -65,13 +65,23 @@ public abstract class TangramPiece implements Parcelable {
      * Current position of the centroid of this piece within
      * the Tangram puzzle, in puzzle-based units.
      */
-    protected @NonNull TPoint position = TPoint.ORIGIN;
+    protected @NonNull TPoint position = ImmutableTPoint.ORIGIN;
 
     /**
      * Whether this piece is mirrored or flipped.  This can
      * only be changed if the piece has no reflective symmetry.
      */
     protected boolean isMirrored = false;
+
+    /**
+     * Cache of the vertices of this piece in its current transform.
+     * We keep this allocated to avoid excessive memory allocation
+     * and release when rendering graphics.
+     */
+    private TPoint[] transformedVertices = null;
+
+    /** Whether the {@code transformedVertices} array is stale. */
+    private boolean transformIsStale = true;
 
     /** @return the name of the piece to use in JSON puzzle files */
     public abstract String getJsonName();
@@ -86,38 +96,26 @@ public abstract class TangramPiece implements Parcelable {
     }
 
     /**
-     * Set the orientation of this piece as a multiple of 45&deg;
-     * or <sup>&pi;</sup>&#8260;<sub>4</sub> radians.
+     * Set the orientation of this piece in degrees.  This normalizes
+     * the value to [0&ndash;360).
      *
-     * @param orientation the new orientation [0&ndash;8)
+     * @param orientation the new orientation in degrees
      */
     public void setRotation(float orientation) {
-        rotation = (float) (orientation - 8 * Math.floor(orientation / 8));
+        float oldRotation = rotation;
+        rotation = (float) (orientation - 360 * Math.floor(orientation / 360));
+        transformIsStale |= (rotation != oldRotation);
     }
 
     /**
-     * Rotate this piece by a multiple of 45&deg;.
-     *
-     * @param steps the number of 45&deg; steps by which to
-     * rotate this piece.  Positive values rotate clockwise,
-     * negative values rotate counter-clockwise.
-     */
-    public void coarseRotate(int steps) {
-        rotation += steps % 8;
-        if (rotation < 0)
-            rotation += 8;
-        else if (rotation >= 8)
-            rotation -= 8;
-    }
-
-    /**
-     * Rotate this piece by an arbitrary amount.
+     * Rotate this piece by an arbitrary amount.  The resulting rotation
+     * is normalized to [0&ndash;360).
      *
      * @param degreesClockwise the amount by which to rotate the piece
      * in degrees.  May be negative to rotate counter-clockwise.
      */
-    public void fineRotateDegrees(float degreesClockwise) {
-        setRotation(rotation + degreesClockwise / 45.0f);
+    public void rotateByDegrees(float degreesClockwise) {
+        setRotation(rotation + degreesClockwise);
     }
 
     /**
@@ -131,7 +129,9 @@ public abstract class TangramPiece implements Parcelable {
      * Move this piece to a given position in the puzzle.
      */
     public void setPosition(@NonNull TPoint position) {
+        TPoint oldPosition = this.position;
         this.position = position;
+        transformIsStale |= !oldPosition.equals(position);
     }
 
     /**
@@ -155,6 +155,7 @@ public abstract class TangramPiece implements Parcelable {
         if (!canFlip())
             return;
         isMirrored = !isMirrored;
+        transformIsStale = true;
     }
 
     /**
@@ -168,21 +169,19 @@ public abstract class TangramPiece implements Parcelable {
      * orientation and position.
      */
     public TPoint[] getVertices() {
-        TPoint[] transformed = new TPoint[getShapeVertices().length];
-        for (int i = 0; i < transformed.length; i++) {
-            TPoint v = getShapeVertices()[i];
-            if (isMirrored && v.getX() != 0)
-                v = v.mirrorX();
-            if (rotation != 0) {
-                if (rotation >= 1)
-                    v = v.coarseRotate((int) rotation);
-                double rad = (rotation - (int) rotation) * Math.PI / 4;
-                if (rad != 0)
-                    v = v.fineRotate(rad);
+        if (transformIsStale) {
+            if (transformedVertices == null)
+                transformedVertices = new TPoint[getShapeVertices().length];
+            for (int i = 0; i < transformedVertices.length; i++) {
+                TPoint v = getShapeVertices()[i];
+                if (isMirrored && v.getX() != 0)
+                    v = v.mirrorX();
+                if (rotation != 0)
+                    v = v.rotate(rotation);
+                transformedVertices[i] = v.add(position);
             }
-            transformed[i] = v.add(position);
         }
-        return transformed;
+        return transformedVertices;
     }
 
     /**
@@ -228,7 +227,7 @@ public abstract class TangramPiece implements Parcelable {
     public static TangramPiece fromJSON(JSONObject json) throws JSONException {
         String name = json.getString(JSON_NAME);
         TangramPiece piece = getTangramPiece(name);
-        piece.position = new TPoint(json.getJSONObject(JSON_POSITION));
+        piece.position = new ImmutableTPoint(json.getJSONObject(JSON_POSITION));
         if (piece.canFlip())
             piece.isMirrored = json.getBoolean(JSON_MIRRORED);
         // Make sure the rotation is normalized to [0-8).
@@ -271,9 +270,9 @@ public abstract class TangramPiece implements Parcelable {
      */
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        // Since this is an abstract class, we MUST write
-        // the type of child class first so that when reading
-        // it back we know which implementation to create.
+        // Since this is an abstract class, we MUST write the
+        // type of child class first so that when reading it
+        // back we know which implementation to create.
         dest.writeString(getJsonName());
         // Write the point's fields directly (paired with
         // TPoint.CREATOR.createFromParcel in our CREATOR below).  Do NOT

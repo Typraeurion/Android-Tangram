@@ -36,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.xmission.trevin.android.tangram.R;
+import com.xmission.trevin.android.tangram.data.MutableTPoint;
 import com.xmission.trevin.android.tangram.data.TPoint;
 import com.xmission.trevin.android.tangram.data.TangramPiece;
 import com.xmission.trevin.android.tangram.data.TangramPuzzle;
@@ -224,7 +225,7 @@ public class PlayTableView extends View {
      * pointer to the {@link #rotationPointerId} pointer as of the most
      * recent motion event.  The change in this angle between events is
      * applied to {@link #selectedPiece} via
-     * {@link TangramPiece#fineRotateDegrees(float)}.
+     * {@link TangramPiece#rotateByDegrees(float)}.
      */
     private float lastRotationAngle;
 
@@ -345,7 +346,8 @@ public class PlayTableView extends View {
     public void addPieceAtViewLocation(
             @NonNull TangramPiece piece, float viewX, float viewY) {
         mapTouchToPuzzle(viewX, viewY);
-        piece.setPosition(new TPoint(touchBuffer[0], 0, touchBuffer[1], 0));
+        piece.setPosition(new MutableTPoint(
+                touchBuffer[0], 0, touchBuffer[1], 0));
         pieces.add(piece);
         setSelectedPiece(piece);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
@@ -711,7 +713,7 @@ public class PlayTableView extends View {
                             delta -= 360f;
                         while (delta <= -180f)
                             delta += 360f;
-                        selectedPiece.fineRotateDegrees(delta);
+                        selectedPiece.rotateByDegrees(delta);
                         lastRotationAngle = current;
                         invalidate();
                     }
@@ -741,7 +743,7 @@ public class PlayTableView extends View {
                 mapTouchToPuzzle(
                         event.getX(pointerIndex), event.getY(pointerIndex));
                 // Free placement for now; snapping happens on release.
-                selectedPiece.setPosition(new TPoint(
+                selectedPiece.setPosition(new MutableTPoint(
                         touchBuffer[0] + grabOffsetX, 0,
                         touchBuffer[1] + grabOffsetY, 0));
                 invalidate();
