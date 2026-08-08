@@ -83,9 +83,27 @@ public class MutableTPoint extends TPoint {
         return xa;
     }
 
+    /**
+     * Change the <i>a</i> coefficient of the X coordinate.
+     *
+     * @param a the new <i>a</i> coefficient
+     */
+    public void setXa(float a) {
+        xa = a;
+    }
+
     @Override
     public float getXb() {
         return xb;
+    }
+
+    /**
+     * Change the <i>b</i> coefficient of the X coordinate.
+     *
+     * @param b the new <i>b</i> coefficient
+     */
+    public void setXb(float b) {
+        xb = b;
     }
 
     @Override
@@ -93,9 +111,27 @@ public class MutableTPoint extends TPoint {
         return ya;
     }
 
+    /**
+     * Change the <i>a</i> coefficient of the Y coordinate.
+     *
+     * @param a the new <i>a</i> coefficient
+     */
+    public void setYa(float a) {
+        ya = a;
+    }
+
     @Override
     public float getYb() {
         return yb;
+    }
+
+    /**
+     * Change the <i>b</i> coefficient of the Y coordinate.
+     *
+     * @param b the new <i>b</i> coefficient
+     */
+    public void setYb(float b) {
+        yb = b;
     }
 
     /** @return this after translation */

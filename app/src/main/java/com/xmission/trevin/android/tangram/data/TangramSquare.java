@@ -20,7 +20,7 @@ import com.xmission.trevin.android.tangram.R;
 
 /**
  * A square which is the size of two {@link TangramSmallTriangle}s
- * placed face-to-face.  This has a length of 3&#8730;2&#773; on each
+ * placed face-to-face.  This has a length of 6&#8730;2&#773; on each
  * side.  It&rsquo;s default orientation is orthogonal to the axes.
  *
  * @author Trevin Beattie
@@ -30,10 +30,10 @@ public class TangramSquare extends TangramPiece {
     public static final String JSON_NAME = "square";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new ImmutableTPoint(0, -1.5f, 0, -1.5f),
-            new ImmutableTPoint(0,  1.5f, 0, -1.5f),
-            new ImmutableTPoint(0,  1.5f, 0,  1.5f),
-            new ImmutableTPoint(0, -1.5f, 0,  1.5f)
+            new ImmutableTPoint(0, -3f, 0, -3f),
+            new ImmutableTPoint(0,  3f, 0, -3f),
+            new ImmutableTPoint(0,  3f, 0,  3f),
+            new ImmutableTPoint(0, -3f, 0,  3f)
     };
 
     public String getJsonName() {
@@ -50,7 +50,7 @@ public class TangramSquare extends TangramPiece {
     }
 
     public float getMaxRadius() {
-        return 2.12132034f;
+        return 4.24264068f;
     }
 
     @Override

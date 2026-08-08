@@ -2,21 +2,21 @@
   {
     "id": "root-square",
     "name": "Square",
-    "size": 12,
+    "size": 24,
     "pieces": [
       {
         "name": "large_triangle",
         "rotation": 0,
         "position": {
           "xa": 0,
-          "ya": 4
+          "ya": 8
         }
       },
       {
         "name": "large_triangle",
         "rotation": 90,
         "position": {
-          "xa": -4,
+          "xa": -8,
           "ya": 0
         }
       },
@@ -24,8 +24,8 @@
         "name": "medium_triangle",
         "rotation": 45,
         "position": {
-          "xa": 4,
-          "ya": -4
+          "xa": 8,
+          "ya": -8
         }
       },
       {
@@ -33,15 +33,15 @@
         "isMirrored": false,
         "rotation": 0,
         "position": {
-          "xa": -1.5,
-          "ya": -4.5
+          "xa": -3,
+          "ya": -9
         }
       },
       {
         "name": "square",
         "rotation": 45,
         "position": {
-          "xa": 3,
+          "xa": 6,
           "ya": 0
         }
       },
@@ -50,15 +50,15 @@
         "rotation": 180,
         "position": {
           "xa": 0,
-          "ya": -2
+          "ya": -4
         }
       },
       {
         "name": "small_triangle",
         "rotation": -90,
         "position": {
-          "xa": 5,
-          "ya": 3
+          "xa": 10,
+          "ya": 6
         }
       }
     ]
@@ -66,1536 +66,1536 @@
   {
     "id": "geometric-right-isosceles-triangle",
     "name": "Right Isosceles Triangle",
-    "size": 16.970563,
+    "size": 33.941126,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": -4,
-	  "yb": 2
-	}
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -8,
+          "yb": 4
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -4,
-	  "yb": -2
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -8,
+          "yb": -4
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": 0,
-	  "yb": -2
-	}
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 0,
+          "yb": -4
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -4,
-	  "yb": -5
-	}
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -8,
+          "yb": -10
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -1.5,
-	  "yb": -4.5
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -3,
+          "yb": -9
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": 1,
-	  "yb": -5
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 2,
+          "yb": -10
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": -45,
-	"position": {
-	  "xb": 3,
-	  "yb": -4.5
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": 6,
+          "yb": -9
+        }
       }
     ]
   },
   {
     "id": "geometric-truncated-diamond",
     "name": "Truncated Diamond",
-    "size": 12.727922,
+    "size": 25.455844,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 0.5,
-	  "yb": -0.5
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 1,
+          "yb": -1
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 2.5,
-	  "yb": -2.5
-	}
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 5,
+          "yb": -5
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": -45,
-	"position": {
-	  "xb": 1.5,
-	  "yb": 3
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": 3,
+          "yb": 6
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 180,
-	"position": {
-	  "xb": -1.5,
-	  "yb": 2.5
-	}
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xb": -3,
+          "yb": 5
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -3.5,
-	  "yb": 3.5
-	}
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -7,
+          "yb": 7
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -3,
-	  "ya": 0
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -6,
+          "ya": 0
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": -2.5,
-	  "yb": -2.5
-	}
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -5,
+          "yb": -5
+        }
       }
     ]
   },
   {
     "id": "geometric-double-convex-hexagon",
     "name": "Double Convex Hexagon",
-    "size": 18,
+    "size": 36,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": -3,
-	  "ya": 4
-	}
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": -6,
+          "ya": 8
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": -3,
-	  "ya": -4
-	}
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -6,
+          "ya": -8
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -90,
-	"position": {
-	  "xa": -1,
-	  "ya": 0
-	}
+        "name": "small_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -2,
+          "ya": 0
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": -135,
-	"position": {
-	  "xa": 2,
-	  "ya": 1
-	}
+        "name": "medium_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": 4,
+          "ya": 2
+        }
       },
       {
-	"name": "square",
-	"rotation": 45,
-	"position": {
-	  "xa": 3,
-	  "ya": -3
-	}
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 6,
+          "ya": -6
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": 6,
-	  "ya": -5
-	}
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 12,
+          "ya": -10
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 0,
-	"position": {
-	  "xa": 4.5,
-	  "ya": 4.5
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 0,
+        "position": {
+          "xa": 9,
+          "ya": 9
+        }
       }
     ]
   },
   {
     "id": "geometric-parallelogram",
     "name": "Parallelogram",
-    "size": 25.4558441,
+    "size": 50.9116882,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": -5,
-	  "yb": 1
-	}
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -10,
+          "yb": 2
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -1,
-	  "yb": 1
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -2,
+          "yb": 2
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": true,
-	"rotation": 45,
-	"position": {
-	  "xa": 0,
-	  "yb": -1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 45,
+        "position": {
+          "xa": 0,
+          "yb": -3
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 180,
-	"position": {
-	  "xb": 3,
-	  "yb": 1
-	}
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xb": 6,
+          "yb": 2
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 2,
-	  "yb": -2
-	}
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 4,
+          "yb": -4
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": 4.5,
-	  "yb": -1.5
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 9,
+          "yb": -3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": 7,
-	  "yb": -2
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 14,
+          "yb": -4
+        }
       }
     ]
   },
   {
     "id": "geometric-trapezoid",
     "name": "Trapezoid",
-    "size": 25.4558441,
+    "size": 50.9116882,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": -5,
-	  "yb": 1
-	}
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -10,
+          "yb": 2
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 90,
-	"position": {
-	  "xb": -2,
-	  "ya": 0
-	}
+        "name": "medium_triangle",
+        "rotation": 90,
+        "position": {
+          "xb": -4,
+          "ya": 0
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -1,
-	  "yb": -2
-	}
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -2,
+          "yb": -4
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": -45,
-	"position": {
-	  "xa": 0,
-	  "yb": 1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xa": 0,
+          "yb": 3
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": 1.5,
-	  "yb": -1.5
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 3,
+          "yb": -3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": 2,
-	  "yb": 2
-	}
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 4,
+          "yb": 4
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 5,
-	  "yb": 1
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 10,
+          "yb": 2
+        }
       }
     ]
   },
   {
     "id": "geometric-elongated-diamond",
     "name": "Elongated Diamond",
-    "size": 21.2132034,
+    "size": 42.4264068,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -1,
-	  "yb": -0.5
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -2,
+          "yb": -1
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 1,
-	  "yb": -2.5
-	}
-      },
-      {
-	"name": "medium_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": 0,
-	  "yb": -5.5
-	}
-      },
-      {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": 1.5,
-	  "yb": 3
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -1,
-	  "yb": 2.5
-	}
-      },
-      {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": -1.5,
-	  "yb": 4.5
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": 1,
-	  "yb": 5.5
-	}
-      }
-    ]
-  },
-  {
-    "id": "geometric-wedge",
-    "name": "Wedge",
-    "size": 21.2132034,
-    "pieces": [
-      {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 1,
-	  "yb": 3.5
-	}
-      },
-      {
-	"name": "medium_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": 0,
-	  "yb": 0.5
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": -2,
-	  "yb": -0.5
-	}
-      },
-      {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": 1.5,
-	  "yb": -1.5
-	}
-      },
-      {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -1.5,
-	  "yb": -3
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -2,
-	  "yb": -5.5
-	}
-      },
-      {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 1,
-	  "yb": -5.5
-	}
-      }
-    ]
-  },
-  {
-    "id": "geometric-chevron",
-    "name": "Chevron",
-    "size": 16.9705627,
-    "pieces": [
-      {
-	"name": "medium_triangle",
-	"rotation": -90,
-	"position": {
-	  "xb": -4,
-	  "ya": 0
-	}
-      },
-      {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -1.5,
-	  "yb": 1.5
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -1,
-	  "yb": 4
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": -1,
-	  "yb": -1
-	}
-      },
-      {
-	"name": "parallelogram",
-	"isMirrored": true,
-	"rotation": -45,
-	"position": {
-	  "xb": -1.5,
-	  "yb": -3
-	}
-      },
-      {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 2,
-	  "yb": 4
-	}
-      },
-      {
-	"name": "large_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": 2,
-	  "yb": -4
-	}
-      }
-    ]
-  },
-  {
-    "id": "geometric-2truncated-square",
-    "name": "Square Truncated on 2 Corners",
-    "size": 25.4558441,
-    "pieces": [
-      {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -2.5,
-	  "yb": 2.5
-	}
-      },
-      {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -0.5,
-	  "yb": 0.5
-	}
-      },
-      {
-	"name": "medium_triangle",
-	"rotation": 90,
-	"position": {
-	  "xb": 2.5,
-	  "yb": 1.5
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": 3.5,
-	  "yb": 3.5
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": -2.5,
-	  "yb": -2.5
-	}
-      },
-      {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xa": 0,
-	  "yb": -3
-	}
-      },
-      {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": 3,
-	  "yb": -1.5
-	}
-      }
-    ]
-  },
-  {
-    "id": "geometric-cup",
-    "name": "Cup",
-    "size": 16.9705627,
-    "pieces": [
-      {
-	"name": "large_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": 0,
-	  "ya": 1,
-	  "yb": 1.5
-	}
-      },
-      {
-	"name": "medium_triangle",
-	"rotation": 180,
-	"position": {
-	  "xb": 3,
-	  "ya": -3,
-	  "yb": 2.5
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": 5,
-	  "ya": -3,
-	  "yb": 0.5
-	}
-      },
-      {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": -45,
-	"position": {
-	  "xb": 3,
-	  "ya": -3
-	}
-      },
-      {
-	"name": "large_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": -1,
-	  "ya": -3,
-	  "yb": 0.5
-	}
-      },
-      {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -4.5,
-	  "ya": -3
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -4,
-	  "ya": -3,
-	  "yb": 2.5
-	}
-      }
-    ]
-  },
-  {
-    "id": "geometric-right-angled-pentagon",
-    "name": "Right-angled Pentagon",
-    "size": 16.9705627,
-    "pieces": [
-      {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -1,
-	  "yb": 2.5
-	}
-      },
-      {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 1,
-	  "yb": 0.5
-	}
-      },
-      {
-	"name": "medium_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": 0,
-	  "yb": -2.5
-	}
-      },
-      {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -4.5,
-	  "yb": 3
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": -4,
-	  "yb": 0.5
-	}
-      },
-      {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 4,
-	  "yb": 3.5
-	}
-      },
-      {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": 4.5,
-	  "yb": 1.5
-	}
-      }
-    ]
-  },
-  {
-    "id": "basic-teapot",
-    "name": "Teapot",
-    "size": 19,
-    "pieces": [
-      {
-	"name": "large_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": 1,
-	  "yb": 2.5
-	}
-      },
-      {
-	"name": "large_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": -1,
-	  "yb": 0.5
-	}
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 2,
+          "yb": -5
+        }
       },
       {
         "name": "medium_triangle",
         "rotation": 0,
         "position": {
           "xa": 0,
-          "yb": -2.5
+          "yb": -11
         }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": -4.5,
-	  "yb": 1.5
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 3,
+          "yb": 6
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": 3,
-	  "xb": 3,
-	  "ya": -2,
-	  "yb": 4.5
-	}
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -2,
+          "yb": 5
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xa": 3,
-	  "xb": 3,
-	  "ya": -3,
-	  "yb": 3
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": -3,
+          "yb": 9
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": 3,
-	  "xb": 3,
-	  "ya": -4,
-	  "yb": 1.5
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 2,
+          "yb": 11
+        }
+      }
+    ]
+  },
+  {
+    "id": "geometric-wedge",
+    "name": "Wedge",
+    "size": 42.4264068,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 2,
+          "yb": 7
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": 1
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -4,
+          "yb": -1
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 3,
+          "yb": -3
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -3,
+          "yb": -6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -4,
+          "yb": -11
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 2,
+          "yb": -11
+        }
+      }
+    ]
+  },
+  {
+    "id": "geometric-chevron",
+    "name": "Chevron",
+    "size": 33.9411254,
+    "pieces": [
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xb": -8,
+          "ya": 0
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -3,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -2,
+          "yb": 8
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -2,
+          "yb": -2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xb": -3,
+          "yb": -6
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 4,
+          "yb": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 4,
+          "yb": -8
+        }
+      }
+    ]
+  },
+  {
+    "id": "geometric-2truncated-square",
+    "name": "Square Truncated on 2 Corners",
+    "size": 50.9116882,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": 5
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -1,
+          "yb": 1
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 90,
+        "position": {
+          "xb": 5,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 7,
+          "yb": 7
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -5,
+          "yb": -5
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -6
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 6,
+          "yb": -3
+        }
+      }
+    ]
+  },
+  {
+    "id": "geometric-cup",
+    "name": "Cup",
+    "size": 33.9411254,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 2,
+          "yb": 3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xb": 6,
+          "ya": -6,
+          "yb": 5
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 10,
+          "ya": -6,
+          "yb": 1
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": 6,
+          "ya": -6
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -2,
+          "ya": -6,
+          "yb": 1
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -9,
+          "ya": -6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -8,
+          "ya": -6,
+          "yb": 5
+        }
+      }
+    ]
+  },
+  {
+    "id": "geometric-right-angled-pentagon",
+    "name": "Right-angled Pentagon",
+    "size": 33.9411254,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -2,
+          "yb": 5
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 2,
+          "yb": 1
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -5
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -9,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -8,
+          "yb": 1
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 8,
+          "yb": 7
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 9,
+          "yb": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "basic-teapot",
+    "name": "Teapot",
+    "size": 38,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 2,
+          "yb": 5
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -2,
+          "yb": 1
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -5
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": -9,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 6,
+          "xb": 6,
+          "ya": -4,
+          "yb": 9
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 6,
+          "xb": 6,
+          "ya": -6,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 6,
+          "xb": 6,
+          "ya": -8,
+          "yb": 3
+        }
       }
     ]
   },
   {
     "id": "basic-sailboat",
     "name": "Sailboat",
-    "size": 19.2132034,
+    "size": 38.4264068,
     "pieces": [
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": -45,
-	"position": {
-	  "xa": 1,
-	  "ya": 6
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xa": 2,
+          "ya": 12
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": 1,
-	  "xb": -3,
-	  "ya": 6,
-	  "yb": -0.5
-	}
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 2,
+          "xb": -6,
+          "ya": 12,
+          "yb": -1
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xa": 1,
-	  "xb": 2,
-	  "ya": 6,
-	  "yb": 0.5
-	}
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 2,
+          "xb": 4,
+          "ya": 12,
+          "yb": 1
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xa": 1,
-	  "xb": 4,
-	  "ya": 6,
-	  "yb": -0.5
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": 2,
+          "xb": 8,
+          "ya": 12,
+          "yb": -1
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xa": 1,
-	  "xb": 3,
-	  "ya": 6,
-	  "yb": -3
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 2,
+          "xb": 6,
+          "ya": 12,
+          "yb": -6
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 90,
-	"position": {
-	  "xa": 3,
-	  "xb": -1.5,
-	  "yb": -1.5
-	}
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 6,
+          "xb": -3,
+          "yb": -3
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 135,
-	"position": {
-	  "xa": 1,
-	  "xb": -3.5,
-	  "yb": -0.5
-	}
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 2,
+          "xb": -7,
+          "yb": -1
+        }
       }
     ]
   },
   {
     "id": "basic-arrow",
     "name": "Arrow",
-    "size": 18.7279221,
+    "size": 37.4558442,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": 135,
-	"position": {
-	  "xa": -3,
-	  "xb": 2.5,
-	  "yb": 1
-	}
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -6,
+          "xb": 5,
+          "yb": 2
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 90,
-	"position": {
-	  "xa": -1,
-	  "xb": 4.5,
-	  "ya": 0
-	}
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -2,
+          "xb": 9,
+          "ya": 0
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": -3,
-	  "xb": 1.5,
-	  "yb": -2
-	}
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -6,
+          "xb": 3,
+          "yb": -4
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xa": -3,
-	  "xb": -0.5,
-	  "yb": -1
-	}
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -6,
+          "xb": -1,
+          "yb": -2
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": -45,
-	"position": {
-	  "xa": -3,
-	  "xb": -1.5,
-	  "yb": 1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xa": -6,
+          "xb": -3,
+          "yb": 3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xa": -3,
-	  "xb": -3.5,
-	  "yb": 1
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": -6,
+          "xb": -7,
+          "yb": 2
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xa": -3,
-	  "xb": -3,
-	  "yb": -1.5
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": -6,
+          "xb": -6,
+          "yb": -3
+        }
       }
     ]
   },
   {
     "id": "basic-shirt",
     "name": "Shirt",
-    "size": 16.9705627,
+    "size": 33.9411254,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -1,
-	  "yb": 2.5
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -2,
+          "yb": 5
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 1,
-	  "yb": 0.5
-	}
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 2,
+          "yb": 1
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -1.5,
-	  "yb": -3
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -3,
+          "yb": -6
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": true,
-	"rotation": -45,
-	"position": {
-	  "xb": -4.5,
-	  "yb": -1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xb": -9,
+          "yb": -3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": 1,
-	  "yb": -3.5
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 2,
+          "yb": -7
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 0,
-	"position": {
-	  "xb": 3,
-	  "yb": -2.5
-	}
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "yb": -5
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 5,
-	  "yb": -0.5
-	}
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 10,
+          "yb": -1
+        }
       }
     ]
   },
   {
     "id": "basic-cargo-ship",
     "name": "Cargo Ship",
-    "size": 29.6984848,
+    "size": 59.3969696,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -2.5,
-	  "yb": 1
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": 2
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -0.5,
-	  "yb": -1
-	}
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -1,
+          "yb": -2
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -5.5,
-	  "yb": 1
-	}
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -11,
+          "yb": 2
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": true,
-	"rotation": 45,
-	"position": {
-	  "xb": -7.5,
-	  "yb": 1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 45,
+        "position": {
+          "xb": -15,
+          "yb": 3
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": 3,
-	  "yb": 1.5
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "yb": 3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 5.5,
-	  "yb": 2
-	}
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 11,
+          "yb": 4
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 180,
-	"position": {
-	  "xb": 7.5,
-	  "yb": 1
-	}
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xb": 15,
+          "yb": 2
+        }
       }
     ]
   },
   {
     "id": "basic-hammer",
     "name": "Hammer",
-    "size": 18.7279221,
+    "size": 37.4558442,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": -3,
-	  "ya": 1,
-	  "yb": -4.5
-	}
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": -6,
+          "ya": 2,
+          "yb": -9
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": 3,
-	  "ya": -1,
-	  "yb": -4.5
-	}
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 6,
+          "ya": -2,
+          "yb": -9
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 135,
-	"position": {
-	  "xa": 7,
-	  "ya": 1,
-	  "yb": -4.5
-	}
+        "name": "medium_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 14,
+          "ya": 2,
+          "yb": -9
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xa": 3,
-	  "xb": -2,
-	  "ya": 3,
-	  "yb": -3.5
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": 6,
+          "xb": -4,
+          "ya": 6,
+          "yb": -7
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": true,
-	"rotation": -45,
-	"position": {
-	  "xa": 3,
-	  "xb": -1.5,
-	  "ya": 3,
-	  "yb": -1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xa": 6,
+          "xb": -3,
+          "ya": 6,
+          "yb": -3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 135,
-	"position": {
-	  "xa": 3,
-	  "xb": -1,
-	  "ya": 3,
-	  "yb": 0.5
-	}
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 6,
+          "xb": -2,
+          "ya": 6,
+          "yb": 1
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xa": 3,
-	  "xb": -1.5,
-	  "ya": 3,
-	  "yb": 3
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 6,
+          "xb": -3,
+          "ya": 6,
+          "yb": 6
+        }
       }
     ]
   },
   {
     "id": "basic-house",
     "name": "House",
-    "size": 16.2426407,
+    "size": 32.4852814,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": 0,
-	  "ya": 1,
-	  "yb": 3
-	}
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 2,
+          "yb": 6
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": -45,
-	"position": {
-	  "xa": -4,
-	  "ya": -1,
-	  "yb": 3
-	}
+        "name": "medium_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": -8,
+          "ya": -2,
+          "yb": 6
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 180,
-	"position": {
-	  "xa": 3,
-	  "ya": -2,
-	  "yb": 3
-	}
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 6,
+          "ya": -4,
+          "yb": 6
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -90,
-	"position": {
-	  "xa": 5,
-	  "yb": 3
-	}
+        "name": "small_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 10,
+          "yb": 6
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 0,
-	"position": {
-	  "xb": 1.5,
-	  "ya": -5,
-	  "yb": 3
-	}
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": 3,
+          "ya": -10,
+          "yb": 6
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": -45,
-	"position": {
-	  "xa": -6,
-	  "xb": 1.5,
-	  "ya": -3,
-	  "yb": 1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xa": -12,
+          "xb": 3,
+          "ya": -6,
+          "yb": 3
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xa": -6,
-	  "xb": 3,
-	  "ya": -3,
-	  "yb": -1.5
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": -12,
+          "xb": 6,
+          "ya": -6,
+          "yb": -3
+        }
       }
     ]
   },
   {
     "id": "basic-mountain",
     "name": "Mountain",
-    "size": 25.4558441,
+    "size": 50.9116882,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -1,
-	  "ya": 3,
-	  "yb": -0.5
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -2,
+          "ya": 6,
+          "yb": -1
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": -5,
-	  "ya": 3,
-	  "yb": -0.5
-	}
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -10,
+          "ya": 6,
+          "yb": -1
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": -90,
-	"position": {
-	  "xb": 2,
-	  "ya": 3,
-	  "yb": -1.5
-	}
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xb": 4,
+          "ya": 6,
+          "yb": -3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 4,
-	  "ya": 3,
-	  "yb": 0.5
-	}
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 8,
+          "ya": 6,
+          "yb": 1
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": 4.5,
-	  "ya": 3,
-	  "yb": -1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 9,
+          "ya": 6,
+          "yb": -3
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 7,
-	  "ya": 3,
-	  "yb": 0.5
-	}
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 14,
+          "ya": 6,
+          "yb": 1
+        }
       },
       {
-	"name": "square",
-	"rotation": 45,
-	"position": {
-	  "xa": 0,
-	  "yb": -1.5
-	}
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 0,
+          "yb": -3
+        }
       }
     ]
   },
   {
     "id": "basic-candle",
     "name": "Candle",
-    "size": 32.4852814,
+    "size": 64.9705628,
     "size_comment": "Since the parallelogram is placed at a half-angle, it adds 3√10 units to the height; the rest of the candle is 18+3√2 units high.  To keep the positioning of the other pieces aligned, the point where the flame meeds the candle is snapped to 6.5 units which makes the base extend about ¾ unit lower than the flame goes up.",
     "pieces": [
       {
-	"name": "square",
-	"rotation": 45,
-	"position": {
-	  "xa": 0,
-	  "ya": -3.5
-	}
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 0,
+          "ya": -7
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 90,
-	"position": {
-	  "xa": -2,
-	  "ya": -0.5
-	}
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -4,
+          "ya": -1
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": -90,
-	"position": {
-	  "xa": 1,
-	  "ya": 2.5
-	}
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 2,
+          "ya": 5
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 90,
-	"position": {
-	  "xa": -1,
-	  "ya": 8.5
-	}
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -2,
+          "ya": 17
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -90,
-	"position": {
-	  "xa": 2,
-	  "ya": 11.5
-	}
+        "name": "small_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 4,
+          "ya": 23
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 0,
-	"position": {
-	  "xa": 0,
-	  "ya": 11.5,
-	  "yb": 2
-	}
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 23,
+          "yb": 4
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation_comment": "To get the far ends of the parallelogram lined up, the base has to be rotated 18.435° from vertical.  There is no rational value for this angle.  Instead we're going to snap this to 15°, which puts the centroid at 1.5×√2-0.75×√6 x, -0.75×√2-1.5×√6 y from the lowest point.",
-	"rotation": 75,
-	"position": {
-	  "xa": 0.284203036,
-	  "ya": -11.2348948
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation_comment": "To get the far ends of the parallelogram lined up, the base has to be rotated 18.435° from vertical.  There is no rational value for this angle.  Instead we're going to snap this to 15°, which puts the centroid at 1.5×√2-0.75×√6 x, -0.75×√2-1.5×√6 y from the lowest point.",
+        "rotation": 75,
+        "position": {
+          "xa": 0.568406072,
+          "ya": -22.4697896
+        }
       }
     ]
   },
   {
     "id": "basic-chair",
     "name": "Chair",
-    "size": 21.2132034,
+    "size": 42.4264068,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -2.5,
-	  "yb": 2.5
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": 5
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -3,
-	  "yb": 6
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -6,
+          "yb": 12
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": 2.5,
-	  "yb": 3.5
-	}
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 5,
+          "yb": 7
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 2.5,
-	  "yb": 6.5
-	}
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 5,
+          "yb": 13
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": -3,
-	  "yb": 1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": -6,
+          "yb": -3
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": -90,
-	"position": {
-	  "xb": -2.5,
-	  "yb": -1.5
-	}
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xb": -5,
+          "yb": -9
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": -3.5,
-	  "yb": -3.5
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -7,
+          "yb": -13
+        }
       }
     ]
   },
   {
     "id": "basic-plane",
     "name": "Plane",
-    "size": 28.9705627,
+    "size": 57.9411254,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": 2,
-	  "yb": -2
-	}
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 4,
+          "yb": -4
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": -45,
-	"position": {
-	  "xb": 2,
-	  "yb": 2
-	}
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 4,
+          "yb": 4
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": true,
-	"rotation": 0,
-	"position": {
-	  "xa": 1.5,
-	  "xb": 6,
-	  "ya": 1.5
-	}
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 0,
+        "position": {
+          "xa": 3,
+          "xb": 12,
+          "ya": 3
+        }
       },
       {
-	"name": "square",
-	"rotation": 0,
-	"position": {
-	  "xb": -1.5,
-	  "ya": 0
-	}
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -3,
+          "ya": 0
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": 45,
-	"position": {
-	  "xb": -4,
-	  "yb": -0.5
-	}
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -8,
+          "yb": -1
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -135,
-	"position": {
-	  "xb": -5,
-	  "yb": 0.5
-	}
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -10,
+          "yb": 1
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 45,
-	"position": {
-	  "xa": -2,
-	  "xb": -6,
-	  "ya": -4,
-	  "yb": 1.5
-	}
+        "name": "medium_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": -4,
+          "xb": -12,
+          "ya": -8,
+          "yb": 3
+        }
       }
     ]
   },
   {
     "id": "basic-watering-can",
     "name": "Watering Can",
-    "size": 22.4852814,
+    "size": 44.9705628,
     "pieces": [
       {
-	"name": "large_triangle",
-	"rotation": 90,
-	"position": {
-	  "xa": 2,
-	  "ya": 5
-	}
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 4,
+          "ya": 10
+        }
       },
       {
-	"name": "large_triangle",
-	"rotation": 135,
-	"position": {
-	  "xb": 4,
-	  "ya": 11,
-	  "yb": -2
-	}
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 8,
+          "ya": 22,
+          "yb": -4
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -90,
-	"position": {
-	  "xa": 5,
-	  "ya": 2
-	}
+        "name": "small_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 10,
+          "ya": 4
+        }
       },
       {
-	"name": "small_triangle",
-	"rotation": -45,
-	"position": {
-	  "xa": 6,
-	  "xb": 1,
-	  "ya": 5,
-	  "yb": -2
-	}
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": 12,
+          "xb": 2,
+          "ya": 10,
+          "yb": -4
+        }
       },
       {
-	"name": "square",
-	"rotation": 45,
-	"position": {
-	  "xa": 3,
-	  "ya": -1
-	}
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 6,
+          "ya": -2
+        }
       },
       {
-	"name": "parallelogram",
-	"isMirrored": false,
-	"rotation": 45,
-	"position": {
-	  "xb": -1.5,
-	  "ya": -1
-	}
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": -3,
+          "ya": -2
+        }
       },
       {
-	"name": "medium_triangle",
-	"rotation": 135,
-	"position": {
-	  "xa": -2,
-	  "xb": -3,
-	  "ya": -3,
-	  "yb": -3
-	}
+        "name": "medium_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -4,
+          "xb": -6,
+          "ya": -6,
+          "yb": -6
+        }
       }
     ]
   }

@@ -19,12 +19,13 @@ package com.xmission.trevin.android.tangram.data;
 import com.xmission.trevin.android.tangram.R;
 
 /**
- * A square which is the size of two {@link TangramSmallTriangle}s
+ * A parallelogram which is the size of two {@link TangramSmallTriangle}s
  * placed with their short sides together with one rotated 180&deg;
- * relative to the other.  Its sides have lengths of 3&#8730;2&#773;
- * on the short edge and 6 on the long edge.  It&rsquo;s default
+ * relative to the other.  Its sides have lengths of 6&#8730;2&#773;
+ * on the short edge and 12 on the long edge.  It&rsquo;s default
  * orientation is with the long edge on top and bottom, and angled
- * 45&deg; counter-clockwise.
+ * 45&deg; counter-clockwise where +Y is towards the bottom
+ * matching the direction of the display coordinate system.
  *
  * @author Trevin Beattie
  */
@@ -33,10 +34,10 @@ public class TangramParallelogram extends TangramPiece {
     public static final String JSON_NAME = "parallelogram";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new ImmutableTPoint(-4.5f, 0, -1.5f, 0),
-            new ImmutableTPoint( 1.5f, 0, -1.5f, 0),
-            new ImmutableTPoint( 4.5f, 0,  1.5f, 0),
-            new ImmutableTPoint(-1.5f, 0,  1.5f, 0)
+            new ImmutableTPoint(-9f, 0, -3f, 0),
+            new ImmutableTPoint( 3f, 0, -3f, 0),
+            new ImmutableTPoint( 9f, 0,  3f, 0),
+            new ImmutableTPoint(-3f, 0,  3f, 0)
     };
 
     public String getJsonName() {
@@ -53,7 +54,7 @@ public class TangramParallelogram extends TangramPiece {
     }
 
     public float getMaxRadius() {
-        return 4.74341649f;
+        return 9.48683298f;
     }
 
     @Override

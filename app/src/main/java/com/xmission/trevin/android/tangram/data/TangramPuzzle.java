@@ -83,10 +83,11 @@ public class TangramPuzzle implements Parcelable {
      * Default constructor.  The puzzle is unnamed and will have
      * the seven standard pieces placed outside the bounds.
      */
+    // To Do: If it turns out there's no need for this constructor, remove it.
     public TangramPuzzle() {
         // Set the default bounds of the puzzle
         // to the size of 9 (3×3) compact squares.
-        size = 36;
+        size = 72;
         pieces = new TangramPiece[7];
         pieces[0] = new TangramSmallTriangle();
         pieces[1] = new TangramSmallTriangle();
@@ -96,7 +97,7 @@ public class TangramPuzzle implements Parcelable {
         pieces[5] = new TangramLargeTriangle();
         pieces[6] = new TangramLargeTriangle();
         for (int i = 0; i < pieces.length; i++)
-            pieces[i].setPosition(new MutableTPoint(12*i - 36, 0, 24, 0));
+            pieces[i].setPosition(new MutableTPoint(24*i - 72, 0, 48, 0));
     }
 
     /**

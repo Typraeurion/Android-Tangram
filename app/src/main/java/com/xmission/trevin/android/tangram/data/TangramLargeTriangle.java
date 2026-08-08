@@ -21,9 +21,10 @@ import com.xmission.trevin.android.tangram.R;
 /**
  * A right isosceles triangle which is the size of two
  * {@link TangramMediumTriangle}s placed back-to-back.
- * This has a length of 6&#8730;2&#773; on the orthogonal sides
- * and 12 on the hypotenuse.  It&rsquo;s default orientation
- * is with the hypotenuse on the bottom.
+ * This has a length of 12&#8730;2&#773; on the orthogonal sides
+ * and 24 on the hypotenuse.  It&rsquo;s default orientation
+ * is with the hypotenuse on the bottom, which is in the +Y
+ * direction matching the display coordinate system.
  *
  * @author Trevin Beattie
  */
@@ -32,9 +33,9 @@ public class TangramLargeTriangle extends TangramPiece {
     public static final String JSON_NAME = "large_triangle";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new ImmutableTPoint( 0, 0, -4, 0),
-            new ImmutableTPoint( 6, 0,  2, 0),
-            new ImmutableTPoint(-6, 0,  2, 0)
+            new ImmutableTPoint( 0, 0, -8, 0),
+            new ImmutableTPoint( 12, 0,  4, 0),
+            new ImmutableTPoint(-12, 0,  4, 0)
     };
 
     public String getJsonName() {
@@ -51,7 +52,7 @@ public class TangramLargeTriangle extends TangramPiece {
     }
 
     public float getMaxRadius() {
-        return 6.32455532f;
+        return 12.64911064f;
     }
 
     @Override

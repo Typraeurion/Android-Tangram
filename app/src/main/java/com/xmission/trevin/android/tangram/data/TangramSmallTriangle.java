@@ -20,10 +20,11 @@ import com.xmission.trevin.android.tangram.R;
 
 /**
  * The smallest piece of a Tangram: a right isosceles triangle.
- * In order to avoid non-binary division to get the centroid,
- * it&rsquo;s scaled to a length of 3&#8730;2&#773; on the
- * orthogonal sides and 6 on the hypotenuse.  It&rsquo;s
- * default orientation is with the hypotenuse on the bottom.
+ * In order to avoid fractions to snap the centroid to the puzzle
+ * grid, it&rsquo;s scaled to a length of 6&#8730;2&#773; on the
+ * orthogonal sides and 12 on the hypotenuse.  It&rsquo;s
+ * default orientation is with the hypotenuse on the bottom, which
+ * is in the +Y direction matching the display coordinate system.
  *
  * @author Trevin Beattie
  */
@@ -32,9 +33,9 @@ public class TangramSmallTriangle extends TangramPiece {
     public static final String JSON_NAME = "small_triangle";
 
     public static final TPoint[] VERTICES = new TPoint[] {
-            new ImmutableTPoint( 0, 0, -2, 0),
-            new ImmutableTPoint( 3, 0,  1, 0),
-            new ImmutableTPoint(-3, 0,  1, 0)
+            new ImmutableTPoint( 0, 0, -4, 0),
+            new ImmutableTPoint( 6, 0,  2, 0),
+            new ImmutableTPoint(-6, 0,  2, 0)
     };
 
     public String getJsonName() {
@@ -51,7 +52,7 @@ public class TangramSmallTriangle extends TangramPiece {
     }
 
     public float getMaxRadius() {
-        return 3.16227766f;
+        return 6.32455532f;
     }
 
     @Override

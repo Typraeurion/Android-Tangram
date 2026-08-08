@@ -114,8 +114,12 @@ public class PlayTableView extends View {
      */
     private float userZoom = 1f;
 
-    /** Fraction of the view kept as margin around the puzzle when fitting. */
-    private static final float FIT_MARGIN = 0.95f;
+    /**
+     * Relative size of the puzzle goal to the play table when setting
+     * the initial scale in order to leave a margin around the puzzle.
+     * This should be less than 1.
+     */
+    private static final float FIT_MARGIN = 0.875f;
 
     /** Smallest allowed value for {@link #userZoom}. */
     private static final float MIN_ZOOM = 0.5f;
