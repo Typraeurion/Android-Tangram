@@ -84,3 +84,13 @@ configurations.all {
         }
     }
 }
+
+tasks.register('generateCustomJavadoc', Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += files(android.getBootClassPath().join(File.pathSeparator))
+    destinationDir = file(layout.buildDirectory.dir("docs/javadoc").get().asFile)
+    options {
+        // Inject MathJax script to format LaTeX markup on page render.
+        header = '<script id="MathJav-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>'
+    }
+}

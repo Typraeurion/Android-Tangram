@@ -38,19 +38,19 @@ import org.json.JSONObject;
  */
 public abstract class TPoint implements Parcelable {
 
-    double SQRT2 = Math.sqrt(2);
+    public static final double SQRT2 = Math.sqrt(2);
 
     /** JSON key for the <i>a</i> coefficient of the X coordinate */
-    String JSON_X_A = "xa";
+    public static final String JSON_X_A = "xa";
 
     /** JSON key for the <i>b</i> coefficient of the X coordinate */
-    String JSON_X_B = "xb";
+    public static final  String JSON_X_B = "xb";
 
     /** JSON key for the <i>a</i> coefficient of the Y coordinate */
-    String JSON_Y_A = "ya";
+    public static final String JSON_Y_A = "ya";
 
     /** JSON key for the <i>b</i> coefficient of the Y coordinate */
-    String JSON_Y_B = "yb";
+    public static final String JSON_Y_B = "yb";
 
     /** @return the <i>a</i> coefficient of the <i>x</i> coordinate */
     public abstract float getXa();
@@ -127,6 +127,94 @@ public abstract class TPoint implements Parcelable {
      * @return the point at (X, -Y) of this point
      */
     public abstract @NonNull TPoint mirrorY();
+
+    /**
+     * Locate the nearest point in &#8474;&#8730;2&#773; to this point
+     * on the puzzle grid where all coefficients are integers
+     * (&#8714; &#8484;).  This only works when each of the coordinates
+     * are within roughly 50 puzzle units from the origin.  The algorithm
+     * uses a &ldquo;rational approximation via the Pell convergents of
+     * &#8730;2&#773;&rdquo; for each coordinate:
+     * <ol>
+     *     <li>Generate sufficiently large convergent numbers <i>p</i>
+     *     and <i>q</i> such that \(p^2 - 2 \cdot q^2 = \pm 1\).</li>
+     *     <li>Compute two close integers <i>A</i> and <i>B</i> by
+     *     rounding:
+     *     <div class="math">
+     *         $$A = \left\lfloor x \cdot q \right\rceil$$
+     *         $$B = \left\lfloor x \cdot p \right\rceil$$
+     *     </div>
+     *     </li>
+     *     <li>Multiplying \(x = a + b\sqrt{2}\) by <i>q</i> and <i>p</i>
+     *     yields a system of two equations:
+     *     <div class="math">
+     *         $$q \cdot a + p \cdot b = A$$
+     *         $$p \cdot a + 2q \cdot b = B$$
+     *     </div>
+     *     </li>
+     *     <li>Solve for <i>a</i> and <i>b</i> using the determinant
+     *     \(2q^2 - p^2 = \mp 1\):
+     *     <div class="math">
+     *         $$a = \frac{2q \cdot A - p \cdot B}{2q^2 - p^2}$$
+     *         $$b = \frac{q \cdot B - p \cdot A}{2q^2 - p^2}$$
+     *     </div>
+     *     </li>
+     * </ol>
+     *
+     * @return {@code this} if its coefficients are already integers,
+     * or a new {@link ImmutableTPoint} with integer coefficients that
+     * is close to this point.
+     */
+    // FIXME: This calculation breaks down for certain numbers,
+    // resulting in coefficients that are well over 100.
+    public @NonNull TPoint nearestGridPoint() {
+        if ((getXa() == Math.floor(getXa())) &&
+                (getXb() == Math.floor(getXb())) &&
+                (getYa() == Math.floor(getYa())) &&
+                (getYb() == Math.floor(getYb())))
+            return this;
+
+        /*
+         * Precomputed Pell convergent numbers of the 6th iteration.
+         * CAUTION: Using higher iterations can cause this method
+         * to return coefficients far outside the range of the coordinate,
+         * which may be accurate but unhelpful.
+         */
+        final long P = 239;
+        final long Q = 169;
+        final long DET = 1; // 2∙Q² - P²
+
+        // Start with the X coordinate
+        double x = getX();
+        long xA = Math.round(x * Q);
+        long xB = Math.round(x * P);
+        long xa = (2 * Q * xA - P * xB) / DET;
+        long xb = (Q * xB - P * xA) / DET;
+
+        // Repeat for the Y coordinate
+        double y = getY();
+        long yA = Math.round(y * Q);
+        long yB = Math.round(y * P);
+        long ya = (2 * Q * yA - P * yB) / DET;
+        long yb = (Q * yB - P * yA) / DET;
+
+        // This *should* be the final answer.
+        return new ImmutableTPoint((float) xa, (float) xb,
+                (float) ya, (float) yb);
+    }
+
+    /**
+     * Determine the distance between this TPoint and another.
+     *
+     * @param p2 the other point
+     *
+     * @return the Euclidean distance between the two points
+     */
+    public double distanceTo(TPoint p2) {
+        double dx = getX() - p2.getX();
+        double dy = getY() - p2.getY();
+        return Math.sqrt(dx * dx + dy * dy);
+    }
 
     /**
      * Map this point to a JSON object for saving to a file.
