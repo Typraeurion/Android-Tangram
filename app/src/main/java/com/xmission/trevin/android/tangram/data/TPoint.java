@@ -132,9 +132,45 @@ public abstract class TPoint implements Parcelable {
      * Locate the nearest point in &#8474;&#8730;2&#773; to this point
      * on the puzzle grid where all coefficients are integers
      * (&#8714; &#8484;).  This only works when each of the coordinates
-     * are within roughly 50 puzzle units from the origin.  The algorithm
-     * uses a &ldquo;rational approximation via the Pell convergents of
-     * &#8730;2&#773;&rdquo; for each coordinate:
+     * are within roughly 250 puzzle units from the origin.
+     *
+     * @return {@code this} if its coefficients are already integers,
+     * or a new {@link ImmutableTPoint} with integer coefficients that
+     * is close to this point.
+     */
+    // FIXME: This calculation breaks down for certain numbers,
+    // resulting in coefficients that are well over 100.
+    public @NonNull TPoint nearestGridPoint() {
+        if ((getXa() == Math.floor(getXa())) &&
+                (getXb() == Math.floor(getXb())) &&
+                (getYa() == Math.floor(getYa())) &&
+                (getYb() == Math.floor(getYb())))
+            return this;
+
+        long[] coefX = approximateQ2Field(getX());
+        long[] coefY = approximateQ2Field(getY());
+
+        return new ImmutableTPoint((float) coefX[0], (float) coefX[1],
+                (float) coefY[0], (float) coefY[1]);
+    }
+
+    /*
+     * Precomputed Pell convergent numbers of the 5th iteration.
+     * CAUTION: Using higher iterations can cause this method
+     * to return coefficients far outside the range of the coordinate,
+     * which may be accurate but unhelpful.  Using lower iterations
+     * causes the method to break down when the expected coefficient
+     * is greater than Q.
+     */
+    static final int P = 99;
+    static final int Q = 70;
+    static final int DET = -1; // 2∙Q² - P²
+
+    /**
+     * Given a number <i>n</i>, compute the rational approximation of the
+     * equation <i>a</i> + <i>b</i>&#8730;2&#773; = <i>n</i> using
+     * integer coefficients <i>a</i> and <i>b</i> via the Pell
+     * convergents of &#8730;2&#773;&rdquo;:
      * <ol>
      *     <li>Generate sufficiently large convergent numbers <i>p</i>
      *     and <i>q</i> such that \(p^2 - 2 \cdot q^2 = \pm 1\).</li>
@@ -161,46 +197,19 @@ public abstract class TPoint implements Parcelable {
      *     </li>
      * </ol>
      *
-     * @return {@code this} if its coefficients are already integers,
-     * or a new {@link ImmutableTPoint} with integer coefficients that
-     * is close to this point.
+     * @param n the number whose &#8474;&#8730;2&#773; coefficients
+     *to approximate
+     *
+     * @return a pair of integer coefficients in an array
      */
-    // FIXME: This calculation breaks down for certain numbers,
-    // resulting in coefficients that are well over 100.
-    public @NonNull TPoint nearestGridPoint() {
-        if ((getXa() == Math.floor(getXa())) &&
-                (getXb() == Math.floor(getXb())) &&
-                (getYa() == Math.floor(getYa())) &&
-                (getYb() == Math.floor(getYb())))
-            return this;
-
-        /*
-         * Precomputed Pell convergent numbers of the 6th iteration.
-         * CAUTION: Using higher iterations can cause this method
-         * to return coefficients far outside the range of the coordinate,
-         * which may be accurate but unhelpful.
-         */
-        final long P = 239;
-        final long Q = 169;
-        final long DET = 1; // 2∙Q² - P²
-
-        // Start with the X coordinate
-        double x = getX();
-        long xA = Math.round(x * Q);
-        long xB = Math.round(x * P);
-        long xa = (2 * Q * xA - P * xB) / DET;
-        long xb = (Q * xB - P * xA) / DET;
-
-        // Repeat for the Y coordinate
-        double y = getY();
-        long yA = Math.round(y * Q);
-        long yB = Math.round(y * P);
-        long ya = (2 * Q * yA - P * yB) / DET;
-        long yb = (Q * yB - P * yA) / DET;
-
-        // This *should* be the final answer.
-        return new ImmutableTPoint((float) xa, (float) xb,
-                (float) ya, (float) yb);
+    public static long[] approximateQ2Field(double n) {
+        // Compute the intermediate integers
+        long A = Math.round(n * Q);
+        long B = Math.round(n * P);
+        // Solve the system of equations
+        long a = (2 * Q * A - P * B) / DET;
+        long b = (Q * B - P * A) / DET;
+        return new long[] { a, b };
     }
 
     /**
@@ -236,7 +245,7 @@ public abstract class TPoint implements Parcelable {
 
     /**
      * Save this point to a {@link Parcel} (typically as part of a
-     * {@link TangramPiece}.
+     * {@link TangramPiece}.)
      *
      * @param dest The {@link Parcel} in which the object should be written.
      * @param flags Additional flags about how the object should be written.

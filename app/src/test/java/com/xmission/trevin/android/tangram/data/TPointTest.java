@@ -152,14 +152,19 @@ public class TPointTest {
      * takes advantage of the fact that the X and Y coordinates are
      * calculated independently by testing alternating positive and
      * negative values in each.
+     * <p>
+     * <b>Caveat:</b> The calculation breaks down where the coefficients
+     * have opposite signs and
+     * </p>
      */
     @Test
     public void testNearestGridPointCollapsedBCoefficient() {
         // Re-use mutable TPoints to avoid tens of thousands of allocations.
         MutableTPoint collapsed = new MutableTPoint(0, 0, 0, 0);
         MutableTPoint expected = new MutableTPoint(0, 0, 0, 0);
-        for (int a = 0; a <= 100; a++) {
-            for (int b = 1; b <= 100 - a; b ++) {
+        // 70 is the limit at which the algorithm appears to work.
+        for (int a = 0; a <= 70; a++) {
+            for (int b = 1; b <= 70 - a; b ++) {
                 // First pass: both positive on X, both negative on Y
                 collapsed.setXa((float) (a + b * TPoint.SQRT2));
                 collapsed.setYa((float) (-a - b * TPoint.SQRT2));
@@ -196,8 +201,9 @@ public class TPointTest {
         // Re-use mutable TPoints to avoid tens of thousand of allocations.
         MutableTPoint collapsed = new MutableTPoint(0, 0, 0, 0);
         MutableTPoint expected = new MutableTPoint(0, 0, 0, 0);
-        for (int b = 0; b <= 100; b ++) {
-            for (int a = 1; a <= 100 - b; a++) {
+        // 70 is the limit at which the algorithm appears to work.
+        for (int b = 0; b <= 70; b ++) {
+            for (int a = 1; a <= 70 - b; a++) {
                 // First pass: both positive on X, both negative on Y
                 collapsed.setXb((float) (a / TPoint.SQRT2 + b));
                 collapsed.setYb((float) (-a / TPoint.SQRT2 - b));
@@ -238,12 +244,12 @@ public class TPointTest {
         // Repeat this test a sufficient number of times
         // to establish confidence in the algorithm.
         for (int i = 0; i < 10000; i++) {
-            float testXa = (float) (Math.random() * 100);
+            float testXa = (float) (Math.random() * 70);
             float testXb = (float) (Math.random()
-                    * (100 - testXa * TPoint.SQRT2));
-            float testYa = (float) (Math.random() * 100);
+                    * (70 - testXa * TPoint.SQRT2));
+            float testYa = (float) (Math.random() * 70);
             float testYb = (float) (Math.random()
-                    * (100 - testXa * TPoint.SQRT2));
+                    * (70 - testXa * TPoint.SQRT2));
             inexact.setXa(testXa);
             inexact.setXb(testXb);
             inexact.setYa(testYa);

@@ -198,15 +198,23 @@ public class ImmutableTPoint extends TPoint {
             sb.append(xa);
         else if (xa == 0)
             sb.append(xb).append("√2\u0305");
-        else
-            sb.append(xa).append('+').append(xb).append("√2\u0305");
+        else {
+            sb.append(xa);
+            if (xb >= 0)
+                sb.append('+');
+            sb.append(xb).append("√2\u0305");
+        }
         sb.append("x, ");
         if (yb == 0)
             sb.append(ya);
         else if (ya == 0)
             sb.append(yb).append("√2\u0305");
-        else
-            sb.append(ya).append('+').append(yb).append("√2\u0305");
+        else {
+            sb.append(ya);
+            if (yb >= 0)
+                sb.append('+');
+            sb.append(yb).append("√2\u0305");
+        }
         sb.append("y)");
         return sb.toString();
     }
