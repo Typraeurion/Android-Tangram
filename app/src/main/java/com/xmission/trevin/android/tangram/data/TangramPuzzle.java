@@ -27,8 +27,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
@@ -77,27 +78,17 @@ public class TangramPuzzle implements Parcelable {
      * square the Tangram pieces are cut from.
      */
     protected float size;
-    protected @NonNull TangramPiece[] pieces;
+    protected final List<TangramPiece> pieces = new ArrayList<>();
 
     /**
      * Default constructor.  The puzzle is unnamed and will have
-     * the seven standard pieces placed outside the bounds.
+     * no pieces yet; the pieces will need to be added later.
      */
     // To Do: If it turns out there's no need for this constructor, remove it.
     public TangramPuzzle() {
         // Set the default bounds of the puzzle
         // to the size of 9 (3×3) compact squares.
         size = 72;
-        pieces = new TangramPiece[7];
-        pieces[0] = new TangramSmallTriangle();
-        pieces[1] = new TangramSmallTriangle();
-        pieces[2] = new TangramSquare();
-        pieces[3] = new TangramParallelogram();
-        pieces[4] = new TangramMediumTriangle();
-        pieces[5] = new TangramLargeTriangle();
-        pieces[6] = new TangramLargeTriangle();
-        for (int i = 0; i < pieces.length; i++)
-            pieces[i].setPosition(new MutableTPoint(24*i - 72, 0, 48, 0));
     }
 
     /**
@@ -115,9 +106,8 @@ public class TangramPuzzle implements Parcelable {
         // To Do: Check for a translation table
         size = (float) json.getDouble(JSON_SIZE);
         JSONArray jsonPieces = json.getJSONArray(JSON_PIECES);
-        pieces = new TangramPiece[jsonPieces.length()];
-        for (int i = 0; i < pieces.length; i++) try {
-            pieces[i] = TangramPiece.fromJSON(jsonPieces.getJSONObject(i));
+        for (int i = 0; i < jsonPieces.length(); i++) try {
+            pieces.add(TangramPiece.fromJSON(jsonPieces.getJSONObject(i)));
         } catch (JSONException e) {
             JSONException wrappedException = new JSONException(
                     String.format(Locale.US,
@@ -140,12 +130,12 @@ public class TangramPuzzle implements Parcelable {
         id = in.readString();
         name = in.readString();
         size = in.readFloat();
-        TangramPiece[] piecesIn = in.createTypedArray(TangramPiece.CREATOR);
+        List<TangramPiece> piecesIn =
+                in.createTypedArrayList(TangramPiece.CREATOR);
         if (piecesIn != null) {
-            pieces = piecesIn;
+            pieces.addAll(piecesIn);
         } else {
-            Log.e(LOG_TAG, "TangramPuzzle parcel has no pieces!");
-            pieces = new TangramPiece[0];
+            Log.e(LOG_TAG, "TangramPuzzle parcel has no pieces list!");
         }
     }
 
@@ -198,7 +188,7 @@ public class TangramPuzzle implements Parcelable {
 
     /** @return the number of pieces in the puzzle (normally 7) */
     public int getPieceCount() {
-        return pieces.length;
+        return pieces.size();
     }
 
     /**
@@ -209,7 +199,7 @@ public class TangramPuzzle implements Parcelable {
      * @return the puzzle piece at the given index
      */
     public TangramPiece getPiece(int index) {
-        return pieces[index];
+        return pieces.get(index);
     }
 
     /**
@@ -217,6 +207,41 @@ public class TangramPuzzle implements Parcelable {
      */
     public float getSize() {
         return size;
+    }
+
+    /**
+     * Add a piece to this puzzle if not already present.
+     *
+     * @param piece the piece to add
+     *
+     * @return {@code true} if the piece was added, {@code false}
+     * if it was already in the puzzle.
+     */
+    public boolean addPiece(@NonNull TangramPiece piece) {
+        if (pieces.contains(piece))
+            return false;
+        return pieces.add(piece);
+    }
+
+    /**
+     * Add multiple pieces to this puzzle at once.
+     *
+     * @param pieces the pieces to add
+     */
+    public void addPieces(@NonNull List<TangramPiece> pieces) {
+        this.pieces.addAll(pieces);
+    }
+
+    /**
+     * Remove a piece from this puzzle.
+     *
+     * @param piece the piece to remove
+     *
+     * @return {@code true} if the piece was present and removed,
+     * {@code false} if it was not in this puzzle.
+     */
+    public boolean removePiece(@NonNull TangramPiece piece) {
+        return pieces.remove(piece);
     }
 
     private static final Map<Class<? extends TangramPiece>, Integer>
@@ -250,7 +275,7 @@ public class TangramPuzzle implements Parcelable {
      * @return true if all expected pieces are present, false otherwise
      */
     public boolean isValid() {
-        if (pieces.length != 7)
+        if (pieces.size() != 7)
             return false;
         Map<Class<? extends TangramPiece>, Integer> counts = new HashMap<>();
         for (TangramPiece piece : pieces) {
@@ -292,10 +317,10 @@ public class TangramPuzzle implements Parcelable {
         dest.writeString(id);
         dest.writeString(name);
         dest.writeFloat(size);
-        // Use writeTypedArray (paired with createTypedArray in our CREATOR):
+        // Use writeTypedList (paired with createTypedArrayList in our CREATOR):
         // the element type is known from TangramPiece.CREATOR, so this omits
         // the redundant per-element class name that writeParcelableArray adds.
-        dest.writeTypedArray(pieces, flags);
+        dest.writeTypedList(pieces);
     }
 
     /**
@@ -361,7 +386,8 @@ public class TangramPuzzle implements Parcelable {
      * For two TangramPuzzles to be the same, they must have the same
      * source, ID, and pieces.  We&rsquo;ll let the names be different
      * because one may be translated differently than the other, and
-     * the sizes are only advisory.
+     * the sizes are only advisory.  But to keep this operation simple,
+     * the pieces must be in the same order.
      *
      * @param o the other object to compare this to
      *
@@ -375,10 +401,130 @@ public class TangramPuzzle implements Parcelable {
                 return false;
             if (!Objects.equals(id, p2.id))
                 return false;
-            return Arrays.equals(pieces, p2.pieces);
+            return pieces.equals(p2.pieces);
 
         }
         return false;
+    }
+
+    /**
+     * Snap a given puzzle piece to any neighbors or to the puzzle grid,
+     * according to the first match of the following rules:
+     * <ol>
+     *     <li>If this is the only piece in the play area <i>or</i>
+     *     none of its edges is touching a nearly collinear edge of
+     *     any other piece and none of its vertices is touching an
+     *     edge or vertex of any other piece and none of its edges
+     *     is touching a vertex of any other piece, then snap its
+     *     rotation to the nearest 45&deg; and its position to
+     *     the integer grid.</li>
+     *     <li>If any edge of a piece touches the edge of another piece
+     *     and they are nearly parallel (within specified tolerances),
+     *     snap its rotation to make those edges parallel and its position
+     *     to make them collinear.
+     *     <ol>
+     *         <li>If there is a second edge of the piece which is close
+     *         to the parallel edge of another piece (within tolerance),
+     *         snap its position in the direction orthogonal to the first
+     *         edge to that the second edges are collinear.</li>
+     *         <li>If there is a vertex of the piece which is close to
+     *         either the edge or a vertex of another piece (within
+     *         tolerance), snap the position in the direction orthogonal
+     *         to the first edge such that the closest such vertex lies
+     *         on the edge or vertex of the other piece.</li>
+     *         <li>If there is another edge of the piece which is close to
+     *         a vertex of another piece (within tolerance), snap the
+     *         position in the direction orthogonal to the first edge
+     *         such that the closest such edge passes through the vertex
+     *         of the other piece.</li>
+     *         <li>If one of the endpoints or the center of the snapped
+     *         edge is close to one of the endpoints or center of the edge
+     *         of the other piece that this was snapped to (within tolerance),
+     *         snap the position in the direction orthogonal to the edges
+     *         to make the nearest such points match.</li>
+     *     </ol>
+     *     </li>
+     *     <li>If any vertex of a piece is close to an edge or vertex of
+     *     another piece (within tolerance), snap its rotation to the
+     *     nearest multiple of 15°.
+     *     <ol>
+     *         <li>If the vertex is close to either the vertex or midpoint
+     *         on the edge of the other piece (within tolerance), snap its
+     *         position such that the vertex matches the other point.</li>
+     *         <li>Otherwise snap its position such that the vertex lies
+     *         on the edge of the other piece.</li>
+     *     </ol></li>
+     * </ol>
+     *
+     * All other pieces in the puzzle are considered.  If the given piece is
+     * not already in the puzzle, it is added.
+     *
+     * @param moved the piece to snap into place
+     */
+    public void snap(TangramPiece moved) {
+        // Temporarily move the piece out of the list while
+        // we consider whether it's touching the others.
+        pieces.remove(moved);
+
+        if (pieces.isEmpty()) {
+            // Simple case: nothing to match against.
+            moved.setRotation(45 * Math.round(moved.getRotation() / 45));
+            moved.setPosition(moved.getPosition().nearestZGridPoint());
+        } else {
+            // To Do: touching pieces detection
+            moved.setRotation(15 * Math.round(moved.getRotation() / 15));
+            moved.setPosition(moved.getPosition().nearestQ2GridPoint());
+        }
+
+        pieces.add(moved);
+        Log.d(LOG_TAG, "Snapped " + moved);
+    }
+
+    /**
+     * Find the point at the center of the puzzle.  This walks through
+     * all of the pieces&rsquo;s vertices looking for the minimum and
+     * maximum values of each coordinate, then gets their average.
+     * If the puzzle is currently empty, this returns the origin.
+     * At the same time, this also re-calculates the {@code size} of
+     * the puzzle (provided it is not empty).
+     *
+     * @return the center point of the puzzle
+     */
+    public @NonNull TPoint getCenter() {
+        if (pieces.isEmpty())
+            return ImmutableTPoint.ORIGIN;
+        float minXa = Float.POSITIVE_INFINITY;
+        float maxXa = Float.NEGATIVE_INFINITY;
+        float minXb = Float.POSITIVE_INFINITY;
+        float maxXb = Float.NEGATIVE_INFINITY;
+        float minYa = Float.POSITIVE_INFINITY;
+        float maxYa = Float.NEGATIVE_INFINITY;
+        float minYb = Float.POSITIVE_INFINITY;
+        float maxYb = Float.NEGATIVE_INFINITY;
+        for (TangramPiece piece : pieces) {
+            for (TPoint vertex : piece.getVertices()) {
+                if (vertex.getXa() < minXa)
+                    minXa = vertex.getXa();
+                if (vertex.getXa() > maxXa)
+                    maxXa = vertex.getXa();
+                if (vertex.getXb() < minXb)
+                    minXb = vertex.getXb();
+                if (vertex.getXb() > maxXb)
+                    maxXb = vertex.getXb();
+                if (vertex.getYa() < minYa)
+                    minYa = vertex.getYa();
+                if (vertex.getYa() > maxYa)
+                    maxYa = vertex.getYa();
+                if (vertex.getYb() < minYb)
+                    minYb = vertex.getYb();
+                if (vertex.getYb() > maxYb)
+                    maxYb = vertex.getYb();
+            }
+        }
+        size = (float) Math.max(maxXa - minXa + (maxXb- minXb) * TPoint.SQRT2,
+                maxYa - minYa + (maxYb - minYb) * TPoint.SQRT2);
+        return new ImmutableTPoint((minXa + maxXa) / 2, (minXb + maxXb) / 2,
+                (minYa + maxYa) / 2, (minYb + maxYb) / 2);
     }
 
 }

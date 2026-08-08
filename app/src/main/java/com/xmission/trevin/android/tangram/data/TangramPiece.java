@@ -185,6 +185,13 @@ public abstract class TangramPiece implements Parcelable {
     }
 
     /**
+     * @return whether the vertices of this piece need to be recomputed.
+     */
+    public boolean isDirty() {
+        return transformIsStale;
+    }
+
+    /**
      * @return the radius from the piece&rsquo;s centroid
      * to the farthest vertex.
      */

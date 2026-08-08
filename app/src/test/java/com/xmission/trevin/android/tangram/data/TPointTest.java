@@ -112,7 +112,7 @@ public class TPointTest {
     }
 
     /**
-     * Simple test of {@link TPoint#nearestGridPoint()} where the
+     * Simple test of {@link TPoint#nearestQ2GridPoint()} where the
      * point&rsquo;s coefficients are already integers.  The test
      * will start from the {@link ImmutableTPoint#ORIGIN} and work
      * its way out from there alternating between positive and negative
@@ -120,8 +120,8 @@ public class TPointTest {
      * coordinates are calculated independently.
      */
     @Test
-    public void testNearestGridPointAlreadyOnGrid() {
-        TPoint actual = ImmutableTPoint.ORIGIN.nearestGridPoint();
+    public void testNearestQ2GridPointAlreadyOnQ2Grid() {
+        TPoint actual = ImmutableTPoint.ORIGIN.nearestQ2GridPoint();
         assertEquals("Nearest point to the origin",
                 ImmutableTPoint.ORIGIN, actual);
         // We're going to re-use a mutable TPoint
@@ -134,19 +134,19 @@ public class TPointTest {
                 expected.setXb(b);
                 expected.setYa(-a);
                 expected.setYb(-b);
-                actual = expected.nearestGridPoint();
+                actual = expected.nearestQ2GridPoint();
                 assertEquals("Nearest point", expected, actual);
                 // Second pass: both a coefficients positive, both b negative
                 expected.setXb(-b);
                 expected.setYa(a);
-                actual = expected.nearestGridPoint();
+                actual = expected.nearestQ2GridPoint();
                 assertEquals("Nearest point", expected, actual);
             }
         }
     }
 
     /**
-     * Test {@link TPoint#nearestGridPoint()} where the <i>b</i>
+     * Test {@link TPoint#nearestQ2GridPoint()} where the <i>b</i>
      * coefficient has been collapsed into <i>a</i> (i.e. <i>a</i>&#8242;
      * = <i>a</i> + <i>b</i>&#8730;2&#773;, <i>b</i>&#8242; = 0).  This
      * takes advantage of the fact that the X and Y coordinates are
@@ -158,7 +158,7 @@ public class TPointTest {
      * </p>
      */
     @Test
-    public void testNearestGridPointCollapsedBCoefficient() {
+    public void testNearestQ2GridPointCollapsedBCoefficient() {
         // Re-use mutable TPoints to avoid tens of thousands of allocations.
         MutableTPoint collapsed = new MutableTPoint(0, 0, 0, 0);
         MutableTPoint expected = new MutableTPoint(0, 0, 0, 0);
@@ -172,7 +172,7 @@ public class TPointTest {
                 expected.setXb(b);
                 expected.setYa(-a);
                 expected.setYb(-b);
-                TPoint actual = collapsed.nearestGridPoint();
+                TPoint actual = collapsed.nearestQ2GridPoint();
                 assertEquals("Nearest point to " + collapsed,
                         expected, actual);
                 // Second pass: a positive, b negative on X;
@@ -181,7 +181,7 @@ public class TPointTest {
                 collapsed.setYa((float) (-a + b * TPoint.SQRT2));
                 expected.setXb(-b);
                 expected.setYb(b);
-                actual = collapsed.nearestGridPoint();
+                actual = collapsed.nearestQ2GridPoint();
                 assertEquals("Nearest point to " + collapsed,
                         expected, actual);
             }
@@ -189,7 +189,7 @@ public class TPointTest {
     }
 
     /**
-     * Test {@link TPoint#nearestGridPoint()} where the <i>a</i>
+     * Test {@link TPoint#nearestQ2GridPoint()} where the <i>a</i>
      * coefficient has been collapsed into <i>b</i> (i.e. <i>a</i>&#8242;
      * = 0, <i>b</i>&#8242; = <i>a</i>&#247;&#8730;2&#773; + <i>b</i>).
      * This takes advantage of the fact that the X and Y coordinates are
@@ -197,7 +197,7 @@ public class TPointTest {
      * negative values in each.
      */
     @Test
-    public void testNearestGridPointCollapsedACoefficient() {
+    public void testNearestQ2GridPointCollapsedACoefficient() {
         // Re-use mutable TPoints to avoid tens of thousand of allocations.
         MutableTPoint collapsed = new MutableTPoint(0, 0, 0, 0);
         MutableTPoint expected = new MutableTPoint(0, 0, 0, 0);
@@ -211,7 +211,7 @@ public class TPointTest {
                 expected.setXb(b);
                 expected.setYa(-a);
                 expected.setYb(-b);
-                TPoint actual = collapsed.nearestGridPoint();
+                TPoint actual = collapsed.nearestQ2GridPoint();
                 assertEquals("Nearest point to " + collapsed,
                         expected, actual);
                 // Second pass: a positive, b negative on X;
@@ -220,7 +220,7 @@ public class TPointTest {
                 collapsed.setYb((float) (-a / TPoint.SQRT2 + b));
                 expected.setXb(-b);
                 expected.setYb(b);
-                actual = collapsed.nearestGridPoint();
+                actual = collapsed.nearestQ2GridPoint();
                 assertEquals("Nearest point to " + collapsed,
                         expected, actual);
             }
@@ -228,14 +228,14 @@ public class TPointTest {
     }
 
     /**
-     * Test {@link TPoint#nearestGridPoint()} where the coordinates are
+     * Test {@link TPoint#nearestQ2GridPoint()} where the coordinates are
      * not on the grid.  Determining the expected value can be tricky
      * here, because the steps of the <i>a</i> and <i>b</i> coefficients
      * are uneven; e.g. 5&#8730;2&#773; is less than
      * <sup>1</sup>&#8260;<sub>14</sub> from the integer 7.
      */
     @Test
-    public void testNearestGridPointNotOnGrid() {
+    public void testNearestQ2GridPointNotOnQ2Grid() {
         // Re-use mutable TPoints to avoid hundreds of allocations.
         MutableTPoint inexact = new MutableTPoint(0, 0, 0, 0);
         MutableTPoint[] candidates = new MutableTPoint[1 << 4];
@@ -283,7 +283,7 @@ public class TPointTest {
             }
             // Now check what the algorithm produced;
             // it may be better than any of our choices.
-            TPoint actual = inexact.nearestGridPoint();
+            TPoint actual = inexact.nearestQ2GridPoint();
             if (actual.equals(bestCandidate)) {
                 // Our crude guess was right;
                 continue;

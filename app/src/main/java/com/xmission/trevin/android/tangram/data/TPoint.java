@@ -129,6 +129,23 @@ public abstract class TPoint implements Parcelable {
     public abstract @NonNull TPoint mirrorY();
 
     /**
+     * Locate the nearest point to this point on an integer puzzle grid
+     * (<i>a</i> &#8714; &#8484;, <i>b</i> = 0).
+     *
+     * @return {@code this} if its <i>a</i> coefficients are already
+     * integers and <i>b</i> are 0, or a new {@link ImmutableTPoint}
+     * that is close to this point.
+     */
+    public @NonNull TPoint nearestZGridPoint() {
+        if ((getXa() == Math.floor(getXa())) && (getXb() == 0) &&
+                (getYa() == Math.floor(getYa())) && (getYb() == 0))
+            return this;
+
+        return new ImmutableTPoint((float) Math.round(getX()), 0f,
+                (float) Math.round(getY()), 0f);
+    }
+
+    /**
      * Locate the nearest point in &#8474;&#8730;2&#773; to this point
      * on the puzzle grid where all coefficients are integers
      * (&#8714; &#8484;).  This only works when each of the coordinates
@@ -140,7 +157,7 @@ public abstract class TPoint implements Parcelable {
      */
     // FIXME: This calculation breaks down for certain numbers,
     // resulting in coefficients that are well over 100.
-    public @NonNull TPoint nearestGridPoint() {
+    public @NonNull TPoint nearestQ2GridPoint() {
         if ((getXa() == Math.floor(getXa())) &&
                 (getXb() == Math.floor(getXb())) &&
                 (getYa() == Math.floor(getYa())) &&

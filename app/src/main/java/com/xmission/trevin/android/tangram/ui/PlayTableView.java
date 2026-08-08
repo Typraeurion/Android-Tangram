@@ -409,6 +409,19 @@ public class PlayTableView extends View {
     }
 
     /**
+     * Snap the selected piece after its release, using
+     * {@link TangramPuzzle#snap(TangramPiece)}.
+     */
+    private void snapSelectedPiece() {
+        if (selectedPiece == null)
+            return;
+        // To Do: Should we retain the puzzle in play?
+        TangramPuzzle puzzle = new TangramPuzzle();
+        puzzle.addPieces(pieces);
+        puzzle.snap(selectedPiece);
+    }
+
+    /**
      * Change the selection, notifying {@link #selectionListener} only when
      * the selected piece actually changes.
      */
@@ -807,6 +820,9 @@ public class PlayTableView extends View {
                 // neighbors (and to the solution outline) here, and only
                 // then snap its rotation to the nearest 45° via
                 // TangramPiece.coarseRotate.
+                // For now (testing), snap the rotation to the nearest 15°
+                // and the position to the puzzle grid (ℚ√2 field).
+                snapSelectedPiece();
                 return true;
         }
         return super.onTouchEvent(event);
