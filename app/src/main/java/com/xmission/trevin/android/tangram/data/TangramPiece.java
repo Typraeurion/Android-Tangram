@@ -192,6 +192,20 @@ public abstract class TangramPiece implements Parcelable {
     }
 
     /**
+     * @return the edges of this piece in its current orientation and
+     * position, in winding order&mdash;edge <i>i</i> runs from vertex
+     * <i>i</i> to vertex <i>i</i>&nbsp;+&nbsp;1 (wrapping), so there are as
+     * many edges as vertices.  Used by the snapping logic.
+     */
+    public TEdge[] getEdges() {
+        TPoint[] vertices = getVertices();
+        TEdge[] edges = new TEdge[vertices.length];
+        for (int i = 0; i < vertices.length; i++)
+            edges[i] = new TEdge(vertices[i], vertices[(i + 1) % vertices.length]);
+        return edges;
+    }
+
+    /**
      * @return the radius from the piece&rsquo;s centroid
      * to the farthest vertex.
      */

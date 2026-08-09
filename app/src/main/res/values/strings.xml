@@ -19,6 +19,8 @@ https://opensource.org/license/gpl-3.0 for more details.\n
 </string>
     <string name="app_name">Tangram</string>
     <string name="ButtonSave">Save Pattern</string>
+    <string name="ErrorInvalidNamedPuzzle">Invalid puzzle: %1$s</string>
+    <string name="ErrorInvalidUnnamedPuzzle">Invalid puzzle</string>
     <string name="InfoButtonOK">OK</string>
     <string name="MenuAbout">About&#8230;</string>
     <string name="MenuLibrary">Browse Library</string>
@@ -26,14 +28,16 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="MenuRandom">Random Puzzle</string>
     <string name="MenuResume">Resume Puzzle In Progress</string>
     <string name="MenuSketch">Free-form</string>
-    <string name="PrefsTextHintLevel">Hint Level: </string>
-    <string name="PrefsTextHintNone">No Hints</string>
-    <string name="PrefsTextHintOutline">Outline Pieces</string>
-    <string name="PrefsTextHintSolve">Colored Pieces</string>
-    <string name="PrefsTextThemeDark">Dark</string>
-    <string name="PrefsTextThemeDefault">System Default</string>
-    <string name="PrefsTextThemeLight">Light</string>
-    <string name="PrefsTextUITheme">UI Theme: </string>
+    <!-- Badge showing how many of a piece are left to place, e.g. "×2" -->
+    <string name="piece_count_format">&#215;%d</string>
+    <!-- Piece names, used for the tray slots' accessibility descriptions -->
+    <string name="PieceNameLargeTriangle">Large Triangle</string>
+    <string name="PieceNameMediumTriangle">Medium Triangle</string>
+    <string name="PieceNameParallelogram">Parallelogram</string>
+    <string name="PieceNameSmallTriangle">Small Triangle</string>
+    <string name="PieceNameSquare">Square</string>
+    <!-- Spoken description of a tray slot: name then count available -->
+    <string name="piece_tray_item_description">%1$s, %2$d available</string>
     <string name="PlayButtonBackText">Exit</string>
     <string name="PlayButtonBackTooltip">Back to main menu</string>
     <string name="PlayButtonFlipText">Flip</string>
@@ -42,17 +46,26 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="PlayButtonSaveTooltip">Save the completed Tangram</string>
     <string name="PlayViewGoalText">Goal</string>
     <string name="PlayViewGoalTooltip">Puzzle goal</string>
+    <string name="PrefsTextHintLevel">Hint Level: </string>
+    <string name="PrefsTextHintNone">No Hints</string>
+    <string name="PrefsTextHintOutline">Outline Pieces</string>
+    <string name="PrefsTextHintSolve">Colored Pieces</string>
+    <string name="PrefsTextThemeDark">Dark</string>
+    <string name="PrefsTextThemeDefault">System Default</string>
+    <string name="PrefsTextThemeLight">Light</string>
+    <string name="PrefsTextUITheme">UI Theme: </string>
     <string name="TitleTooltip">Tangram</string>
-    <!-- Piece names, used for the tray slots' accessibility descriptions -->
-    <string name="piece_large_triangle">Large triangle</string>
-    <string name="piece_medium_triangle">Medium triangle</string>
-    <string name="piece_parallelogram">Parallelogram</string>
-    <string name="piece_square">Square</string>
-    <string name="piece_small_triangle">Small triangle</string>
-
-    <!-- Badge showing how many of a piece are left to place, e.g. "×2" -->
-    <string name="piece_count_format">&#215;%d</string>
-    <!-- Spoken description of a tray slot: name then count available -->
-    <string name="piece_tray_item_description">%1$s, %2$d available</string>
+    <!-- Puzzle validation errors -->
+    <string name="ValidationErrorDisconnect">%1$s are not touching %2$s</string>
+    <plurals name="ValidationErrorExtraPiece">
+        <item quantity="one">There is %1$d extra %2$s</item>
+        <item quantity="other">There are %1$d extra %2$ss</item>
+    </plurals>
+    <plurals name="ValidationErrorMissingPiece">
+        <item quantity="one">%1$d %2$s is missing</item>
+        <item quantity="other">%1$d %2$ss are missing</item>
+    </plurals>
+    <string name="ValidationErrorNotTouching">%1$s does not touch any other pieces</string>
+    <string name="ValidationErrorOverlap">%1$s overlaps %2$s</string>
 
 </resources>

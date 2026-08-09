@@ -41,9 +41,7 @@ import com.xmission.trevin.android.tangram.data.TPoint;
 import com.xmission.trevin.android.tangram.data.TangramPiece;
 import com.xmission.trevin.android.tangram.data.TangramPuzzle;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Locale;
 
 /**
@@ -137,12 +135,13 @@ public class PlayTableView extends View {
     private final SparseIntArray fillColors = new SparseIntArray();
 
     /**
-     * The pieces this view owns, in back-to-front draw order: the last
-     * element is on top and is the first candidate for hit-testing.  This
-     * list is the view&rsquo;s authoritative state; a {@link TangramPuzzle}
-     * can be built from it (or used to populate it) at the boundary.
+     * The play field: the pieces the player has placed, in back-to-front
+     * draw order (the last element is on top and the first hit-test
+     * candidate).  This is the view&rsquo;s authoritative working state, and
+     * the puzzle that {@link TangramPuzzle#snap(TangramPiece)} operates on
+     * when a piece is released.
      */
-    private final List<TangramPiece> pieces = new ArrayList<>();
+    private final TangramPuzzle playField = new TangramPuzzle();
 
     /**
      * Default playfield extent, in puzzle units, used for free-play /
@@ -296,9 +295,8 @@ public class PlayTableView extends View {
      */
     public void setPuzzle(@NonNull TangramPuzzle puzzle) {
         playfieldSize = puzzle.getSize();
-        pieces.clear();
-        for (int i = 0; i < puzzle.getPieceCount(); i++)
-            pieces.add(puzzle.getPiece(i));
+        playField.clear();
+        playField.addPieces(puzzle.getPieces());
         setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         panX = panY = 0f;
@@ -321,7 +319,7 @@ public class PlayTableView extends View {
         solution = puzzle;
         playfieldSize = (puzzle != null)
                 ? puzzle.getSize() : DEFAULT_PLAYFIELD_SIZE;
-        pieces.clear();
+        playField.clear();
         setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
@@ -352,7 +350,7 @@ public class PlayTableView extends View {
         mapTouchToPuzzle(viewX, viewY);
         piece.setPosition(new MutableTPoint(
                 touchBuffer[0], 0, touchBuffer[1], 0));
-        pieces.add(piece);
+        playField.addPiece(piece);
         setSelectedPiece(piece);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
@@ -401,7 +399,7 @@ public class PlayTableView extends View {
         if (x >= 0 && x <= getWidth() && y >= 0 && y <= getHeight())
             return; // centroid still on the field; keep the piece
         TangramPiece removed = selectedPiece;
-        pieces.remove(removed);
+        playField.removePiece(removed);
         setSelectedPiece(null);
         invalidate();
         if (pieceReturnedListener != null)
@@ -415,10 +413,8 @@ public class PlayTableView extends View {
     private void snapSelectedPiece() {
         if (selectedPiece == null)
             return;
-        // To Do: Should we retain the puzzle in play?
-        TangramPuzzle puzzle = new TangramPuzzle();
-        puzzle.addPieces(pieces);
-        puzzle.snap(selectedPiece);
+        playField.snap(selectedPiece);
+        invalidate();
     }
 
     /**
@@ -607,7 +603,7 @@ public class PlayTableView extends View {
         canvas.drawColor(bgColor);
 
         // Nothing to draw until we have pieces and a measured size.
-        if (pieces.isEmpty() || (fitScale <= 0f))
+        if ((playField.getPieceCount() == 0) || (fitScale <= 0f))
             return;
 
         float scale = getUnitScale();
@@ -616,8 +612,8 @@ public class PlayTableView extends View {
         outlinePaint.setColor(outlineColor);
         outlinePaint.setStrokeWidth(outlineWidthPx);
 
-        for (int i = 0; i < pieces.size(); i++) {
-            TangramPiece piece = pieces.get(i);
+        for (int i = 0; i < playField.getPieceCount(); i++) {
+            TangramPiece piece = playField.getPiece(i);
 
             /*
              * Cheap culling: skip any piece whose bounding circle lies
@@ -814,14 +810,9 @@ public class PlayTableView extends View {
                 panPointerId = MotionEvent.INVALID_POINTER_ID;
                 endFieldGesture();
                 // A piece dragged off the visible field goes back to the
-                // tray rather than being lost off-screen.
+                // tray rather than being lost off-screen; anything left on the
+                // field snaps to its neighbors / the grid.
                 returnSelectedPieceIfOffField();
-                // To Do: snap the released piece's vertices/edges to its
-                // neighbors (and to the solution outline) here, and only
-                // then snap its rotation to the nearest 45° via
-                // TangramPiece.coarseRotate.
-                // For now (testing), snap the rotation to the nearest 15°
-                // and the position to the puzzle grid (ℚ√2 field).
                 snapSelectedPiece();
                 return true;
         }
@@ -968,8 +959,8 @@ public class PlayTableView extends View {
      */
     @Nullable
     private TangramPiece pieceAt(float px, float py) {
-        for (int i = pieces.size() - 1; i >= 0; i--) {
-            TangramPiece piece = pieces.get(i);
+        for (int i = playField.getPieceCount() - 1; i >= 0; i--) {
+            TangramPiece piece = playField.getPiece(i);
             if (contains(piece.getVertices(), px, py))
                 return piece;
         }
@@ -978,8 +969,8 @@ public class PlayTableView extends View {
 
     /** Move a piece to the top of the draw / hit-test order. */
     private void raiseToTop(TangramPiece piece) {
-        if (pieces.remove(piece))
-            pieces.add(piece);
+        if (playField.removePiece(piece))
+            playField.addPiece(piece);
     }
 
     /**
@@ -1014,7 +1005,7 @@ public class PlayTableView extends View {
     @Override
     protected Parcelable onSaveInstanceState() {
         SavedState state = new SavedState(super.onSaveInstanceState());
-        state.pieces = pieces.toArray(new TangramPiece[0]);
+        state.pieces = playField.getPieces().toArray(new TangramPiece[0]);
         state.userZoom = userZoom;
         state.panX = panX;
         state.panY = panY;
@@ -1028,9 +1019,9 @@ public class PlayTableView extends View {
             return;
         }
         super.onRestoreInstanceState(ss.getSuperState());
-        pieces.clear();
+        playField.clear();
         if (ss.pieces != null)
-            Collections.addAll(pieces, ss.pieces);
+            playField.addPieces(Arrays.asList(ss.pieces));
         userZoom = ss.userZoom;
         panX = ss.panX;
         panY = ss.panY;

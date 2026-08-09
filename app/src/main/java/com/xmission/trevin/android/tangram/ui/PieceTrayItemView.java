@@ -80,15 +80,15 @@ public class PieceTrayItemView extends FrameLayout {
      */
     public enum PieceType {
         SMALL_TRIANGLE(TangramSmallTriangle.class,
-                TangramSmallTriangle::new, R.string.piece_small_triangle),
+                TangramSmallTriangle::new, R.string.PieceNameSmallTriangle),
         SQUARE(TangramSquare.class,
-                TangramSquare::new, R.string.piece_square),
+                TangramSquare::new, R.string.PieceNameSquare),
         PARALLELOGRAM(TangramParallelogram.class,
-                TangramParallelogram::new, R.string.piece_parallelogram),
+                TangramParallelogram::new, R.string.PieceNameParallelogram),
         MEDIUM_TRIANGLE(TangramMediumTriangle.class,
-                TangramMediumTriangle::new, R.string.piece_medium_triangle),
+                TangramMediumTriangle::new, R.string.PieceNameMediumTriangle),
         LARGE_TRIANGLE(TangramLargeTriangle.class,
-                TangramLargeTriangle::new, R.string.piece_large_triangle);
+                TangramLargeTriangle::new, R.string.PieceNameLargeTriangle);
 
         final Class<? extends TangramPiece> pieceClass;
         final PieceFactory factory;

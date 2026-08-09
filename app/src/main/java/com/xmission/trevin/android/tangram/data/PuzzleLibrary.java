@@ -21,6 +21,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.xmission.trevin.android.tangram.exception.InvalidPuzzleException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
