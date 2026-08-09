@@ -33,10 +33,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Container for a Tangram.  This names a puzzle and provides the
@@ -331,16 +334,18 @@ public class TangramPuzzle implements Parcelable {
      * </ul>
      * and all pieces must be touching and not overlap.
      * Ideally the pieces should be oriented at multiples of 45&deg;
-     * (or in a few cases a multiple of 22.5&deg;), aligned to
+     * (or in a few cases a multiple of 15&deg;), aligned to
      * puzzle grid units, and centered around the origin, but this
      * method doesn&rsquo;t impose a hard constraint on that.
-     * <p>
-     *     <i>Note: the method currently doesn&rsquo;t check for
-     *     overlaps or non-touching pieces, while we&rsquo;re working
-     *     on creating the puzzle library&hellip;</i>
-     * </p>
      *
-     * @return true if all expected pieces are present, false otherwise
+     * <p>Any problems are recorded in {@link #validationErrors}: a
+     * {@link MissingPieceException}/{@link ExtraPieceException} per piece
+     * type with the wrong count, an {@link OverlappingPiecesException} per
+     * overlapping pair, a {@link PieceNotTouchingException} per piece that
+     * touches nothing else, and a {@link DisconnectedException} for each
+     * additional connected group when the pieces form more than one.</p>
+     *
+     * @return true if the puzzle has no validation errors, false otherwise
      */
     public boolean isValid() {
         List<TangramException> errors = new ArrayList<>();
@@ -372,13 +377,111 @@ public class TangramPuzzle implements Parcelable {
                             entry.getValue().pieceName));
             }
         }
-        // To Do: Check for overlaps and gaps
+        // Overlaps: each piece against the earlier pieces in the list.
+        for (int j = 1; j < pieces.size(); j++) {
+            for (int i = 0; i < j; i++) {
+                if (pieces.get(j).overlaps(pieces.get(i))) {
+                    PieceTypeInfo first = PIECE_INFO.get(pieces.get(i).getClass());
+                    PieceTypeInfo second = PIECE_INFO.get(pieces.get(j).getClass());
+                    if (first != null && second != null)
+                        errors.add(new OverlappingPiecesException(
+                                first.pieceNameId, first.pieceName,
+                                second.pieceNameId, second.pieceName));
+                }
+            }
+        }
+
+        // Touching / connectivity (only meaningful with two or more pieces).
+        int n = pieces.size();
+        if (n >= 2) {
+            boolean[][] touch = new boolean[n][n];
+            for (int i = 0; i < n; i++)
+                for (int j = i + 1; j < n; j++)
+                    touch[i][j] = touch[j][i] =
+                            pieces.get(i).touches(pieces.get(j));
+
+            // A piece touching nothing else isn't part of the tangram.
+            for (int i = 0; i < n; i++) {
+                boolean touchesAny = false;
+                for (int j = 0; j < n; j++)
+                    if (touch[i][j]) {
+                        touchesAny = true;
+                        break;
+                    }
+                if (!touchesAny) {
+                    PieceTypeInfo info = PIECE_INFO.get(pieces.get(i).getClass());
+                    if (info != null)
+                        errors.add(new PieceNotTouchingException(
+                                info.pieceNameId, info.pieceName));
+                }
+            }
+
+            // Connected components (union-find over the touch graph): if more
+            // than one multi-piece group remains, the groups are disconnected.
+            int[] parent = new int[n];
+            for (int i = 0; i < n; i++)
+                parent[i] = i;
+            for (int i = 0; i < n; i++)
+                for (int j = i + 1; j < n; j++)
+                    if (touch[i][j])
+                        parent[find(parent, i)] = find(parent, j);
+            Map<Integer, List<Integer>> components = new LinkedHashMap<>();
+            for (int i = 0; i < n; i++) {
+                int root = find(parent, i);
+                List<Integer> component = components.get(root);
+                if (component == null) {
+                    component = new ArrayList<>();
+                    components.put(root, component);
+                }
+                component.add(i);
+            }
+            List<List<Integer>> groups = new ArrayList<>();
+            for (List<Integer> component : components.values())
+                if (component.size() >= 2)
+                    groups.add(component);
+            for (int g = 1; g < groups.size(); g++)
+                errors.add(new DisconnectedException(
+                        nameIdsOf(groups.get(0)), namesOf(groups.get(0)),
+                        nameIdsOf(groups.get(g)), namesOf(groups.get(g))));
+        }
+
         if (errors.isEmpty()) {
             validationErrors = null;
             return true;
         }
         validationErrors = errors;
         return false;
+    }
+
+    /** Union-find root of {@code i}, with path halving. */
+    private static int find(int[] parent, int i) {
+        while (parent[i] != i) {
+            parent[i] = parent[parent[i]];
+            i = parent[i];
+        }
+        return i;
+    }
+
+    /** @return the set of piece-name resource ids for a group of pieces. */
+    private Set<Integer> nameIdsOf(@NonNull List<Integer> group) {
+        Set<Integer> ids = new TreeSet<>();
+        for (int i : group) {
+            PieceTypeInfo info = PIECE_INFO.get(pieces.get(i).getClass());
+            if (info != null)
+                ids.add(info.pieceNameId);
+        }
+        return ids;
+    }
+
+    /** @return the set of piece names (for logging) for a group of pieces. */
+    private Set<String> namesOf(@NonNull List<Integer> group) {
+        Set<String> names = new TreeSet<>();
+        for (int i : group) {
+            PieceTypeInfo info = PIECE_INFO.get(pieces.get(i).getClass());
+            if (info != null)
+                names.add(info.pieceName);
+        }
+        return names;
     }
 
     /**

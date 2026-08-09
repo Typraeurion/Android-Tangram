@@ -54,4 +54,14 @@ public class ExtraPieceException extends TangramException {
                 numExtra, numExtra, context.getString(pieceId));
     }
 
+    /** @return the number of extra pieces found */
+    public int getNumExtra() {
+        return numExtra;
+    }
+
+    /** @return the resource ID of the name of the piece */
+    public int getExtraPieceId() {
+        return pieceId;
+    }
+
 }

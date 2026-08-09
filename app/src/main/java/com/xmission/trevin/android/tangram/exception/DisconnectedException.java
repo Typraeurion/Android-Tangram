@@ -73,4 +73,14 @@ public class DisconnectedException extends TangramException {
                 group1Names, group2Names);
     }
 
+    /** @return the ID&rsquo;s of the names of pieces in the first group */
+    public Set<Integer> getGroup1Ids() {
+        return Collections.unmodifiableSet(group1Ids);
+    }
+
+    /** @return the ID&rsquo;s of the names of pieces in the second group */
+    public Set<Integer> getGroup2Ids() {
+        return Collections.unmodifiableSet(group2Ids);
+    }
+
 }

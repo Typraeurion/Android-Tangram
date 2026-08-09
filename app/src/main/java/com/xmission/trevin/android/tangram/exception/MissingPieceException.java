@@ -54,4 +54,14 @@ public class MissingPieceException extends TangramException {
                 numMissing, numMissing, context.getString(pieceId));
     }
 
+    /** @return the number of missing pieces */
+    public int getNumMissing() {
+        return numMissing;
+    }
+
+    /** @return the resource ID of the name of the piece */
+    public int getMissingPieceId() {
+        return pieceId;
+    }
+
 }

@@ -74,6 +74,9 @@ dependencies {
     androidTestImplementation libs.androidx.junit
 
     testImplementation libs.junit
+    // Real org.json implementation so JSON puzzle parsing can be
+    // exercised in JVM unit tests (the android.jar stub throws).
+    testImplementation libs.json
 }
 
 configurations.all {

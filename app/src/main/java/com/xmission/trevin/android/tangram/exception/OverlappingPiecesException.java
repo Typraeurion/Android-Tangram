@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import com.xmission.trevin.android.tangram.R;
 
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Validation error for a piece which overlaps another piece
@@ -52,6 +53,11 @@ public class OverlappingPiecesException extends TangramException {
         return context.getString(R.string.ValidationErrorOverlap,
                 context.getString(pieceIds[0]),
                 context.getString(pieceIds[1]));
+    }
+
+    /** @return the ID&rsquo;s of the names of the pieces */
+    public Set<Integer> getPieceIds() {
+        return Set.of(pieceIds[0], pieceIds[1]);
     }
 
 }

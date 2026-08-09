@@ -50,4 +50,9 @@ public class PieceNotTouchingException extends TangramException {
                 context.getString(pieceId));
     }
 
+    /** @return the resource ID of the name of the piece */
+    public int getPieceId() {
+        return pieceId;
+    }
+
 }

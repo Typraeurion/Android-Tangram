@@ -53,6 +53,18 @@ public abstract class TangramPiece implements Parcelable {
     public static final String JSON_MIRRORED = "isMirrored";
 
     /**
+     * Maximum gap, in puzzle units, between two pieces&rsquo; boundaries for
+     * them to count as touching.
+     */
+    public static final double TOUCH_TOLERANCE = 0.1;
+
+    /**
+     * Minimum interior penetration, in puzzle units, for two pieces to count
+     * as overlapping (so a shared edge or vertex is <em>not</em> an overlap).
+     */
+    public static final double OVERLAP_TOLERANCE = 0.1;
+
+    /**
      * Current orientation from the baseline around the centroid
      * in degrees.  Normally values should be from 0&ndash;345 in
      * multiples of 15, but this may take fractional values for
@@ -203,6 +215,76 @@ public abstract class TangramPiece implements Parcelable {
         for (int i = 0; i < vertices.length; i++)
             edges[i] = new TEdge(vertices[i], vertices[(i + 1) % vertices.length]);
         return edges;
+    }
+
+    /**
+     * @param other the piece to test against
+     * @return whether this piece&rsquo;s interior overlaps {@code other}&rsquo;s
+     * by more than {@link #OVERLAP_TOLERANCE}.  Uses the Separating Axis
+     * Theorem for the two convex polygons; merely sharing an edge or vertex
+     * (touching) is not an overlap.
+     */
+    public boolean overlaps(@NonNull TangramPiece other) {
+        TPoint[] a = getVertices(), b = other.getVertices();
+        return !hasSeparatingAxis(a, b) && !hasSeparatingAxis(b, a);
+    }
+
+    /**
+     * @return whether some edge normal of {@code a} separates the two convex
+     * polygons (their projections onto that axis don&rsquo;t overlap by more
+     * than {@link #OVERLAP_TOLERANCE})
+     */
+    private static boolean hasSeparatingAxis(
+            @NonNull TPoint[] a, @NonNull TPoint[] b) {
+        int n = a.length;
+        for (int i = 0; i < n; i++) {
+            TPoint p0 = a[i], p1 = a[(i + 1) % n];
+            // Outward normal of edge (p0 -> p1), normalized so the overlap is
+            // measured as a distance in puzzle units.
+            double axisX = -(p1.getY() - p0.getY());
+            double axisY = p1.getX() - p0.getX();
+            double length = Math.hypot(axisX, axisY);
+            if (length == 0)
+                continue;
+            axisX /= length;
+            axisY /= length;
+            double minA = Double.POSITIVE_INFINITY, maxA = Double.NEGATIVE_INFINITY;
+            double minB = Double.POSITIVE_INFINITY, maxB = Double.NEGATIVE_INFINITY;
+            for (TPoint p : a) {
+                double d = p.getX() * axisX + p.getY() * axisY;
+                minA = Math.min(minA, d);
+                maxA = Math.max(maxA, d);
+            }
+            for (TPoint p : b) {
+                double d = p.getX() * axisX + p.getY() * axisY;
+                minB = Math.min(minB, d);
+                maxB = Math.max(maxB, d);
+            }
+            double overlap = Math.min(maxA, maxB) - Math.max(minA, minB);
+            if (overlap <= OVERLAP_TOLERANCE)
+                return true; // separated (or only touching) on this axis
+        }
+        return false;
+    }
+
+    /**
+     * @param other the piece to test against
+     * @return whether this piece touches {@code other}: their boundaries come
+     * within {@link #TOUCH_TOLERANCE} of each other (or their interiors
+     * overlap, which also counts as touching for connectivity purposes)
+     */
+    public boolean touches(@NonNull TangramPiece other) {
+        if (overlaps(other))
+            return true;
+        for (TPoint v : getVertices())
+            for (TEdge e : other.getEdges())
+                if (e.distanceToPoint(v) <= TOUCH_TOLERANCE)
+                    return true;
+        for (TPoint v : other.getVertices())
+            for (TEdge e : getEdges())
+                if (e.distanceToPoint(v) <= TOUCH_TOLERANCE)
+                    return true;
+        return false;
     }
 
     /**

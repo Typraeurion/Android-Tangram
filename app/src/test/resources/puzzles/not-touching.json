@@ -1,0 +1,66 @@
+{
+  "id": "bad-not-touching",
+  "name": "Detached Piece",
+  "size": 24,
+    "comment": "The second small triangle is offset +0.171573x units from the rest of the puzzle, which along a 45° diagonal is 0.12132 units between edges which should be outside the tolerance range of 0.1 units.",
+  "pieces": [
+    {
+      "name": "large_triangle",
+      "rotation": 0,
+      "position": {
+        "xa": 0,
+        "ya": 8
+      }
+    },
+    {
+      "name": "large_triangle",
+      "rotation": 90,
+      "position": {
+        "xa": -8,
+        "ya": 0
+      }
+    },
+    {
+      "name": "medium_triangle",
+      "rotation": 45,
+      "position": {
+        "xa": 8,
+        "ya": -8
+      }
+    },
+    {
+      "name": "parallelogram",
+      "isMirrored": false,
+      "rotation": 0,
+      "position": {
+        "xa": -3,
+        "ya": -9
+      }
+    },
+    {
+      "name": "square",
+      "rotation": 45,
+      "position": {
+        "xa": 6,
+        "ya": 0
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": 180,
+      "position": {
+        "xa": 0,
+        "ya": -4
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": -90,
+      "position": {
+        "xa": 13,
+        "xb": -2,
+        "ya": 6
+      }
+    }
+  ]
+}

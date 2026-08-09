@@ -149,14 +149,12 @@ public abstract class TPoint implements Parcelable {
      * Locate the nearest point in &#8474;&#8730;2&#773; to this point
      * on the puzzle grid where all coefficients are integers
      * (&#8714; &#8484;).  This only works when each of the coordinates
-     * are within roughly 250 puzzle units from the origin.
+     * are within 70 puzzle units from the origin.
      *
      * @return {@code this} if its coefficients are already integers,
      * or a new {@link ImmutableTPoint} with integer coefficients that
      * is close to this point.
      */
-    // FIXME: This calculation breaks down for certain numbers,
-    // resulting in coefficients that are well over 100.
     public @NonNull TPoint nearestQ2GridPoint() {
         if ((getXa() == Math.floor(getXa())) &&
                 (getXb() == Math.floor(getXb())) &&
