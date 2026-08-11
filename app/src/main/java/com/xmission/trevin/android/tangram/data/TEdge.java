@@ -16,7 +16,12 @@
  */
 package com.xmission.trevin.android.tangram.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
+
+import java.util.Locale;
 
 /**
  * A straight edge (line segment) between two {@link TPoint}s, with the
@@ -33,11 +38,11 @@ import androidx.annotation.NonNull;
  *
  * @author Claude Opus 4.8
  */
-public class TEdge {
+public class TEdge implements Parcelable {
 
-    private final TPoint start;
-    private final TPoint end;
-    private final TPoint midpoint;
+    private final @NonNull TPoint start;
+    private final @NonNull TPoint end;
+    private final @NonNull TPoint midpoint;
 
     /**
      * Construct an edge from {@code start} to {@code end}.
@@ -50,6 +55,21 @@ public class TEdge {
                 (start.getXb() + end.getXb()) / 2,
                 (start.getYa() + end.getYa()) / 2,
                 (start.getYb() + end.getYb()) / 2);
+    }
+
+    /**
+     * Construct an edge from a {@link Parcel}.
+     */
+    private TEdge(Parcel in) {
+        TPoint p0 = in.readTypedObject(TPoint.CREATOR);
+        TPoint p2 = in.readTypedObject(TPoint.CREATOR);
+        TPoint p1 = in.readTypedObject(TPoint.CREATOR);
+        if ((p0 == null) || (p2 == null) || (p1 == null))
+            throw new IllegalArgumentException(
+                    "Parcel corrupted; contains null value for edge point");
+        start = p0;
+        end = p2;
+        midpoint = p1;
     }
 
     /** @return the starting endpoint of this edge. */
@@ -207,9 +227,64 @@ public class TEdge {
         return overlapFraction * length();
     }
 
-    @NonNull
+    /**
+     * Save this edge to a {@link Parcel}.
+     *
+     * @param dest The {@link Parcel} in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     * This class does not use any flags.
+     */
     @Override
-    public String toString() {
-        return "TEdge[" + start + " -> " + end + "]";
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeTypedObject(start, flags);
+        dest.writeTypedObject(end, flags);
+        dest.writeTypedObject(midpoint, flags);
     }
+
+    /**
+     * Create an edge from a {@link Parcel}.
+     */
+    public static Creator<TEdge> CREATOR = new Creator<>() {
+        @Override
+        public TEdge createFromParcel(Parcel in) {
+            return new TEdge(in);
+        }
+        @Override
+        public TEdge[] newArray(int size) {
+            return new TEdge[size];
+        }
+    };
+
+    /**
+     * The {@link Parcel} for this object contains no special objects.
+     *
+     * @return 0
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public @NonNull String toString() {
+        return String.format(Locale.US,
+                "TEdge[%s \u2192 %s]", start, end);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = start.hashCode();
+        hash = hash * 31 + end.hashCode();
+        hash = hash * 31 + midpoint.hashCode();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof TEdge e2))
+            return false;
+        return start.equals(e2.start) && end.equals(e2.end)
+                && midpoint.equals(e2.midpoint);
+    }
+
 }

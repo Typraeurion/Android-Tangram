@@ -54,17 +54,28 @@ public abstract class TangramActivity extends AppCompatActivity {
 
     /**
      * @return the style resource to apply to this activity.  The default is
-     * the theme for the current hint level; subclasses may override to force
-     * a specific subtheme.
+     * the theme for the current piece coloring; subclasses may override to
+     * force a specific subtheme.
      */
     @StyleRes
     protected int resolveThemeResource() {
-        return themeForHintLevel(
-                TangramPreferences.getInstance(this).getHintLevel());
+        TangramPreferences prefs = TangramPreferences.getInstance(this);
+        return themeForPieces(prefs.getPieceColoring());
     }
 
     /**
-     * Map a hint level to the theme that colors the tangram pieces (and any
+     * @return the style resource to apply to puzzle goals.  This is used
+     * for the goal view in the play activity as well as the list of
+     * puzzles in the library.
+     */
+    @StyleRes
+    protected int resolveHintThemeResource() {
+        TangramPreferences prefs = TangramPreferences.getInstance(this);
+        return themeForPieces(prefs.getHintLevel());
+    }
+
+    /**
+     * Map a piece theme to the theme that colors the tangram pieces (and any
      * other hint-styled graphics):
      * <ul>
      *   <li>{@code OPAQUE} &rarr; all one color, no outline (hardest);</li>
@@ -72,16 +83,16 @@ public abstract class TangramActivity extends AppCompatActivity {
      *   <li>{@code SOLVE} &rarr; the fully, distinctly colored solution.</li>
      * </ul>
      *
-     * @param level the current hint level
+     * @param theme the current piece theme
      * @return the corresponding style resource
      */
     @StyleRes
-    protected static int themeForHintLevel(
-            @NonNull TangramPreferences.HintLevel level) {
-        return switch (level) {
-            case HINT -> R.style.Theme_Tangram_Hinted;
-            case SOLVE -> R.style.Theme_Tangram;
-            default -> R.style.Theme_Tangram_Puzzle; // OPAQUE
+    protected static int themeForPieces(
+            @NonNull TangramPreferences.PiecesTheme theme) {
+        return switch (theme) {
+            case OPAQUE -> R.style.Theme_Tangram_Puzzle;
+            case OUTLINE -> R.style.Theme_Tangram_Hinted;
+            case MULTICOLOR -> R.style.Theme_Tangram;
         };
     }
 }

@@ -47,7 +47,7 @@ import java.util.TreeSet;
  *
  * @author Trevin Beattie
  */
-public class TangramPuzzle implements Parcelable {
+public class TangramPuzzle implements Cloneable, Parcelable {
 
     public static final String LOG_TAG = "TangramPuzzle";
 
@@ -175,6 +175,21 @@ public class TangramPuzzle implements Parcelable {
         } else {
             Log.e(LOG_TAG, "TangramPuzzle parcel has no pieces list!");
         }
+    }
+
+    /**
+     * Create a deep copy of this puzzle.  This is used for saving an
+     * active puzzle without disturbing the original.
+     */
+    protected TangramPuzzle(TangramPuzzle original) {
+        sourceFileName = original.sourceFileName;
+        id = original.id;
+        name = original.name;
+        size = original.size;
+        for (TangramPiece piece : original.pieces)
+            pieces.add(piece.clone());
+        validationErrors = (original.validationErrors == null) ? null
+                : new ArrayList<>(original.validationErrors);
     }
 
     /**
@@ -602,6 +617,14 @@ public class TangramPuzzle implements Parcelable {
 
         }
         return false;
+    }
+
+    /**
+     * @return a deep copy of this puzzle.
+     */
+    @Override
+    public @NonNull TangramPuzzle clone() {
+        return new TangramPuzzle(this);
     }
 
     /**

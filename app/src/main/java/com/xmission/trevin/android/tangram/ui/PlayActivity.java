@@ -16,23 +16,34 @@
  */
 package com.xmission.trevin.android.tangram.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.IntentCompat;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.*;
+import com.xmission.trevin.android.tangram.util.FileUtils;
 
+import java.io.File;
 import java.util.Locale;
 
 /**
@@ -57,10 +68,16 @@ public class PlayActivity extends TangramActivity {
     public static final String EXTRA_PUZZLE_GOAL =
             "com.xmission.trevin.android.tangram.PUZZLE_GOAL";
 
+    private TangramPreferences prefs;
+
     private PlayTableView playTableView;
+
+    private ViewGroup saveButtonFrame;
 
     /** Reference to the puzzle name toast if we show one, otherwise null */
     private Toast puzzleToast = null;
+
+    private PuzzleLibrary library = null;
 
     /**
      * Build an intent to start this activity.
@@ -87,6 +104,8 @@ public class PlayActivity extends TangramActivity {
                 "onCreate(%s)", savedInstanceState == null ? "" : "saved state"));
         setContentView(R.layout.activity_play);
         WindowInsetsUtil.applySafeAreaPadding(this);
+
+        prefs = TangramPreferences.getInstance(this);
 
         playTableView = findViewById(R.id.play_table);
         TangramPuzzle goal = IntentCompat.getParcelableExtra(
@@ -135,6 +154,9 @@ public class PlayActivity extends TangramActivity {
      * for free-play mode
      */
     private void setUpOverlayControls(@Nullable TangramPuzzle goal) {
+        ViewGroup backFrame = findViewById(R.id.button_back_frame);
+        moveControlToCorner(R.id.button_back_frame,
+                prefs.getBackButtonCorner());
         findViewById(R.id.button_back).setOnClickListener((v) -> {
             if (puzzleToast != null)
                 puzzleToast.cancel();
@@ -142,6 +164,18 @@ public class PlayActivity extends TangramActivity {
         });
 
         ViewGroup goalFrame = findViewById(R.id.goal_view_frame);
+        if (prefs.getHintLevel() != prefs.getPieceColoring()) {
+            // Re-theme the goal view according to the hint level.
+            goalFrame.removeAllViews();
+            int hintTheme = resolveHintThemeResource();
+            ContextThemeWrapper themedContext =
+                    new ContextThemeWrapper(this, hintTheme);
+            LayoutInflater inflater = getLayoutInflater()
+                    .cloneInContext(themedContext);
+            View themedGoal = inflater.inflate(
+                    R.layout.goal_frame, goalFrame, true);
+        }
+        moveControlToCorner(R.id.goal_view_frame, prefs.getGoalCorner());
         TangramPuzzleView goalView = findViewById(R.id.goal_view);
         if (goal != null) {
             goalView.setPuzzle(goal);
@@ -160,6 +194,32 @@ public class PlayActivity extends TangramActivity {
         flipFrame.setVisibility(
                 canFlip(playTableView.getSelectedPiece())
                         ? View.VISIBLE : View.GONE);
+
+        saveButtonFrame = findViewById(R.id.button_save_frame);
+        moveControlToCorner(R.id.button_save_frame,
+                prefs.getSaveButtonCorner());
+        // We only care about saving *if* we're in free-play mode
+        // and *if* the user has set up a directory for user puzzles.
+        if ((goal == null) && (prefs.getUserPuzzlesDir() != null)) {
+            ImageButton saveButton = findViewById(R.id.button_save);
+            saveButton.setOnClickListener(new SavePuzzleListener());
+        }
+    }
+
+    /**
+     * Move a given hover control into the designated corner.
+     *
+     * @param groupId the ID of the {@link LinearLayout} containing the control
+     * @param corner the corner in which to move the layout
+     */
+    private void moveControlToCorner(
+            int groupId,
+            @NonNull TangramPreferences.Corner corner) {
+        LinearLayout frame = findViewById(groupId);
+        FrameLayout.LayoutParams params =
+                (FrameLayout.LayoutParams) frame.getLayoutParams();
+        params.gravity = corner.getGravity();
+        frame.setLayoutParams(params);
     }
 
     /** @return whether a (possibly {@code null}) piece can be flipped. */
@@ -220,4 +280,163 @@ public class PlayActivity extends TangramActivity {
             }
         }
     }
+
+    /**
+     * Called when the user clicks the save button.
+     */
+    private class SavePuzzleListener implements View.OnClickListener {
+        private final SavePuzzleCallback callback = new SavePuzzleCallback();
+        private AlertDialog saveDialog = null;
+        @Override
+        public void onClick(View v) {
+            if (saveDialog == null) {
+                saveDialog = new AlertDialog.Builder(PlayActivity.this)
+                        .setTitle(R.string.SaveDialogTitle)
+                        .setView(R.layout.dialog_save_puzzle)
+                        .setPositiveButton(R.string.SaveDialogButtonSave,
+                                // MUST pass null here to prevent Android from
+                                // closing the dialog before the save is finished.
+                                null)
+                        .setNegativeButton(R.string.SaveDialogButtonCancel,
+                                (d, w) -> d.dismiss())
+                        .create();
+                saveDialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                        .setOnClickListener(callback);
+                saveDialog.setOnShowListener((d) -> {
+                    saveDialog.setCancelable(true);
+                    saveDialog.setCanceledOnTouchOutside(false);
+                    saveDialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                            .setEnabled(true);
+                    saveDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                            .setEnabled(true);
+                });
+            }
+            saveDialog.show();
+        }
+
+        /**
+         * Called when the user clicks "Save" in the save dialog.
+         */
+        private class SavePuzzleCallback implements View.OnClickListener {
+            @Override
+            public void onClick(View button) {
+                // Disable dismissing the dialog until we're done with it.
+                saveDialog.getButton(DialogInterface.BUTTON_POSITIVE)
+                        .setEnabled(false);
+                saveDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+                        .setEnabled(false);
+                saveDialog.setCancelable(false);
+
+                EditText categoryEdit =
+                        saveDialog.findViewById(R.id.SaveDialogCategory);
+                EditText nameEdit =
+                        saveDialog.findViewById(R.id.SaveDialogName);
+                EditText idEdit =
+                        saveDialog.findViewById(R.id.SaveDialogID);
+                String category = categoryEdit.getText().toString().strip();
+                String name = nameEdit.getText().toString().strip();
+                String id = idEdit.getText().toString().strip();
+
+                // Convert any unsafe filename characters to '_'
+                // FIXME: Should also allow non-ASCII alpha characters
+                category.replaceAll("[^-.0-9A-Z_a-z]", "_")
+                        .replaceFirst("^[-._]+", "")
+                        .replaceFirst("[-._]+$", "");
+                if (category.isEmpty())
+                    category = getString(R.string.SaveDialogCategoryHint);
+
+                if (id.isEmpty()) {
+                    // By default, set the ID to the category plus
+                    // the name with spaces replaced by dashes.
+                    id = (category + "-" + name).replaceAll(" ", "-");
+                }
+                // Ensure the ID only has valid characters
+                // FIXME: Should also allow non-ASCII alpha characters
+                id.replaceAll("[^-.0-9A-Z_a-z]", "_");
+                if (id.matches("[-.0-9].*"))
+                    id = "_" + id;
+
+                String dir = prefs.getUserPuzzlesDir();
+                // Sanity check
+                if (dir == null) {
+                    Log.w(LOG_TAG, "User puzzle directory has disappeared");
+                    showError(getString(R.string.ErrorUserDirNotSet));
+                    return;
+                }
+                Uri folderUri = Uri.parse(dir);
+                DocumentFile saveFolder = DocumentFile.fromTreeUri(
+                        PlayActivity.this, folderUri);
+                // Verify we still have access to this directory
+                if (!FileUtils.isDirectoryAccessible(
+                        PlayActivity.this, folderUri)) {
+                    Log.w(LOG_TAG, String.format(Locale.US,
+                            "Permission to use %s has been revoked", dir));
+                    showError(getString(R.string.ErrorUserDirRevoked,
+                            saveFolder.getName()));
+                    return;
+                }
+                String fileName = getString(R.string.UserPuzzleFilePrefix)
+                        + category + ".json";
+                DocumentFile saveFile = saveFolder.findFile(fileName);
+                if (saveFile == null) {
+                    saveFile = saveFolder.createFile(
+                            "application/json", fileName);
+                    if (saveFile == null) {
+                        String displayFullName = saveFolder.getName()
+                                + File.separator + fileName;
+                        Log.e(LOG_TAG, String.format(Locale.US,
+                                "Error creating file %s", displayFullName));
+                        showError(getString(R.string.ErrorCannotCreateSaveFile,
+                                displayFullName));
+                        return;
+                    }
+                }
+
+                if (library == null)
+                    library = PuzzleLibrary.getInstance();
+
+                TangramPuzzle puzzle = playTableView.getPuzzle().clone();
+                puzzle.setSourceFileName(saveFile.getName());
+                puzzle.setName(name);
+                puzzle.setId(id);
+
+                // Center the puzzle.
+                TPoint centerAdjust = puzzle.getCenter().mirrorX().mirrorY();
+                for (TangramPiece piece : puzzle.getPieces()) {
+                    piece.setPosition(piece.getPosition().add(centerAdjust));
+                }
+                // Save it.
+                try {
+                    library.savePuzzle(PlayActivity.this, puzzle, saveFile);
+                } catch (Exception e) {
+                    showError(getString(R.string.ErrorWritingPuzzle,
+                            saveFile.getName(), e.getMessage()));
+                    return;
+                }
+                saveDialog.dismiss();
+                return;
+            }
+
+            /**
+             * Show an error message if we fail to save the puzzle.
+             * This also dismisses the save dialog and hides the Save
+             * button.
+             *
+             * @param message the message to display
+             */
+            void showError(String message) {
+                saveDialog.dismiss();
+                saveButtonFrame.setVisibility(View.GONE);
+                new AlertDialog.Builder(PlayActivity.this)
+                        .setTitle(R.string.ErrorCannotSave)
+                        .setMessage(message)
+                        .setNegativeButton(
+                                R.string.SaveDialogButtonCancel, null)
+                        .setCancelable(true)
+                        .show();
+            }
+        }
+
+    }
+
 }

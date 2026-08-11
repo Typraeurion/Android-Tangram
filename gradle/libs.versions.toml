@@ -2,6 +2,7 @@
 agp = "9.2.1"
 appcompat = "1.7.1"
 constraintLayout = "2.2.1"
+documentFile = "1.1.0"
 espressoCore = "3.7.0"
 json = "20260719"
 junit = "4.13.2"
@@ -11,6 +12,7 @@ runner = "1.7.0"
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintLayout" }
+androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentFile" }
 androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
 json = { module = "org.json:json", version.ref = "json" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

@@ -21,6 +21,8 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,6 +51,9 @@ public class TangramPreferences
 
     /** Label for the preferences option "UI Theme" */
     public static final String PREF_UI_THEME = "UITheme";
+
+    /** Label for the preferences option "Piece Coloring" */
+    public static final String PREF_PIECE_COLOR = "PieceColoring";
 
     /** Label for the preferences option "Hint Level" */
     public static final String PREF_HINT_LEVEL = "HintLevel";
@@ -96,29 +101,44 @@ public class TangramPreferences
     /** Cache the old (or default) UI theme */
     private UITheme oldTheme = UITheme.SYSTEM_DEFAULT;
 
-    /** Values for puzzle hinting */
-    public enum HintLevel {
+    /** Values for coloring pieces and giving hints for a puzzle */
+    public enum PiecesTheme {
         /** No hinting; pieces are the same color with no outline. */
         OPAQUE,
         /** Light hint: pieces are the same color but have outlines. */
-        HINT,
+        OUTLINE,
         /** Solution: pieces have distinct colors and outlines. */
-        SOLVE
+        MULTICOLOR
     }
 
+    /** Cache the old (or default) piece coloring */
+    private PiecesTheme oldPieceColoring = PiecesTheme.OUTLINE;
+
     /** Cache the old (or default) hint level */
-    private HintLevel oldHint = HintLevel.OPAQUE;
+    private PiecesTheme oldHint = PiecesTheme.OPAQUE;
 
     /** Values for corners */
     public enum Corner {
         /** Top-left corner */
-        TOP_LEFT,
+        TOP_LEFT(Gravity.TOP | Gravity.LEFT),
         /** Top-right corner */
-        TOP_RIGHT,
+        TOP_RIGHT(Gravity.TOP | Gravity.RIGHT),
         /** Bottom-left corner */
-        BOTTOM_LEFT,
+        BOTTOM_LEFT(Gravity.BOTTOM | Gravity.LEFT),
         /** Bottom-right corner */
-        BOTTOM_RIGHT
+        BOTTOM_RIGHT (Gravity.BOTTOM | Gravity.RIGHT);
+
+        /** Layout gravity for the frame used in this corner */
+        private final int gravity;
+
+        Corner(int gravity) {
+            this.gravity = gravity;
+        }
+
+        /** @return the gravity for this corner */
+        public int getGravity() {
+            return gravity;
+        }
     }
 
     /** Cache the old (or default) back button corner */
@@ -143,6 +163,18 @@ public class TangramPreferences
     }
 
     /**
+     * Definition of a listener to call when the piece coloring has changed.
+     */
+    public interface OnPieceColoringChangedListener {
+        /**
+         * Called when the piece coloring has been changed.
+         *
+         * @param newColor the piece coloring that was set
+         */
+        void onPieceColoringChanged(@NonNull PiecesTheme newColor);
+    }
+
+    /**
      * Definition of a listener to call when the hint level has changed.
      */
     public interface OnHintLevelChangedListener {
@@ -151,7 +183,7 @@ public class TangramPreferences
          *
          * @param newHint the hint level that was set
          */
-        void onHintLevelChanged(@NonNull HintLevel newHint);
+        void onHintLevelChanged(@NonNull PiecesTheme newHint);
     }
 
     /**
@@ -172,6 +204,12 @@ public class TangramPreferences
      * Registered listeners for changes to the UI theme.
      */
     private final List<OnUIThemeChangedListener> uiThemeListeners =
+            new ArrayList<>();
+
+    /**
+     * Registered listeners for changes to the piece coloring.
+     */
+    private final List<OnPieceColoringChangedListener> pieceColoringListeners =
             new ArrayList<>();
 
     /**
@@ -310,13 +348,26 @@ public class TangramPreferences
         }
 
         /**
+         * Change the theme of the piece colors for the play area
+         * and app icons
+         *
+         * @param theme the type of theme to use
+         *
+         * @return this Editor for chaining
+         */
+        public Editor setPieceColoring(PiecesTheme theme) {
+            actualEditor.putString(PREF_PIECE_COLOR, theme.name());
+            return this;
+        }
+
+        /**
          * Change the hint level.
          *
          * @param level the hint level to use
          *
          * @return this Editor for chaining
          */
-        public Editor setHintLevel(HintLevel level) {
+        public Editor setHintLevel(PiecesTheme level) {
             actualEditor.putString(PREF_HINT_LEVEL, level.name());
             return this;
         }
@@ -404,16 +455,36 @@ public class TangramPreferences
         edit().setUITheme(theme).finish();
     }
 
-    /** @return the current hint level */
-    public @NonNull HintLevel getHintLevel() {
-        String levelName = prefs.getString(PREF_HINT_LEVEL,
-                HintLevel.OPAQUE.name());
+    /** @return the current piece coloring theme */
+    public @NonNull PiecesTheme getPieceColoring() {
+        String levelName = prefs.getString(PREF_PIECE_COLOR,
+                PiecesTheme.OPAQUE.name());
         try {
-            return HintLevel.valueOf(levelName);
+            return PiecesTheme.valueOf(levelName);
+        } catch (IllegalArgumentException e) {
+            Log.w(LOG_TAG, String.format(Locale.US,
+                    "Invalid piece coloring (%s) in preferences", levelName));
+            return PiecesTheme.OUTLINE;
+        }
+    }
+
+    /**
+     * Change the piece coloring
+     */
+    public void setPieceColoring(@NonNull PiecesTheme level) {
+        edit().setPieceColoring(level).finish();
+    }
+
+    /** @return the current hint level */
+    public @NonNull PiecesTheme getHintLevel() {
+        String levelName = prefs.getString(PREF_HINT_LEVEL,
+                PiecesTheme.OPAQUE.name());
+        try {
+            return PiecesTheme.valueOf(levelName);
         } catch (IllegalArgumentException e) {
             Log.w(LOG_TAG, String.format(Locale.US,
                     "Invalid hint level (%s) in preferences", levelName));
-            return HintLevel.OPAQUE;
+            return PiecesTheme.OPAQUE;
         }
     }
 
@@ -422,7 +493,7 @@ public class TangramPreferences
      *
      * @param level the hint level to use
      */
-    public void setHintLevel(@NonNull HintLevel level) {
+    public void setHintLevel(@NonNull PiecesTheme level) {
         edit().setHintLevel(level).finish();
     }
 
@@ -531,6 +602,26 @@ public class TangramPreferences
     }
 
     /**
+     * Register a listener for changes to the piece coloring.
+     *
+     * @param listener the listener to register
+     */
+    public void registerPieceColoringListener(
+            @NonNull OnPieceColoringChangedListener listener) {
+        pieceColoringListeners.add(listener);
+    }
+
+    /**
+     * Remove a callback for changes to the piece coloring.
+     *
+     * @param listener the listener to remove
+     */
+    public void unregisterPieceColoringListener(
+            @NonNull OnPieceColoringChangedListener listener) {
+        pieceColoringListeners.remove(listener);
+    }
+
+    /**
      * Register a listener for changes to the hint level.
      *
      * @param listener the listener to register
@@ -587,11 +678,30 @@ public class TangramPreferences
     }
 
     /**
+     * Call back the {@code onPieceColoringChanged} method of all
+     * piece coloring listeners.
+     */
+    private class PieceColoringCallbackRunner implements Runnable {
+        private final PiecesTheme newColor;
+        PieceColoringCallbackRunner(PiecesTheme newColor) {
+            this.newColor = newColor;
+        }
+        @Override
+        public void run() {
+            synchronized(pieceColoringListeners) {
+                for (OnPieceColoringChangedListener listener : pieceColoringListeners) {
+                    listener.onPieceColoringChanged(newColor);
+                }
+            }
+        }
+    }
+
+    /**
      * Call back the {@code onHintLevelChanged} method of all hint level listeners.
      */
     private class HintLevelCallbackRunner implements Runnable {
-        private final HintLevel newLevel;
-        HintLevelCallbackRunner(HintLevel newLevel) {
+        private final PiecesTheme newLevel;
+        HintLevelCallbackRunner(PiecesTheme newLevel) {
             this.newLevel = newLevel;
         }
         @Override
@@ -648,8 +758,21 @@ public class TangramPreferences
                 }
                 break;
 
+            case PREF_PIECE_COLOR:
+                PiecesTheme newColor = getPieceColoring();
+                if (newColor != oldPieceColoring) {
+                    PieceColoringCallbackRunner colorRunner =
+                            new PieceColoringCallbackRunner(newColor);
+                    if (uiHandler == null)
+                        colorRunner.run();
+                    else
+                        uiHandler.post(colorRunner);
+                    oldPieceColoring = newColor;
+                }
+                break;
+
             case PREF_HINT_LEVEL:
-                HintLevel newHint = getHintLevel();
+                PiecesTheme newHint = getHintLevel();
                 if (newHint != oldHint) {
                     HintLevelCallbackRunner hintRunner =
                             new HintLevelCallbackRunner(newHint);

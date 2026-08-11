@@ -305,6 +305,12 @@ public class PlayTableView extends View {
         invalidate();
     }
 
+    /** @return the current puzzle */
+    @NonNull
+    public TangramPuzzle getPuzzle() {
+        return playField;
+    }
+
     /**
      * Set the goal puzzle the player is trying to reproduce (or
      * {@code null} for free-play / sketch mode) and adopt its playfield
@@ -348,6 +354,8 @@ public class PlayTableView extends View {
     public void addPieceAtViewLocation(
             @NonNull TangramPiece piece, float viewX, float viewY) {
         mapTouchToPuzzle(viewX, viewY);
+        // FIXME: Placing a new piece should snap it by
+        // the same rules as moving an existing piece.
         piece.setPosition(new MutableTPoint(
                 touchBuffer[0], 0, touchBuffer[1], 0));
         playField.addPiece(piece);
@@ -415,6 +423,12 @@ public class PlayTableView extends View {
             return;
         playField.snap(selectedPiece);
         invalidate();
+        if (playField.isValid()) {
+            // To Do: notify PlayActivity.
+            // If we're playing for a goal puzzle, check for a match.
+            // If we're in free-form play -and- a user puzzle
+            // directory is set, show the "Save" button.
+        }
     }
 
     /**

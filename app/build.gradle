@@ -68,6 +68,7 @@ android {
 dependencies {
     implementation libs.androidx.appcompat
     implementation libs.androidx.constraintlayout
+    implementation libs.androidx.documentfile
 
     androidTestImplementation libs.androidx.runner
     androidTestImplementation libs.androidx.espresso.core

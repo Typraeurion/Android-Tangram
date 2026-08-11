@@ -287,7 +287,7 @@ public abstract class TPoint implements Parcelable {
      */
     public static Creator<TPoint> CREATOR = new Creator<>() {
         @Override
-        public TPoint createFromParcel(android.os.Parcel in) {
+        public TPoint createFromParcel(Parcel in) {
             boolean isMutable = (in.readInt() != 0);
             return isMutable ? MutableTPoint.CREATOR.createFromParcel(in)
                     : ImmutableTPoint.CREATOR.createFromParcel(in);

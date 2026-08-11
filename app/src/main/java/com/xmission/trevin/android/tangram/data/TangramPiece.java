@@ -36,7 +36,7 @@ import org.json.JSONObject;
  *
  * @author Trevin Beattie
  */
-public abstract class TangramPiece implements Parcelable {
+public abstract class TangramPiece implements Cloneable, Parcelable {
 
     public static final String LOG_TAG = "TangramPiece";
 
@@ -463,6 +463,25 @@ public abstract class TangramPiece implements Parcelable {
                     && p2.isMirrored == isMirrored;
         }
         return false;
+    }
+
+    /**
+     * @return a deep copy of this piece.
+     */
+    @Override
+    public @NonNull TangramPiece clone() {
+        try {
+            TangramPiece copy = (TangramPiece) super.clone();
+            // Eliminate references from the copy; keep it independent.
+            copy.transformedVertices = null;
+            copy.transformIsStale = true;
+            if (copy.position instanceof MutableTPoint mp)
+                copy.position = new ImmutableTPoint(
+                        mp.getXa(), mp.getXb(), mp.getYa(), mp.getYb());
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(e);
+        }
     }
 
 }

@@ -29,7 +29,7 @@ import androidx.annotation.Nullable;
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 import com.xmission.trevin.android.tangram.data.TangramPreferences;
-import com.xmission.trevin.android.tangram.data.TangramPreferences.HintLevel;
+import com.xmission.trevin.android.tangram.data.TangramPreferences.PiecesTheme;
 
 import java.util.Locale;
 
@@ -55,7 +55,7 @@ public class MainActivity extends TangramActivity {
         WindowInsetsUtil.applySafeAreaPadding(this);
 
         TangramPreferences prefs = TangramPreferences.getInstance(this);
-        prefs.registerHintLevelListener(new HintLevelChangeListener());
+        prefs.registerPieceColoringListener(new PieceColoringChangeListener());
 
         Button button = findViewById(R.id.MainButtonLibrary);
         Button button2 = findViewById(R.id.MainButtonRandom);
@@ -89,14 +89,14 @@ public class MainActivity extends TangramActivity {
     }
 
     /**
-     * Called when the hint level preference has changed.
+     * Called when the piece coloring preference has changed.
      * This requires us to re-create the activity so that the
-     * hint theme is applied to our tangram title and icons.
+     * color theme is applied to our tangram title and icons.
      */
-    private class HintLevelChangeListener
-            implements TangramPreferences.OnHintLevelChangedListener {
+    private class PieceColoringChangeListener
+            implements TangramPreferences.OnPieceColoringChangedListener {
         @Override
-        public void onHintLevelChanged(@NonNull HintLevel newLevel) {
+        public void onPieceColoringChanged(@NonNull PiecesTheme newLevel) {
             recreate();
         }
     }
