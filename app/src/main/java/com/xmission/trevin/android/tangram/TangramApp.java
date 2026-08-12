@@ -19,15 +19,17 @@ package com.xmission.trevin.android.tangram;
 import android.app.Application;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 import com.xmission.trevin.android.tangram.data.TangramPreferences;
+import com.xmission.trevin.android.tangram.util.BackgroundExecutor;
 import com.xmission.trevin.android.tangram.util.FileUtils;
 
+import java.util.Collections;
 import java.util.Locale;
 
 public class TangramApp extends Application {
@@ -73,26 +75,48 @@ public class TangramApp extends Application {
                 // We should be able to continue running in sketch mode,
                 // but there will be no puzzles for the user to solve.
             }
-            if (prefs.getUserPuzzlesDir() != null) try {
-                Uri dirUri = Uri.parse(prefs.getUserPuzzlesDir());
-                DocumentFile puzzlesDir = DocumentFile.fromTreeUri(this, dirUri);
-                if (!FileUtils.isDirectoryAccessible(this, dirUri)) {
-                    // Permission for this directory may have been revoked,
-                    // or the directory itself deleted.
-                    Log.w(LOG_TAG, String.format(Locale.US,
-                            "Permission to use %s has been revoked",
-                            prefs.getUserPuzzlesDir()));
-                    prefs.setUserPuzzlesDir(null);
-                    Toast.makeText(getBaseContext(),
-                            getString(R.string.ErrorUserDirRevoked,
-                                    puzzlesDir.getName()),
-                            Toast.LENGTH_LONG).show();
-                } else {
-                    library.loadUserPuzzles(this, puzzlesDir);
-                }
-            } catch (Exception e) {
-                Log.w(LOG_TAG, "Error loading user puzzles", e);
-            }
+            // The built-in puzzles are small and bundled in the APK, so they
+            // load quickly enough to stay on the main thread (MainActivity
+            // needs them the moment it appears).  User puzzles come through
+            // the Storage Access Framework, which can be slow (e.g.
+            // cloud-backed), so load them off the main thread.
+            if (prefs.getUserPuzzlesDir() != null)
+                BackgroundExecutor.runInBackground(
+                        () -> loadUserPuzzlesAtStartup(prefs));
+        }
+    }
+
+    /**
+     * Load the user's saved puzzles from the configured directory on a
+     * background thread.  Any problems (a revoked directory, unreadable or
+     * invalid files) are queued in the {@link PuzzleLibrary} to be shown by
+     * the first activity that can present a dialog, since an
+     * {@code Application} cannot show one itself.
+     *
+     * @param prefs the shared preferences holding the puzzle directory
+     */
+    private void loadUserPuzzlesAtStartup(@NonNull TangramPreferences prefs) {
+        PuzzleLibrary library = PuzzleLibrary.getInstance();
+        Uri dirUri = Uri.parse(prefs.getUserPuzzlesDir());
+        DocumentFile puzzlesDir = DocumentFile.fromTreeUri(this, dirUri);
+        if (puzzlesDir == null)
+            return;
+        try {
+            // loadUserPuzzles returns null when there were no problems.
+            library.addPendingUserMessages(
+                    library.loadUserPuzzles(this, puzzlesDir));
+        } catch (SecurityException e) {
+            // The permission for this directory was revoked, or the
+            // directory itself was deleted; forget it.
+            Log.w(LOG_TAG, String.format(Locale.US,
+                    "Puzzle directory %s is no longer accessible",
+                    prefs.getUserPuzzlesDir()));
+            String dirName = FileUtils.getFriendlyName(dirUri);
+            prefs.setUserPuzzlesDir(null);
+            library.addPendingUserMessages(Collections.singletonList(
+                    getString(R.string.ErrorUserDirRevoked, dirName)));
+        } catch (Exception e) {
+            Log.w(LOG_TAG, "Error loading user puzzles", e);
         }
     }
 

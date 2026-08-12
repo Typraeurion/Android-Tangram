@@ -19,6 +19,7 @@ package com.xmission.trevin.android.tangram.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -27,14 +28,21 @@ import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.documentfile.provider.DocumentFile;
 
 import com.xmission.trevin.android.tangram.R;
+import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 import com.xmission.trevin.android.tangram.data.TangramPreferences;
+import com.xmission.trevin.android.tangram.util.BackgroundExecutor;
+import com.xmission.trevin.android.tangram.util.FileUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -48,10 +56,16 @@ public class PreferencesActivity extends TangramActivity {
     private static final String LOG_TAG = "PreferencesActivity";
 
     /**
-     * Arbitrary request code for selecting a directory in which to save
-     * user-created puzzles from Android&rqsuo;s Open Document intent
+     * Launcher for the system directory picker (Storage Access Framework
+     * {@code OPEN_DOCUMENT_TREE}).  Registered up front&mdash;before the
+     * activity is started&mdash;as the Activity Result API requires; this
+     * replaces the deprecated {@code startActivityForResult}/
+     * {@code onActivityResult} pair.
      */
-    private static final int SAF_PICK_PUZZLE_DIRECTORY = 17;
+    private final ActivityResultLauncher<Uri> pickPuzzleDirectory =
+            registerForActivityResult(
+                    new ActivityResultContracts.OpenDocumentTree(),
+                    this::onPuzzleDirectoryChosen);
 
     private TangramPreferences prefs;
 
@@ -244,9 +258,13 @@ public class PreferencesActivity extends TangramActivity {
         if (prefs.getUserPuzzlesDir() == null) {
             userDirButton.setText(R.string.PrefsTextNoUserDir);
         } else {
-            DocumentFile df = DocumentFile.fromTreeUri(this,
-                    Uri.parse(prefs.getUserPuzzlesDir()));
-            userDirButton.setText(df.getName());
+            Uri dirUri = Uri.parse(prefs.getUserPuzzlesDir());
+            DocumentFile df = DocumentFile.fromTreeUri(this, dirUri);
+            if ((df == null) || (df.getName() == null)) {
+                forgetUserPuzzlesDir(FileUtils.getFriendlyName(dirUri));
+            } else {
+                userDirButton.setText(df.getName());
+            }
         }
         userDirButton.setOnClickListener(new DirectoryButtonListener());
 
@@ -488,58 +506,109 @@ public class PreferencesActivity extends TangramActivity {
     private class DirectoryButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            // To Do: present a directory chooser
-            Intent chooseDirActivity =
-                    new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-            chooseDirActivity.addCategory(Intent.CATEGORY_DEFAULT);
-            // The chosen directory must be writable, and
-            // permissions persist across app restarts.
-            chooseDirActivity.setFlags(Intent.FLAG_GRANT_PREFIX_URI_PERMISSION
-                    + Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-                    + Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            // FIXME: deprecated method
-            startActivityForResult(Intent.createChooser(chooseDirActivity,
-                    getString(R.string.PrefsDialogUserDirTitle)),
-                    SAF_PICK_PUZZLE_DIRECTORY);
+            // Open the system directory picker, hinting at the currently
+            // chosen directory (if any) as its starting location.  The
+            // OpenDocumentTree contract builds the ACTION_OPEN_DOCUMENT_TREE
+            // intent for us; persistable read/write permission for the
+            // returned tree is taken in onPuzzleDirectoryChosen.
+            Uri initialUri = (prefs.getUserPuzzlesDir() == null) ? null
+                    : Uri.parse(prefs.getUserPuzzlesDir());
+            pickPuzzleDirectory.launch(initialUri);
         }
     }
 
     /**
-     * Called when the user has selected a (new) puzzle directory.
+     * Called when the user has selected a (new) puzzle directory, or
+     * dismissed the picker (in which case {@code uri} is {@code null} and
+     * the current setting is left unchanged).
+     *
+     * @param uri the tree {@link Uri} of the chosen directory, or
+     * {@code null} if the picker was cancelled
      */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != SAF_PICK_PUZZLE_DIRECTORY) {
-            Log.d(LOG_TAG, String.format(Locale.US,
-                    "onActivityResult(%d): Ignoring unknown request code",
-                    requestCode));
-            return;
-        }
-        if (resultCode != RESULT_OK) {
-            Log.i(LOG_TAG, String.format(Locale.US,
-                    "onActivityResult(%s)", switch (resultCode) {
-                        case RESULT_CANCELED -> "CANCELED";
-                        case RESULT_FIRST_USER -> "FIRST_USER";
-                        default -> Integer.toString(resultCode);
-                    }));
-            return;
-        }
-        Uri uri = data.getData();
-        Log.d(LOG_TAG, String.format(Locale.US,
-                "onActivityResult(OK, %s)", uri));
-        Button userDirButton = findViewById(R.id.PreferencesButtonSaveFolder);
+    private void onPuzzleDirectoryChosen(@Nullable Uri uri) {
         if (uri == null) {
-            prefs.setUserPuzzlesDir(null);
-            userDirButton.setText(R.string.PrefsTextNoUserDir);
-        } else {
-            getContentResolver().takePersistableUriPermission(uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            + Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            prefs.setUserPuzzlesDir(uri.toString());
-            DocumentFile df = DocumentFile.fromTreeUri(this, uri);
-            userDirButton.setText(df.getName());
+            Log.i(LOG_TAG, "Directory selection cancelled");
+            return;
         }
+        Log.d(LOG_TAG, String.format(Locale.US,
+                "Directory chosen: %s", uri));
+        // Persist read/write access across app restarts.
+        getContentResolver().takePersistableUriPermission(uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        prefs.setUserPuzzlesDir(uri.toString());
+        Button userDirButton = findViewById(R.id.PreferencesButtonSaveFolder);
+        DocumentFile df = DocumentFile.fromTreeUri(this, uri);
+        userDirButton.setText((df == null) ?
+                getText(R.string.PrefsTextNoUserDir) : df.getName());
+        // Load the puzzles from the newly chosen directory off the main
+        // thread (the Storage Access Framework can be slow).
+        if (df != null)
+            loadUserPuzzlesInBackground(df);
+    }
+
+    /**
+     * Read the user puzzles from the chosen directory on a background
+     * thread and, if anything went wrong, report it in a dialog.
+     *
+     * @param folder the chosen puzzle directory
+     */
+    private void loadUserPuzzlesInBackground(@NonNull DocumentFile folder) {
+        BackgroundExecutor.runInBackground(() -> {
+            List<String> errors;
+            try {
+                errors = PuzzleLibrary.getInstance()
+                        .loadUserPuzzles(this, folder);
+            } catch (SecurityException e) {
+                // The directory is no longer accessible; forget it.  Its
+                // getName() would be null now, so derive a friendly name
+                // from the URI instead.
+                Log.w(LOG_TAG,
+                        "Chosen puzzle directory is not accessible", e);
+                String dirName = FileUtils.getFriendlyName(folder.getUri());
+                runOnUiThread(() -> forgetUserPuzzlesDir(dirName));
+                return;
+            } catch (IOException e) {
+                Log.w(LOG_TAG, "Error loading user puzzles", e);
+                errors = Collections.singletonList(getString(
+                        R.string.ErrorCannotReadUserFile,
+                        folder.getName(), e.getMessage()));
+            }
+            if (errors == null || errors.isEmpty())
+                return;
+            List<String> toShow = errors;
+            runOnUiThread(() -> showUserPuzzleErrors(toShow));
+        });
+    }
+
+    /**
+     * Forget the user-puzzle directory after finding it is no longer
+     * accessible: clear the preference, restore the button label, and tell
+     * the user.  Runs on the main thread.
+     *
+     * @param dirName a best-effort name for the lost directory
+     */
+    private void forgetUserPuzzlesDir(@NonNull String dirName) {
+        prefs.setUserPuzzlesDir(null);
+        Button userDirButton = findViewById(R.id.PreferencesButtonSaveFolder);
+        userDirButton.setText(R.string.PrefsTextNoUserDir);
+        showUserPuzzleErrors(Collections.singletonList(
+                getString(R.string.ErrorUserDirRevoked, dirName)));
+    }
+
+    /**
+     * Show problems encountered while loading user puzzles in a dialog.
+     *
+     * @param messages the messages to display
+     */
+    private void showUserPuzzleErrors(@NonNull List<String> messages) {
+        if (isFinishing())
+            return;
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.UserPuzzleErrorsTitle)
+                .setMessage(String.join("\n\n", messages))
+                .setPositiveButton(R.string.InfoButtonOK, null)
+                .show();
     }
 
 }

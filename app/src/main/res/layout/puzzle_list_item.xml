@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="1dp">
+    <com.xmission.trevin.android.tangram.ui.TangramPuzzleView
+        android:id="@+id/ListPuzzleView"
+        android:layout_width="@dimen/goal_view_size"
+        android:layout_height="@dimen/goal_view_size"
+        android:padding="@dimen/piece_tray_padding"
+        android:scaleType="fitCenter" />
+    <TextView android:id="@+id/ListPuzzleName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start|center_vertical"
+        android:ellipsize="end"
+        android:maxLines="2" />
+</LinearLayout>

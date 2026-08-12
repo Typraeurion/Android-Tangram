@@ -16,6 +16,7 @@
  */
 package com.xmission.trevin.android.tangram.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -201,6 +202,26 @@ public class PlayTableView extends View {
     }
 
     /**
+     * Notified after a piece is placed, moved, or removed and the play
+     * field re-evaluated, so a host can react to the puzzle becoming a
+     * valid Tangram (or ceasing to be one)&mdash;for example, to reveal a
+     * &ldquo;Save&rdquo; control or to check the solution against a goal.
+     */
+    @Nullable
+    private OnPuzzleValidatedListener puzzleValidatedListener;
+
+    /**
+     * Callback for a change in whether the play field is a valid Tangram.
+     */
+    public interface OnPuzzleValidatedListener {
+        /**
+         * @param valid whether the play field currently forms a valid
+         * Tangram (see {@link TangramPuzzle#isValid()})
+         */
+        void onPuzzleValidated(boolean valid);
+    }
+
+    /**
      * The id of the pointer currently dragging {@link #selectedPiece},
      * or {@link MotionEvent#INVALID_POINTER_ID} when nothing is dragging.
      */
@@ -354,12 +375,10 @@ public class PlayTableView extends View {
     public void addPieceAtViewLocation(
             @NonNull TangramPiece piece, float viewX, float viewY) {
         mapTouchToPuzzle(viewX, viewY);
-        // FIXME: Placing a new piece should snap it by
-        // the same rules as moving an existing piece.
         piece.setPosition(new MutableTPoint(
                 touchBuffer[0], 0, touchBuffer[1], 0));
-        playField.addPiece(piece);
         setSelectedPiece(piece);
+        snapSelectedPiece();
         activePointerId = MotionEvent.INVALID_POINTER_ID;
         rotationPointerId = MotionEvent.INVALID_POINTER_ID;
         invalidate();
@@ -392,6 +411,17 @@ public class PlayTableView extends View {
     }
 
     /**
+     * Register a listener to hear when the play field becomes (or stops
+     * being) a valid Tangram.
+     *
+     * @param listener the listener, or {@code null} to clear it
+     */
+    public void setOnPuzzleValidatedListener(
+            @Nullable OnPuzzleValidatedListener listener) {
+        puzzleValidatedListener = listener;
+    }
+
+    /**
      * If the selected piece&rsquo;s centroid has been dragged outside the
      * visible play area, remove it from the field and hand it back to the
      * tray (via {@link #pieceReturnedListener}) so it is not lost.  Called
@@ -412,6 +442,10 @@ public class PlayTableView extends View {
         invalidate();
         if (pieceReturnedListener != null)
             pieceReturnedListener.onPieceReturnedToTray(removed);
+        // Removing a piece can invalidate a previously-complete Tangram
+        // (subsequent snapSelectedPiece() no longer fires, having no
+        // selection), so report the new state here as well.
+        notifyPuzzleValidated();
     }
 
     /**
@@ -423,12 +457,19 @@ public class PlayTableView extends View {
             return;
         playField.snap(selectedPiece);
         invalidate();
-        if (playField.isValid()) {
-            // To Do: notify PlayActivity.
-            // If we're playing for a goal puzzle, check for a match.
-            // If we're in free-form play -and- a user puzzle
-            // directory is set, show the "Save" button.
-        }
+        // Let the host (PlayActivity) decide what a valid Tangram means in
+        // the current mode: reveal the "Save" button in free play, or check
+        // the solution against the goal in puzzle mode.
+        notifyPuzzleValidated();
+    }
+
+    /**
+     * Report the play field&rsquo;s current validity to
+     * {@link #puzzleValidatedListener}, if one is registered.
+     */
+    private void notifyPuzzleValidated() {
+        if (puzzleValidatedListener != null)
+            puzzleValidatedListener.onPuzzleValidated(playField.isValid());
     }
 
     /**
@@ -451,6 +492,9 @@ public class PlayTableView extends View {
         if (selectedPiece != null && selectedPiece.canFlip()) {
             selectedPiece.flip();
             invalidate();
+            // Flipping a piece can change whether the Tangram
+            // is valid, so report the new state here as well.
+            notifyPuzzleValidated();
         }
     }
 
@@ -589,6 +633,12 @@ public class PlayTableView extends View {
     long lastSuppressedMessageTime = 0;
 
     @Override
+    /*
+     * Linting is suppressed for the `new float[...]'
+     * in the middle of the loop below because it's
+     * only used when we need to expand the vertexBuffer.
+     */
+    @SuppressLint("DrawAllocation")
     protected void onDraw(@NonNull Canvas canvas) {
         /*
          * Log the call to DEBUG, but avoid spamming too many calls.

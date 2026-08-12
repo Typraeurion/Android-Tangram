@@ -16,13 +16,13 @@
  */
 package com.xmission.trevin.android.tangram.data;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -118,6 +118,7 @@ public class TangramPreferences
     private PiecesTheme oldHint = PiecesTheme.OPAQUE;
 
     /** Values for corners */
+    @SuppressLint("RtlHardcoded")
     public enum Corner {
         /** Top-left corner */
         TOP_LEFT(Gravity.TOP | Gravity.LEFT),

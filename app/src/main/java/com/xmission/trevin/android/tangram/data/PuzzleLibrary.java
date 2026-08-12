@@ -17,8 +17,6 @@
 package com.xmission.trevin.android.tangram.data;
 
 import android.content.Context;
-import android.content.UriPermission;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -27,26 +25,22 @@ import androidx.documentfile.provider.DocumentFile;
 
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.exception.InvalidPuzzleException;
+import com.xmission.trevin.android.tangram.util.BackgroundExecutor;
+import com.xmission.trevin.android.tangram.util.FileUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Pattern;
-
-import kotlin.text.Charsets;
 
 /**
  * This class manages the collection of puzzles available from the
@@ -65,6 +59,30 @@ public class PuzzleLibrary {
     private @Nullable List<TangramPuzzle> userPuzzles = null;
 
     private boolean initialized = false;
+
+    /**
+     * Callback through which the library hands deferred user-puzzle
+     * messages to whatever activity can currently present them.
+     */
+    public interface UserMessageListener {
+        /**
+         * @param messages one or more messages to show the user; always
+         * delivered on the main thread
+         */
+        void onUserMessages(@NonNull List<String> messages);
+    }
+
+    /**
+     * Messages about user puzzles (revoked directory, unreadable or invalid
+     * files) that arose where no UI could show them&mdash;e.g. during the
+     * app-startup load in the {@code Application}.  Delivered to the first
+     * registered {@link UserMessageListener}.
+     */
+    private final List<String> pendingUserMessages =
+            Collections.synchronizedList(new ArrayList<>());
+
+    /** The current foreground listener for user-puzzle messages, if any. */
+    private @Nullable UserMessageListener userMessageListener;
 
     /**
      * This is a singleton class, so we only allow one instance to be created.
@@ -97,15 +115,11 @@ public class PuzzleLibrary {
     public @NonNull Object readJSONAsset(
             @NonNull Context context, @NonNull String assetName)
             throws IOException, JSONException {
-        StringBuilder builder = new StringBuilder();
-        try (InputStream iStream = context.getAssets().open(assetName);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                     iStream, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null)
-                builder.append(line);
+        String content;
+        try (InputStream iStream = context.getAssets().open(assetName)) {
+            content = FileUtils.readText(iStream);
         }
-        Object o = new JSONTokener(builder.toString()).nextValue();
+        Object o = new JSONTokener(content).nextValue();
         if (!(o instanceof JSONArray) && !(o instanceof JSONObject))
             throw new JSONException("Invalid JSON in " + assetName);
         return o;
@@ -127,25 +141,17 @@ public class PuzzleLibrary {
     public @Nullable Object readJSONUserFile(
             @NonNull Context context, @NonNull DocumentFile fileRef)
         throws IOException, JSONException {
-        StringBuilder builder = new StringBuilder();
+        String content;
         try (InputStream iStream = context.getContentResolver()
-                .openInputStream(fileRef.getUri());
-             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                     iStream, StandardCharsets.UTF_8))) {
-            String line;
-            while ((line = reader.readLine()) != null)
-                builder.append(line);
+                .openInputStream(fileRef.getUri())) {
+            if (iStream == null)
+                throw new IOException("Could not open " + fileRef.getName());
+            // Trim leading and trailing whitespace
+            content = FileUtils.readText(iStream).trim();
         }
-        // Trim leading and trailing whitespace
-        while (builder.length() > 0) {
-            if (Character.isWhitespace(builder.charAt(builder.length() - 1)))
-                builder.deleteCharAt(builder.length() - 1);
-            else if (Character.isWhitespace(builder.charAt(0)))
-                builder.deleteCharAt(0);
-        }
-        if (builder.length() == 0)
+        if (content.isEmpty())
             return null;
-        Object o = new JSONTokener(builder.toString()).nextValue();
+        Object o = new JSONTokener(content).nextValue();
         if (!(o instanceof JSONArray) && !(o instanceof JSONObject))
             throw new JSONException("Invalid JSON in " + fileRef.getName());
         return o;
@@ -216,27 +222,25 @@ public class PuzzleLibrary {
      * the puzzle files to be returned to the user, or {@code null}
      * if no errors were encountered.
      *
+     * @throws SecurityException if the directory is no longer accessible
+     * (its permission was revoked or the directory was deleted); the caller
+     * should forget the directory preference in that case.
      * @throws IOException if there was an error reading the folder
      */
     public List<String> loadUserPuzzles(
             @NonNull Context context, @NonNull DocumentFile folder)
             throws IOException {
+        // Verify we can still read the directory.  A persisted tree
+        // permission grants access to the documents within it, so a
+        // permission-aware check (canRead) is what matters here; comparing
+        // the folder's *document* URI against the persisted *tree* URI would
+        // never match.  A revoked permission or a deleted directory turns
+        // this false.
+        if (!folder.canRead())
+            throw new SecurityException(
+                    "Cannot read the user puzzle directory "
+                            + folder.getName());
         List<String> errors = new ArrayList<>();
-        // Check that the directory is readable
-        boolean readable = false;
-        for (UriPermission permission : context.getContentResolver()
-                .getPersistedUriPermissions()) {
-            if (permission.getUri().equals(folder.getUri()) &&
-                    permission.isReadPermission()) {
-                readable = true;
-                break;
-            }
-        }
-        if (!readable) {
-            errors.add(context.getString(R.string.ErrorUserDirRevoked,
-                    folder.getName()));
-            return errors;
-        }
         Pattern puzzleFilePattern = Pattern.compile(Pattern.quote(
                 context.getString(R.string.UserPuzzleFilePrefix))
                 + ".+\\.json", Pattern.CASE_INSENSITIVE);
@@ -263,7 +267,7 @@ public class PuzzleLibrary {
                     TangramPuzzle puzzle = new TangramPuzzle(
                             jsonArray.getJSONObject(i));
                     puzzle.setSourceFileName(sourceFileName);
-                    puzzles.add(puzzle);
+                    newPuzzles.add(puzzle);
                 } catch (InvalidPuzzleException | JSONException e) {
                     Log.w(LOG_TAG, String.format(Locale.US,
                             "Entry at %s[%d] is not a valid Tangram puzzle",
@@ -273,7 +277,7 @@ public class PuzzleLibrary {
             else if (json instanceof JSONObject jsonObject) try {
                 TangramPuzzle puzzle = new TangramPuzzle(jsonObject);
                 puzzle.setSourceFileName(sourceFileName);
-                puzzles.add(puzzle);
+                newPuzzles.add(puzzle);
             } catch (InvalidPuzzleException | JSONException e) {
                 Log.w(LOG_TAG, String.format(Locale.US,
                         "%s is not a valid Tangram puzzle",
@@ -366,21 +370,49 @@ public class PuzzleLibrary {
         } else {
             jsonString = puzzleJson.toString(2);
         }
-        try (ParcelFileDescriptor pfd = context.getContentResolver()
-                .openFileDescriptor(saveFile.getUri(), "wt")) {
-            if (pfd == null) {
-                throw new IOException(context.getString(
-                        R.string.ErrorCannotCreateSaveFile,
-                        saveFile.getName()));
-            }
-            try (FileOutputStream fos = new FileOutputStream(
-                    pfd.getFileDescriptor());
-                 OutputStreamWriter writer = new OutputStreamWriter(
-                         fos, Charsets.UTF_8)) {
-                writer.write(jsonString);
-                writer.flush();
-            }
+        FileUtils.writeText(context, saveFile.getUri(), jsonString);
+    }
+
+    /**
+     * Queue messages to show the user at the next opportunity.  Safe to
+     * call from a background thread; if a listener is registered, delivery
+     * is posted to the main thread.
+     *
+     * @param messages the messages to queue, or {@code null} / empty for none
+     */
+    public void addPendingUserMessages(@Nullable List<String> messages) {
+        if (messages == null || messages.isEmpty())
+            return;
+        pendingUserMessages.addAll(messages);
+        BackgroundExecutor.runOnMain(this::deliverPendingUserMessages);
+    }
+
+    /**
+     * Register (or clear) the listener that shows queued user-puzzle
+     * messages.  On registration any already-queued messages are delivered.
+     * Call on the main thread (e.g. an activity's {@code onResume} /
+     * {@code onPause}).
+     *
+     * @param listener the listener, or {@code null} to clear it
+     */
+    public void setUserMessageListener(@Nullable UserMessageListener listener) {
+        userMessageListener = listener;
+        if (listener != null)
+            BackgroundExecutor.runOnMain(this::deliverPendingUserMessages);
+    }
+
+    /** Deliver and clear any queued messages to the listener (main thread). */
+    private void deliverPendingUserMessages() {
+        if (userMessageListener == null)
+            return;
+        List<String> delivered;
+        synchronized (pendingUserMessages) {
+            if (pendingUserMessages.isEmpty())
+                return;
+            delivered = new ArrayList<>(pendingUserMessages);
+            pendingUserMessages.clear();
         }
+        userMessageListener.onUserMessages(delivered);
     }
 
     /**

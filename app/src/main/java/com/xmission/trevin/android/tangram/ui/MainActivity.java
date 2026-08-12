@@ -25,12 +25,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 import com.xmission.trevin.android.tangram.data.TangramPreferences;
 import com.xmission.trevin.android.tangram.data.TangramPreferences.PiecesTheme;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -86,6 +88,37 @@ public class MainActivity extends TangramActivity {
         button.setOnClickListener(new OnPreferencesSelected());
         button = findViewById(R.id.MainButtonAbout);
         button.setOnClickListener(new OnAboutSelected());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Surface any user-puzzle problems queued during a background load
+        // (e.g. from the Application's startup load, which can't show a
+        // dialog itself).  Registering also flushes anything already queued.
+        library.setUserMessageListener(this::showUserPuzzleMessages);
+    }
+
+    @Override
+    protected void onPause() {
+        library.setUserMessageListener(null);
+        super.onPause();
+    }
+
+    /**
+     * Show queued user-puzzle messages (revoked directory, unreadable or
+     * invalid files) in a single dialog.
+     *
+     * @param messages the messages to display
+     */
+    private void showUserPuzzleMessages(@NonNull List<String> messages) {
+        if (messages.isEmpty() || isFinishing())
+            return;
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.UserPuzzleErrorsTitle)
+                .setMessage(String.join("\n\n", messages))
+                .setPositiveButton(R.string.InfoButtonOK, null)
+                .show();
     }
 
     /**
