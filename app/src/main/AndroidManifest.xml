@@ -26,6 +26,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.LibraryActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.PreferencesActivity"
             android:exported="false">
             <intent-filter>

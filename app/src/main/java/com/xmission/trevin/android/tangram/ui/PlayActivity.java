@@ -378,6 +378,12 @@ public class PlayActivity extends TangramActivity {
          * Called when the user clicks "Save" in the save dialog.
          */
         private class SavePuzzleCallback implements View.OnClickListener {
+            /**
+             * Maximum distance we can re-snap any puzzle piece
+             * while maintaining puzzle integrity.
+             */
+            private static final double FUDGE_TOLERANCE = 0.125;
+
             @Override
             public void onClick(View button) {
                 // Disable dismissing the dialog until we're done with it.
@@ -432,9 +438,30 @@ public class PlayActivity extends TangramActivity {
                 TangramPuzzle puzzle = playTableView.getPuzzle().clone();
                 puzzle.setName(name);
                 puzzle.setId(id);
-                TPoint centerAdjust = puzzle.getCenter().mirrorX().mirrorY();
+                TPoint centerAdjust = puzzle.getCenter().mirrorX().mirrorY(); // FIXME: Skip if already centered
+                Log.d(LOG_TAG, String.format(Locale.US,
+                        "Adjusting puzzle center by %s", centerAdjust));
                 for (TangramPiece piece : puzzle.getPieces()) {
-                    piece.setPosition(piece.getPosition().add(centerAdjust));
+                    TPoint newCentroid = piece.getPosition().add(centerAdjust);
+                    /*
+                     * The offset where the pieces were originally placed
+                     * may not have had the best alignment for our ℚ√2
+                     * space, so try re-aligning them after centering.
+                     */
+                    TPoint reSnap = newCentroid.nearestQ2GridPoint();
+                    if (reSnap.distanceTo(newCentroid) < FUDGE_TOLERANCE) { // FIXME: Not a fudge if reSnap.equals(newCentroid).
+                        Log.d(LOG_TAG, String.format(Locale.US,
+                                "Fudging %s from %s → %s → %s",
+                                piece.getClass().getSimpleName(),
+                                piece.getPosition(), newCentroid, reSnap));
+                        newCentroid = reSnap;
+                    } else {
+                        Log.d(LOG_TAG, String.format(Locale.US,
+                                "%s moved cleanly from %s → %s",
+                                piece.getClass().getSimpleName(),
+                                piece.getPosition(), newCentroid));
+                    }
+                    piece.setPosition(newCentroid);
                 }
 
                 // The remaining Storage Access Framework work (resolving and
@@ -498,6 +525,12 @@ public class PlayActivity extends TangramActivity {
                 runOnUiThread(() -> {
                     if (saveDialog != null)
                         saveDialog.dismiss();
+                    Toast.makeText(PlayActivity.this, getString(
+                            R.string.NotificationPuzzleSaved, puzzle.getName(),
+                            puzzle.getSourceFileName()), Toast.LENGTH_LONG).show();
+                    // Hide the save button, at least until
+                    // the player changes the puzzle.
+                    saveButtonFrame.setVisibility(View.GONE);
                 });
             }
 

@@ -26,24 +26,24 @@
     <style name="Theme.Tangram.Puzzle" parent="Theme.Tangram">
         <item name="tangramOutlineWidth">0</item>
         <item name="tableOutlineWidth">0dp</item>
-        <item name="tangramOutlineColor">@color/foreground</item>
-        <item name="tangramSmallTriangleColor">@color/foreground</item>
-        <item name="tangramSmallSquareColor">@color/foreground</item>
-        <item name="tangramParallelogramColor">@color/foreground</item>
-        <item name="tangramMediumTriangleColor">@color/foreground</item>
-        <item name="tangramLargeTriangleColor">@color/foreground</item>
+        <item name="tangramOutlineColor">?android:attr/textColorPrimary</item>
+        <item name="tangramSmallTriangleColor">?android:attr/textColorPrimary</item>
+        <item name="tangramSmallSquareColor">?android:attr/textColorPrimary</item>
+        <item name="tangramParallelogramColor">?android:attr/textColorPrimary</item>
+        <item name="tangramMediumTriangleColor">?android:attr/textColorPrimary</item>
+        <item name="tangramLargeTriangleColor">?android:attr/textColorPrimary</item>
     </style>
 
     <!-- For a light hint, we add a white outline -->
     <style name="Theme.Tangram.Hinted" parent="Theme.Tangram">
         <item name="tangramOutlineWidth">1</item>
         <item name="tableOutlineWidth">1dp</item>
-        <item name="tangramOutlineColor">@color/background</item>
-        <item name="tangramSmallTriangleColor">@color/foreground</item>
-        <item name="tangramSmallSquareColor">@color/foreground</item>
-        <item name="tangramParallelogramColor">@color/foreground</item>
-        <item name="tangramMediumTriangleColor">@color/foreground</item>
-        <item name="tangramLargeTriangleColor">@color/foreground</item>
+        <item name="tangramOutlineColor">?android:attr/colorBackground</item>
+        <item name="tangramSmallTriangleColor">?android:attr/textColorPrimary</item>
+        <item name="tangramSmallSquareColor">?android:attr/textColorPrimary</item>
+        <item name="tangramParallelogramColor">?android:attr/textColorPrimary</item>
+        <item name="tangramMediumTriangleColor">?android:attr/textColorPrimary</item>
+        <item name="tangramLargeTriangleColor">?android:attr/textColorPrimary</item>
     </style>
 
 </resources>

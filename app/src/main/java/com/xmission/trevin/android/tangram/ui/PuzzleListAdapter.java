@@ -16,9 +16,11 @@
  */
 package com.xmission.trevin.android.tangram.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,8 @@ import com.xmission.trevin.android.tangram.data.TangramPuzzle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * An adapter for displaying the puzzle library as a list.
@@ -41,11 +45,20 @@ public class PuzzleListAdapter extends BaseAdapter {
 
     public static final String LOG_TAG = "PuzzleListAdapter";
 
+    private final Context context;
+
     private final LayoutInflater inflater;
 
     private final PuzzleLibrary library;
 
     private final List<DataSetObserver> observers = new ArrayList<>();
+
+    /** Pattern for puzzle sources loaded from our own assets */
+    private static final Pattern ASSET_SOURCE_PATTERN =
+            Pattern.compile("^assets/puzzles-(.+)\\.json$");
+
+    /** Pattern for puzzles loaded from a user-designated folder */
+    private final Pattern userSourcePattern;
 
     /**
      * Create the adapter with the given context.
@@ -54,8 +67,12 @@ public class PuzzleListAdapter extends BaseAdapter {
      */
     public PuzzleListAdapter(@NonNull Context context) {
         Log.d(LOG_TAG, "Creating adapter");
+        this.context = context;
         inflater = LayoutInflater.from(context);
         library = PuzzleLibrary.getInstance();
+        userSourcePattern = Pattern.compile(
+                context.getString(R.string.UserPuzzleFilePrefix)
+                + "(.+)\\.json");
     }
 
     /** Indicate that all items in this adapter are enabled */
@@ -105,6 +122,33 @@ public class PuzzleListAdapter extends BaseAdapter {
     }
 
     /**
+     * Given a puzzle, check is source filename and format a display
+     * name.
+     *
+     * @param puzzle the puzzle whose source to display
+     *
+     * @return the display name of the puzzle source, or an empty
+     * string if the puzzle has no source string.
+     */
+    private @NonNull String getPuzzleSource(
+            @NonNull TangramPuzzle puzzle) {
+        if (puzzle.getSourceFileName() == null)
+            return "";
+        Matcher m = ASSET_SOURCE_PATTERN.matcher(puzzle.getSourceFileName());
+        if (m.matches())
+            return context.getString(
+                    R.string.ListPuzzleAssetSource, m.group(1));
+        m = userSourcePattern.matcher(puzzle.getSourceFileName());
+        if (m.matches())
+            return context.getString(
+                    R.string.ListPuzzleUserSource,
+                    m.group(1).replaceAll("_", " "));
+        return context.getString(
+                R.string.ListPuzzleUserSourceFallback,
+                puzzle.getSourceFileName());
+    }
+
+    /**
      * Get a View that displays the puzzle at the specified position
      * in the library.
      *
@@ -117,6 +161,7 @@ public class PuzzleListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // For debug logging
+        /*
         String cvDesc = (convertView == null) ? "null"
                 : convertView.getClass().getSimpleName();
         if (convertView instanceof TextView)
@@ -125,23 +170,32 @@ public class PuzzleListAdapter extends BaseAdapter {
                     ((TextView) convertView).getText().toString());
         Log.d(LOG_TAG, String.format(Locale.US, ".getView(%d,%s,%s)",
                 position, cvDesc, parent));
+         */
         TangramPuzzle puzzle = getItem(position);
         if (convertView instanceof ViewGroup vg) {
             TangramPuzzleView puzzleView = vg.findViewById(R.id.ListPuzzleView);
             TextView puzzleName = vg.findViewById(R.id.ListPuzzleName);
+            TextView puzzleSource = vg.findViewById(R.id.ListPuzzleSource);
             if ((puzzleView != null) && (puzzleName != null)) {
                 puzzleView.setPuzzle(puzzle);
                 puzzleName.setText(puzzle.getName());
+                puzzleSource.setText(getPuzzleSource(puzzle));
                 return vg;
             }
         }
-        Log.d(LOG_TAG, "Creating a new list item view");
+        //Log.d(LOG_TAG, "Creating a new list item view");
+        @SuppressLint("ViewHolder") // We already checked for a valid convertView above
         ViewGroup vg = (ViewGroup) inflater.inflate(
                 R.layout.puzzle_list_item, parent, false);
         TangramPuzzleView puzzleView = vg.findViewById(R.id.ListPuzzleView);
         TextView puzzleName = vg.findViewById(R.id.ListPuzzleName);
+        // Make the name just a bit (20%) larger
+        puzzleName.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+                puzzleName.getTextSize() * 1.2f);
+        TextView puzzleSource = vg.findViewById(R.id.ListPuzzleSource);
         puzzleView.setPuzzle(puzzle);
         puzzleName.setText(puzzle.getName());
+        puzzleSource.setText(getPuzzleSource(puzzle));
         return vg;
     }
 

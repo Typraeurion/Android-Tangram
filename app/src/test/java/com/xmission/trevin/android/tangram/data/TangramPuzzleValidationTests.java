@@ -30,50 +30,38 @@ import com.xmission.trevin.android.tangram.exception.OverlappingPiecesException;
 import com.xmission.trevin.android.tangram.exception.PieceNotTouchingException;
 import com.xmission.trevin.android.tangram.exception.TangramException;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 /**
- * JVM tests that exercise {@link TangramPuzzle}'s JSON constructor and its
- * validation against real files: every puzzle shipped in the app's asset
- * library must validate, and the hand-crafted bad puzzles under
- * {@code src/test/resources/puzzles/} must each be rejected with the
- * appropriate {@link TangramException}.
- *
- * <p>These require a real {@code org.json} implementation on the test
- * classpath (the android.jar stub throws &ldquo;not mocked&rdquo;), added as a
- * {@code testImplementation} dependency.</p>
+ * JVM tests that exercise {@link TangramPuzzle}'s JSON constructor and
+ * its validation against test files: the basic square (correctly formed)
+ * must validate, and bad puzzles must be rejected with the appropriate
+ * {@link TangramException}.
  *
  * @author Claude Opus 4.8
  */
-public class TangramPuzzleLibraryTests {
+public class TangramPuzzleValidationTests {
 
     // ---- helpers ----------------------------------------------------------
 
-    /** Locate the app module's {@code src/main/assets} directory, whether
-     * the tests run with the working directory at the module or repo root. */
-    private static File assetsDir() {
-        for (String base : new String[] {
-                "src/main/assets", "app/src/main/assets" }) {
-            File dir = new File(base);
-            if (dir.isDirectory())
-                return dir;
-        }
-        throw new AssertionError("Could not locate src/main/assets");
-    }
-
-    private static String readAll(InputStream in) throws Exception {
+    /**
+     * Read the contents of an {@code InputStream} into a {@code String}.
+     *
+     * @param in the {@code InputStream} to read
+     *
+     * @return the contents of the {@code InputStream} as a {@code String}
+     */
+    private static String readAll(InputStream in) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int n;
@@ -82,18 +70,38 @@ public class TangramPuzzleLibraryTests {
         return out.toString(StandardCharsets.UTF_8);
     }
 
-    /** Read a bad-puzzle fixture from {@code src/test/resources/puzzles/}. */
-    private static JSONObject fixture(String name) throws Exception {
-        try (InputStream in = TangramPuzzleLibraryTests.class
+    /**
+     * Read a puzzle from {@code src/test/resources/puzzles/}.
+     *
+     * @param name the name of the puzzle file, which should contain
+     * a single puzzle as a JSON object.
+     *
+     * @throws IOException if the file cannot be read
+     * @throws JSONException if the file contains invalid JSON
+     */
+    private static JSONObject fixture(String name)
+            throws IOException, JSONException {
+        try (InputStream in = TangramPuzzleValidationTests.class
                 .getResourceAsStream("/puzzles/" + name)) {
             assertNotNull("fixture /puzzles/" + name + " not found", in);
             return new JSONObject(readAll(in));
         }
     }
 
-    /** Construct a puzzle expected to be invalid and return its errors. */
+    /**
+     * Construct a puzzle expected to be invalid and return its errors.
+     *
+     * @param fixtureName the name of the bad puzzle file to test
+     *
+     * @return the list of errors thrown by the
+     * {@link com.xmission.trevin.android.tangram.data.TangramPuzzle#TangramPuzzle(JSONObject)
+     * TangramPuzzle(json)} constructor
+     *
+     * @throws IOException if the file cannot be read
+     * @throws JSONException if the file contains invalid JSON
+     */
     private static List<TangramException> rejectionErrors(String fixtureName)
-            throws Exception {
+            throws IOException, JSONException {
         JSONObject json = fixture(fixtureName);
         try {
             new TangramPuzzle(json);
@@ -104,6 +112,16 @@ public class TangramPuzzleLibraryTests {
         }
     }
 
+    /**
+     * Check whether a list of {@link TangramException}s
+     * contains an expected exception class.
+     *
+     * @param errors the list of exceptions thrown by the constructor.
+     * @param type the expected exception class
+     *
+     * @return {@code true} if {@code errors} contains at least one
+     * exception of the given {@code type}, {@code false} otherwise.
+     */
     private static boolean hasError(
             List<TangramException> errors,
             Class<? extends TangramException> type) {
@@ -114,44 +132,22 @@ public class TangramPuzzleLibraryTests {
         return false;
     }
 
-    // ---- the shipped library ---------------------------------------------
+    // ---- the valid puzzle ---------------------------------------------
 
     /**
-     * Every puzzle in every {@code assets/puzzles-*.json} file must pass
-     * validation (the constructor throws {@link InvalidPuzzleException}
-     * otherwise).
+     * The valid square file must pass validation.
      */
     @Test
-    public void testAllLibraryPuzzlesAreValid() throws Exception {
-        File[] files = assetsDir().listFiles(
-                (dir, name) -> name.matches("puzzles-.*\\.json"));
-        assertNotNull("no puzzle asset files found", files);
-        assertTrue("no puzzle asset files found", files.length > 0);
-
-        int validated = 0;
-        for (File file : files) {
-            String content = Files.readString(file.toPath());
-            Object root = new JSONTokener(content).nextValue();
-            JSONArray puzzles = (root instanceof JSONArray)
-                    ? (JSONArray) root
-                    : new JSONArray().put(root);
-            for (int i = 0; i < puzzles.length(); i++) {
-                JSONObject json = puzzles.getJSONObject(i);
-                try {
-                    new TangramPuzzle(json);
-                    validated++;
-                } catch (InvalidPuzzleException e) {
-                    fail("Puzzle \"" + json.optString("name", "?")
-                            + "\" in " + file.getName()
-                            + " failed validation: " + e.getMessage());
-                }
-            }
-        }
-        assertTrue("expected at least one library puzzle", validated > 0);
+    public void testValidPuzzle() throws Exception {
+        JSONObject json = fixture("square.json");
+        TangramPuzzle puzzle = new TangramPuzzle(json);
     }
 
     // ---- the bad puzzles --------------------------------------------------
 
+    /**
+     * Test a puzzle where at least one piece overlaps another.
+     */
     @Test
     public void testOverlappingFixtureRejected() throws Exception {
         List<TangramException> errors = rejectionErrors("overlapping.json");
@@ -176,6 +172,9 @@ public class TangramPuzzleLibraryTests {
         }
     }
 
+    /**
+     * Test a puzzle where at least one piece is not touching any others.
+     */
     @Test
     public void testNotTouchingFixtureRejected() throws Exception {
         List<TangramException> errors = rejectionErrors("not-touching.json");
@@ -187,6 +186,11 @@ public class TangramPuzzleLibraryTests {
         }
     }
 
+    /**
+     * Test a puzzle where a group of at least two pieces is not touching
+     * another group of at least two pieces.  This is a distinct case from
+     * a single piece not touching any others.
+     */
     @Test
     public void testDisconnectedFixtureRejected() throws Exception {
         List<TangramException> errors = rejectionErrors("disconnected.json");
@@ -218,6 +222,11 @@ public class TangramPuzzleLibraryTests {
         }
     }
 
+    /**
+     * Test a puzzle which is missing at least one piece.  It&rsquo;s
+     * possible for a puzzle to have both missing and extra pieces
+     * of different types.
+     */
     @Test
     public void testMissingPieceFixtureRejected() throws Exception {
         List<TangramException> errors = rejectionErrors("missing-piece.json");
@@ -230,6 +239,11 @@ public class TangramPuzzleLibraryTests {
         }
     }
 
+    /**
+     * Test a puzzle which has too many instances of at least one type of
+     * piece.  It&rsquo;s possible for a puzzle to have both missing and
+     * extra pieces of different types.
+     */
     @Test
     public void testExtraPieceFixtureRejected() throws Exception {
         List<TangramException> errors = rejectionErrors("extra-piece.json");

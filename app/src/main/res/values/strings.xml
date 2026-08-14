@@ -1,6 +1,6 @@
 <resources>
     <string name="InfoPopupText">Tangram\n
-version 0.2 (2026.08.12)\n
+version 0.2 (2026.08.13)\n
 by Trevin Beattie\n
 \n
 Documentation for this app can be found on its GitHub project page
@@ -36,13 +36,18 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="ErrorUserDirRevoked">Permission to use %s to save user puzzles is no longer available; please re-select it in the preferences.</string>
     <string name="ErrorWritingPuzzle">Could not save the puzzle in %s: %s</string>
     <string name="InfoButtonOK">OK</string>
-    <string name="UserPuzzleErrorsTitle">User Puzzle Errors</string>
+    <string name="LibraryEmpty">No puzzles are available.</string>
+    <string name="LibraryTitle">Puzzle Library</string>
+    <string name="ListPuzzleAssetSource">Built-in %s collection</string>
+    <string name="ListPuzzleUserSource">User-provided %s collection</string>
+    <string name="ListPuzzleUserSourceFallback">User-provided file %s</string>
     <string name="MenuAbout">About&#8230;</string>
     <string name="MenuLibrary">Browse Library</string>
     <string name="MenuPreferences">Preferences</string>
     <string name="MenuRandom">Random Puzzle</string>
     <string name="MenuResume">Resume Puzzle In Progress</string>
     <string name="MenuSketch">Free-form</string>
+    <string name="NotificationPuzzleSaved">Puzzle %s successfully saved to %s</string>
     <!-- Badge showing how many of a piece are left to place, e.g. "×2" -->
     <string name="piece_count_format">&#215;%d</string>
     <!-- Piece names, used for the tray slots' accessibility descriptions -->
@@ -91,6 +96,7 @@ https://opensource.org/license/gpl-3.0 for more details.\n
     <string name="SaveDialogNameHint">My Shape</string>
     <string name="SaveDialogTitle">Save Puzzle</string>
     <string name="TitleTooltip">Tangram</string>
+    <string name="UserPuzzleErrorsTitle">User Puzzle Errors</string>
     <string name="UserPuzzleFilePrefix">puzzles-</string>
     <!-- Puzzle validation errors -->
     <string name="ValidationErrorDisconnect">%1$s are not touching %2$s</string>

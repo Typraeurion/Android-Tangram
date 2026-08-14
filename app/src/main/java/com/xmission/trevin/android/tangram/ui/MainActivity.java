@@ -141,10 +141,7 @@ public class MainActivity extends TangramActivity {
         @Override
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnLibrarySelected.onClick");
-            // To Do: Start the puzzle library activity.
-            Toast.makeText(MainActivity.this,
-                    "Library not yet implemented",
-                    Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, LibraryActivity.class));
         }
     }
 

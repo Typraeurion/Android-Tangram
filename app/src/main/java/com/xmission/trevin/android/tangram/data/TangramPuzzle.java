@@ -85,6 +85,12 @@ public class TangramPuzzle implements Cloneable, Parcelable {
     public static final double POINT_PROXIMITY = 1.0;
 
     /**
+     * Maximum distance to fudge a point from a computed position
+     * to a point in integer ℚ√2 space (snap rule 2.3).
+     */
+    public static final double FUDGE_ALLOWANCE = 0.125;
+
+    /**
      * The file that the puzzle came from, if any.
      * Not set if the puzzle is created in-game.
      */
@@ -904,7 +910,10 @@ public class TangramPuzzle implements Cloneable, Parcelable {
             TPoint delta = new ImmutableTPoint(
                     perpDelta.getXa() + (float) (slide * ux), perpDelta.getXb(),
                     perpDelta.getYa() + (float) (slide * uy), perpDelta.getYb());
-            moved.setPosition(translated(moved.getPosition(), delta));
+            TPoint exactPosition = translated(moved.getPosition(), delta);
+            TPoint snapPosition = exactPosition.nearestZGridPoint();
+            moved.setPosition((snapPosition.distanceTo(exactPosition)
+                    < FUDGE_ALLOWANCE) ? snapPosition : exactPosition);
             return;
         }
 
@@ -1180,38 +1189,38 @@ public class TangramPuzzle implements Cloneable, Parcelable {
     public @NonNull TPoint getCenter() {
         if (pieces.isEmpty())
             return ImmutableTPoint.ORIGIN;
-        float minXa = Float.POSITIVE_INFINITY;
-        float maxXa = Float.NEGATIVE_INFINITY;
-        float minXb = Float.POSITIVE_INFINITY;
-        float maxXb = Float.NEGATIVE_INFINITY;
-        float minYa = Float.POSITIVE_INFINITY;
-        float maxYa = Float.NEGATIVE_INFINITY;
-        float minYb = Float.POSITIVE_INFINITY;
-        float maxYb = Float.NEGATIVE_INFINITY;
+        MutableTPoint min = new MutableTPoint(
+                Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY,
+                Float.POSITIVE_INFINITY, Float.POSITIVE_INFINITY);
+        MutableTPoint max = new MutableTPoint(
+                Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY,
+                Float.NEGATIVE_INFINITY, Float.NEGATIVE_INFINITY);
         for (TangramPiece piece : pieces) {
             for (TPoint vertex : piece.getVertices()) {
-                if (vertex.getXa() < minXa)
-                    minXa = vertex.getXa();
-                if (vertex.getXa() > maxXa)
-                    maxXa = vertex.getXa();
-                if (vertex.getXb() < minXb)
-                    minXb = vertex.getXb();
-                if (vertex.getXb() > maxXb)
-                    maxXb = vertex.getXb();
-                if (vertex.getYa() < minYa)
-                    minYa = vertex.getYa();
-                if (vertex.getYa() > maxYa)
-                    maxYa = vertex.getYa();
-                if (vertex.getYb() < minYb)
-                    minYb = vertex.getYb();
-                if (vertex.getYb() > maxYb)
-                    maxYb = vertex.getYb();
+                if (vertex.getX() < min.getX()) {
+                    min.setXa(vertex.getXa());
+                    min.setXb(vertex.getXb());
+                }
+                if (vertex.getX() > max.getX()) {
+                    max.setXa(vertex.getXa());
+                    max.setXb(vertex.getXb());
+                }
+                if (vertex.getY() < min.getY()) {
+                    min.setYa(vertex.getYa());
+                    min.setYb(vertex.getYb());
+                }
+                if (vertex.getY() > max.getY()) {
+                    max.setYa(vertex.getYa());
+                    max.setYb(vertex.getYb());
+                }
             }
         }
-        size = (float) Math.max(maxXa - minXa + (maxXb- minXb) * TPoint.SQRT2,
-                maxYa - minYa + (maxYb - minYb) * TPoint.SQRT2);
-        return new ImmutableTPoint((minXa + maxXa) / 2, (minXb + maxXb) / 2,
-                (minYa + maxYa) / 2, (minYb + maxYb) / 2);
+        size = (float) Math.max(max.getX() - min.getX(),
+                max.getY() - min.getY());
+        return new ImmutableTPoint((min.getXa() + max.getXa()) / 2,
+                (min.getXb() + max.getXb()) / 2,
+                (min.getYa() + max.getYa()) / 2,
+                (min.getYb() + max.getYb()) / 2);
     }
 
 }

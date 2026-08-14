@@ -173,14 +173,17 @@ public class PuzzleLibrary {
             Log.i(LOG_TAG, "No assets found");
             return;
         }
-        Object json = null;
+        Object json;
         for (String assetName : assets) {
+            json = null;
             if (PUZZLE_PATTERN.matcher(assetName).matches()) try {
                 json = readJSONAsset(context, assetName);
             } catch (IOException | JSONException e) {
                 Log.e(LOG_TAG, String.format(Locale.US,
                         "Error reading assets/%s; ignoring it.",
                         assetName), e);
+                continue;
+            } else {
                 continue;
             }
             if (json instanceof JSONArray jsonArray) {

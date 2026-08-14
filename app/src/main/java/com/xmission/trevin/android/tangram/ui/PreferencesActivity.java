@@ -69,6 +69,8 @@ public class PreferencesActivity extends TangramActivity {
 
     private TangramPreferences prefs;
 
+    private PuzzleLibrary library;
+
     private final Map<TangramPreferences.Corner,Spinner> cornerSpinnerMap
             = new HashMap<>();
 
@@ -156,6 +158,7 @@ public class PreferencesActivity extends TangramActivity {
         WindowInsetsUtil.applySafeAreaPadding(this);
 
         prefs = TangramPreferences.getInstance(this);
+        library = PuzzleLibrary.getInstance();
 
         RadioGroup uiThemeGroup = findViewById(
                 R.id.PreferencesRadioGroupUITheme);
@@ -557,8 +560,7 @@ public class PreferencesActivity extends TangramActivity {
         BackgroundExecutor.runInBackground(() -> {
             List<String> errors;
             try {
-                errors = PuzzleLibrary.getInstance()
-                        .loadUserPuzzles(this, folder);
+                errors = library.loadUserPuzzles(this, folder);
             } catch (SecurityException e) {
                 // The directory is no longer accessible; forget it.  Its
                 // getName() would be null now, so derive a friendly name

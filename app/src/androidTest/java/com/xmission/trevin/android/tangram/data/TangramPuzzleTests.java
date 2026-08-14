@@ -30,14 +30,30 @@ import java.nio.charset.StandardCharsets;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test that we're able to parse the puzzle files.
+ * Test that we're able to parse the puzzle asset files,
+ * and that all puzzles are valid.  Validation is automatically
+ * done during conversion from JSON objects.
  *
  * @author Trevin Beattie
  */
 public class TangramPuzzleTests {
+
+    Context hostContext = null;
+
+    /**
+     * Get the context in which the tests are running,
+     * if not already set.
+     */
+    @Before
+    public void getHostContext() {
+        if (hostContext == null)
+            hostContext = InstrumentationRegistry.getInstrumentation()
+                    .getContext();
+    }
 
     /**
      * Read the contents of an asset file
@@ -51,8 +67,6 @@ public class TangramPuzzleTests {
      * @throws IOException if the asset does not exist or cannot be read.
      */
     public String readAsset(String assetName) throws IOException {
-        Context hostContext =
-                InstrumentationRegistry.getInstrumentation().getContext();
         try (InputStream iStream = hostContext.getAssets().open(assetName);
              BufferedReader reader = new BufferedReader(new InputStreamReader(
                      iStream, StandardCharsets.UTF_8))) {
@@ -64,8 +78,13 @@ public class TangramPuzzleTests {
         }
     }
 
+    /**
+     * Test the basic puzzles file.  This one includes the square
+     * that Tangram pieces are made from, plus a group of puzzles
+     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     */
     @Test
-    public void testReadPuzzles() throws IOException, JSONException {
+    public void testReadBasicPuzzles() throws IOException, JSONException {
         String jsonString = readAsset("puzzles-basic.json");
         JSONArray json = new JSONArray(jsonString);
         assertNotEquals("No puzzles found in puzzles-basic.json",

@@ -10,10 +10,27 @@
         android:layout_height="@dimen/goal_view_size"
         android:padding="@dimen/piece_tray_padding"
         android:scaleType="fitCenter" />
-    <TextView android:id="@+id/ListPuzzleName"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start|center_vertical"
-        android:ellipsize="end"
-        android:maxLines="2" />
+        android:layout_height="@dimen/goal_view_size"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/piece_tray_padding">
+        <TextView android:id="@+id/ListPuzzleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:layout_weight="2"
+            android:ellipsize="end"
+            android:gravity="bottom"
+            android:maxLines="2"
+            android:textStyle="bold" />
+        <TextView android:id="@+id/ListPuzzleSource"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|top"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="2" />
+    </LinearLayout>
 </LinearLayout>
