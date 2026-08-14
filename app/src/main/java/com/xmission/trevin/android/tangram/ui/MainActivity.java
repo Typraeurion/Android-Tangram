@@ -21,13 +21,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
 import com.xmission.trevin.android.tangram.R;
+import com.xmission.trevin.android.tangram.data.GameState;
 import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 import com.xmission.trevin.android.tangram.data.TangramPreferences;
 import com.xmission.trevin.android.tangram.data.TangramPreferences.PiecesTheme;
@@ -82,8 +82,9 @@ public class MainActivity extends TangramActivity {
         }
         button = findViewById(R.id.MainButtonSketch);
         button.setOnClickListener(new OnFreePlaySelected());
-        button = findViewById(R.id.MainButtonResume);
-        button.setOnClickListener(new OnResumeSelected());
+        // The Resume button is shown or hidden based on whether an
+        // in-progress game is saved; that is (re)evaluated in onResume, which
+        // also runs when returning here from PlayActivity.
         button = findViewById(R.id.MainButtonPreferences);
         button.setOnClickListener(new OnPreferencesSelected());
         button = findViewById(R.id.MainButtonAbout);
@@ -93,14 +94,33 @@ public class MainActivity extends TangramActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(LOG_TAG, "onResume()");
         // Surface any user-puzzle problems queued during a background load
         // (e.g. from the Application's startup load, which can't show a
         // dialog itself).  Registering also flushes anything already queued.
         library.setUserMessageListener(this::showUserPuzzleMessages);
+        updateResumeButton();
+    }
+
+    /**
+     * Show the &ldquo;Resume Puzzle In Progress&rdquo; button only when an
+     * unfinished game has been saved (see {@link GameState}); otherwise hide
+     * it.  Re-evaluated on every resume, including when returning from
+     * {@link PlayActivity}.
+     */
+    private void updateResumeButton() {
+        Button resumeButton = findViewById(R.id.MainButtonResume);
+        if (GameState.getInstance().hasInProgressGame()) {
+            resumeButton.setOnClickListener(new OnResumeSelected());
+            resumeButton.setVisibility(View.VISIBLE);
+        } else {
+            resumeButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onPause() {
+        Log.d(LOG_TAG, "onPause()");
         library.setUserMessageListener(null);
         super.onPause();
     }
@@ -130,6 +150,8 @@ public class MainActivity extends TangramActivity {
             implements TangramPreferences.OnPieceColoringChangedListener {
         @Override
         public void onPieceColoringChanged(@NonNull PiecesTheme newLevel) {
+            Log.d(LOG_TAG, String.format(Locale.US,
+                    "Piece coloring changed to %s", newLevel));
             recreate();
         }
     }
@@ -182,10 +204,12 @@ public class MainActivity extends TangramActivity {
         @Override
         public void onClick(View view) {
             Log.d(LOG_TAG, "OnResumeSelected.onClick");
-            // To Do: Start PlayActivity with the saved puzzle
-            Toast.makeText(MainActivity.this,
-                    "Resuming prior game not yet implemented",
-                    Toast.LENGTH_SHORT).show();
+            if (!GameState.getInstance().hasInProgressGame()) {
+                Log.e(LOG_TAG, "No in-progress game to resume");
+                findViewById(R.id.MainButtonResume).setVisibility(View.GONE);
+                return;
+            }
+            startActivity(PlayActivity.createResumeIntent(MainActivity.this));
         }
     }
 

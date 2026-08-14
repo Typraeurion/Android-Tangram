@@ -216,7 +216,7 @@ public class PlayTableView extends View {
     public interface OnPuzzleValidatedListener {
         /**
          * @param valid whether the play field currently forms a valid
-         * Tangram (see {@link TangramPuzzle#isValid()})
+         * Tangram (see {@link TangramPuzzle#isValid(boolean)})
          */
         void onPuzzleValidated(boolean valid);
     }
@@ -233,6 +233,20 @@ public class PlayTableView extends View {
      * finger while dragging.
      */
     private float grabOffsetX, grabOffsetY;
+
+    /**
+     * Whether the selected piece has actually been dragged since it was
+     * grabbed.  A plain tap (grab + release with no drag) leaves this false,
+     * so tapping a piece near the edge does not return it to the tray.
+     */
+    private boolean pieceDragged = false;
+
+    /**
+     * How close to the edge of the view (in dp) a drag must end for the
+     * piece to be returned to the tray, on top of ending outside the view
+     * entirely (dragged into the tray / off-screen).
+     */
+    private static final float EDGE_RETURN_MARGIN_DP = 8f;
 
     /**
      * The id of the second pointer that, together with
@@ -422,20 +436,25 @@ public class PlayTableView extends View {
     }
 
     /**
-     * If the selected piece&rsquo;s centroid has been dragged outside the
-     * visible play area, remove it from the field and hand it back to the
-     * tray (via {@link #pieceReturnedListener}) so it is not lost.  Called
-     * when a drag ends.
+     * If a piece was dragged and released with the finger at (or past) the
+     * edge of the visible play area&mdash;i.e. flicked into the tray or
+     * off-screen&mdash;remove it from the field and hand it back to the tray
+     * (via {@link #pieceReturnedListener}) so it is not lost.  A piece merely
+     * placed near the edge, or a plain tap, is kept.  Called when a drag ends.
+     *
+     * @param releaseX the x coordinate, in view pixels, where the drag ended
+     * @param releaseY the y coordinate, in view pixels, where the drag ended
      */
-    private void returnSelectedPieceIfOffField() {
-        if (selectedPiece == null)
+    private void returnSelectedPieceIfReleasedAtEdge(
+            float releaseX, float releaseY) {
+        if (selectedPiece == null || !pieceDragged)
             return;
-        pointBuffer[0] = selectedPiece.getPosition().getX();
-        pointBuffer[1] = selectedPiece.getPosition().getY();
-        puzzleToView.mapPoints(pointBuffer);
-        float x = pointBuffer[0], y = pointBuffer[1];
-        if (x >= 0 && x <= getWidth() && y >= 0 && y <= getHeight())
-            return; // centroid still on the field; keep the piece
+        float margin = EDGE_RETURN_MARGIN_DP
+                * getResources().getDisplayMetrics().density;
+        boolean atEdge = releaseX <= margin || releaseX >= getWidth() - margin
+                || releaseY <= margin || releaseY >= getHeight() - margin;
+        if (!atEdge)
+            return; // released well inside the play area; keep the piece
         TangramPiece removed = selectedPiece;
         playField.removePiece(removed);
         setSelectedPiece(null);
@@ -469,7 +488,7 @@ public class PlayTableView extends View {
      */
     private void notifyPuzzleValidated() {
         if (puzzleValidatedListener != null)
-            puzzleValidatedListener.onPuzzleValidated(playField.isValid());
+            puzzleValidatedListener.onPuzzleValidated(playField.isValid(true));
     }
 
     /**
@@ -562,6 +581,39 @@ public class PlayTableView extends View {
         setZoom(userZoom * factor);
     }
 
+    /** @return the current horizontal pan offset, in view pixels. */
+    public float getPanX() {
+        return panX;
+    }
+
+    /** @return the current vertical pan offset, in view pixels. */
+    public float getPanY() {
+        return panY;
+    }
+
+    /**
+     * Restore the viewport (zoom and pan) together, e.g. when resuming a
+     * saved game.  The zoom is clamped to
+     * [{@link #MIN_ZOOM}, {@link #MAX_ZOOM}] and the pan is clamped to the
+     * scrollable range.  If the view has not been laid out yet, the values
+     * are stored and applied on the first {@link #onSizeChanged}.
+     *
+     * @param zoom the user zoom multiplier to restore
+     * @param panX the horizontal pan offset to restore, in view pixels
+     * @param panY the vertical pan offset to restore, in view pixels
+     */
+    public void setViewport(float zoom, float panX, float panY) {
+        userZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoom));
+        this.panX = panX;
+        this.panY = panY;
+        if (getWidth() > 0 && getHeight() > 0) {
+            clampPan();
+            rebuildTransform();
+            invalidate();
+        }
+        // Otherwise onSizeChanged() will clamp and rebuild once laid out.
+    }
+
     /**
      * Compute {@link #fitScale} so the puzzle&rsquo;s full extent fits
      * within the current view bounds (less {@link #FIT_MARGIN}).
@@ -617,8 +669,10 @@ public class PlayTableView extends View {
 
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.d(LOG_TAG, String.format(Locale.US,
-                "onSizeChanged(%d×%d → %d×%d)", oldw, oldh, w, h));
+        // Skip logging if this is the first time the view has been measured
+        if (oldw * oldh != 0)
+            Log.d(LOG_TAG, String.format(Locale.US,
+                    "onSizeChanged(%d×%d → %d×%d)", oldw, oldh, w, h));
         super.onSizeChanged(w, h, oldw, oldh);
         computeFitScale();
         clampPan();
@@ -742,6 +796,7 @@ public class PlayTableView extends View {
                 }
                 activePointerId = event.getPointerId(pointerIndex);
                 panPointerId = MotionEvent.INVALID_POINTER_ID;
+                pieceDragged = false;
                 raiseToTop(hit);
                 grabOffsetX = hit.getPosition().getX() - touchBuffer[0];
                 grabOffsetY = hit.getPosition().getY() - touchBuffer[1];
@@ -823,6 +878,7 @@ public class PlayTableView extends View {
                 selectedPiece.setPosition(new MutableTPoint(
                         touchBuffer[0] + grabOffsetX, 0,
                         touchBuffer[1] + grabOffsetY, 0));
+                pieceDragged = true;
                 invalidate();
                 return true;
             }
@@ -865,18 +921,30 @@ public class PlayTableView extends View {
                 return true;
             }
 
-            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_UP: {
                 performClick();
-                // fall through
-            case MotionEvent.ACTION_CANCEL:
+                // Capture where the drag ended before clearing pointer state.
+                int upIndex = event.getActionIndex();
+                float releaseX = event.getX(upIndex);
+                float releaseY = event.getY(upIndex);
                 activePointerId = MotionEvent.INVALID_POINTER_ID;
                 rotationPointerId = MotionEvent.INVALID_POINTER_ID;
                 panPointerId = MotionEvent.INVALID_POINTER_ID;
                 endFieldGesture();
-                // A piece dragged off the visible field goes back to the
-                // tray rather than being lost off-screen; anything left on the
-                // field snaps to its neighbors / the grid.
-                returnSelectedPieceIfOffField();
+                // A piece released with the finger at/past the edge of the
+                // play area (into the tray or off-screen) goes back to the
+                // tray; otherwise it stays and snaps to its neighbors / grid.
+                returnSelectedPieceIfReleasedAtEdge(releaseX, releaseY);
+                snapSelectedPiece();
+                return true;
+            }
+            case MotionEvent.ACTION_CANCEL:
+                // A cancelled gesture is not a deliberate drop, so keep the
+                // piece where it is rather than returning it to the tray.
+                activePointerId = MotionEvent.INVALID_POINTER_ID;
+                rotationPointerId = MotionEvent.INVALID_POINTER_ID;
+                panPointerId = MotionEvent.INVALID_POINTER_ID;
+                endFieldGesture();
                 snapSelectedPiece();
                 return true;
         }

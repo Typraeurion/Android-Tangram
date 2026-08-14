@@ -161,7 +161,7 @@ public class TangramPuzzle implements Cloneable, Parcelable {
             wrappedException.initCause(e);
             throw wrappedException;
         }
-        if (!isValid())
+        if (!isValid(false))
             throw new InvalidPuzzleException("Invalid puzzle: " + name,
                     R.string.ErrorInvalidNamedPuzzle, name, validationErrors);
     }
@@ -366,9 +366,15 @@ public class TangramPuzzle implements Cloneable, Parcelable {
      * touches nothing else, and a {@link DisconnectedException} for each
      * additional connected group when the pieces form more than one.</p>
      *
+     * @param earlyExit if {@code true}, skip more complex evaluation
+     * if errors were found in the initial simple checks.  This is more
+     * useful during play where the user will be moving pieces frequently.
+     * If {@code false}, run all evaluation checks.  This is more useful
+     * when loading puzzles from files so that all errors can be reported.
+     *
      * @return true if the puzzle has no validation errors, false otherwise
      */
-    public boolean isValid() {
+    public boolean isValid(boolean earlyExit) {
         List<TangramException> errors = new ArrayList<>();
         Map<Class<? extends TangramPiece>, Integer> counts = new HashMap<>();
         for (TangramPiece piece : pieces) {
@@ -411,6 +417,10 @@ public class TangramPuzzle implements Cloneable, Parcelable {
                 }
             }
         }
+        if (earlyExit && !errors.isEmpty()) {
+            validationErrors = errors;
+            return false;
+        }
 
         // Touching / connectivity (only meaningful with two or more pieces).
         int n = pieces.size();
@@ -434,6 +444,10 @@ public class TangramPuzzle implements Cloneable, Parcelable {
                     if (info != null)
                         errors.add(new PieceNotTouchingException(
                                 info.pieceNameId, info.pieceName));
+                }
+                if (earlyExit && !errors.isEmpty()) {
+                    validationErrors = errors;
+                    return false;
                 }
             }
 
@@ -697,11 +711,16 @@ public class TangramPuzzle implements Cloneable, Parcelable {
         if (contact != null) {
             // Rules 2, 2.1-2.4: align to the touching neighbor edge.
             snapToEdge(moved, contact);
-        } else if (pieces.isEmpty() || !snapToVertex(moved)) {
+        } else if (!pieces.isEmpty() && snapToVertex(moved)) {
+            // Rule 3: a moved vertex touches a neighbor (handled there).
+            Log.d(LOG_TAG, "Snapped to a vertex contact");
+        } else if (!pieces.isEmpty() && snapEdgeToVertex(moved)) {
+            // A moved edge passes through a neighbor vertex (handled there).
+            Log.d(LOG_TAG, "Snapped an edge to a neighbor vertex");
+        } else {
             // Rule 1: nothing to touch → snap to the grid and 45°.
             snapFree(moved);
         }
-        // else: rule 3 (a vertex contact) was handled by snapToVertex.
 
         pieces.add(moved);
         Log.d(LOG_TAG, "Snapped " + moved);
@@ -755,6 +774,60 @@ public class TangramPuzzle implements Cloneable, Parcelable {
         if (target != null)
             moved.setPosition(translated(moved.getPosition(),
                     coefficientDifference(target, vertex)));
+        return true;
+    }
+
+    /**
+     * Snap the case where one of the moved piece&rsquo;s <em>edges</em> passes
+     * near a neighbor <em>vertex</em>, with no edge-to-edge overlap
+     * ({@link #findBestEdgeContact}) and no moved vertex near a neighbor
+     * ({@link #snapToVertex})&mdash;e.g. a triangle&rsquo;s leg or hypotenuse
+     * resting against the tip of another piece.  Rotation is snapped to the
+     * nearest 45&deg; (all edges of a valid tangram lie at 45&deg; multiples)
+     * and the piece shifted perpendicular so the edge passes through that
+     * vertex, closing the gap.
+     *
+     * @param moved the piece being snapped
+     * @return {@code true} if such a contact was found and snapped,
+     * {@code false} otherwise
+     */
+    private boolean snapEdgeToVertex(@NonNull TangramPiece moved) {
+        // Find the moved edge / neighbor vertex with the smallest perpendicular
+        // gap, where the vertex projects onto the edge's interior (a projection
+        // at an endpoint would be a vertex contact, already ruled out).
+        TEdge[] movedEdges = moved.getEdges();
+        int bestEdgeIndex = -1;
+        TPoint bestVertex = null;
+        double bestGap = EDGE_PROXIMITY;
+        for (int i = 0; i < movedEdges.length; i++) {
+            TEdge edge = movedEdges[i];
+            for (TangramPiece other : pieces) {
+                for (TPoint w : other.getVertices()) {
+                    double fraction = edge.projectionFraction(w);
+                    if ((fraction <= 0) || (fraction >= 1))
+                        continue; // projects beyond the segment's ends
+                    double gap = edge.perpendicularDistanceToLine(w);
+                    if (gap <= bestGap) {
+                        bestGap = gap;
+                        bestEdgeIndex = i;
+                        bestVertex = w;
+                    }
+                }
+            }
+        }
+        if (bestEdgeIndex < 0)
+            return false;
+
+        // Rotation → nearest 45°.
+        moved.setRotation(45f * Math.round(moved.getRotation() / 45f));
+
+        // Shift the piece so the (re-read) edge's line passes through the
+        // neighbor vertex: the delta from the vertex's perpendicular foot on
+        // the edge to the vertex itself.
+        TEdge edge = moved.getEdges()[bestEdgeIndex];
+        TPoint foot = edge.pointAtFraction(edge.projectionFraction(bestVertex));
+        moved.setPosition(translated(moved.getPosition(),
+                coefficientDifference(bestVertex, foot)));
         return true;
     }
 

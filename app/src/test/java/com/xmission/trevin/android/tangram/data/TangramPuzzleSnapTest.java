@@ -219,6 +219,33 @@ public class TangramPuzzleSnapTest {
         assertEquals(4.667, apex.getX(), 1e-2);          // along-base unchanged
     }
 
+    // ---- edge-through-neighbor-vertex snap ---------------------------------
+
+    @Test
+    public void testEdgeSnapsToNeighborVertex() {
+        // A large triangle with its right leg running up to the vertex at
+        // (12, -2).  A medium triangle rotated 90° has a vertical left edge;
+        // placed at x=15 that edge sits at x = 15 - 2√2 ≈ 12.17, leaving a
+        // ~0.17 gap from the vertex (no edge overlap, no vertex-vertex touch),
+        // which used to fall through to a free grid snap.
+        TangramPuzzle puzzle = new TangramPuzzle();
+        TangramPiece large = largeTriangleAt(0, 0, -6);
+        puzzle.addPiece(large);
+
+        TangramPiece medium = new TangramMediumTriangle();
+        medium.setRotation(90f);
+        medium.setPosition(at(15, 3));
+        puzzle.snap(medium);
+
+        // Rotation (already a 45° multiple) is preserved, and the piece is
+        // shifted so its edge passes through the vertex, closing the gap.
+        assertEquals(90f, medium.getRotation(), DELTA);
+        assertEquals(12 + 2 * Math.sqrt(2), medium.getPosition().getX(), 1e-2);
+        assertEquals(3, medium.getPosition().getY(), 1e-2);
+        assertTrue("edge should now touch the neighbor vertex",
+                medium.touches(large));
+    }
+
     @Test
     public void testSnapDoesNotDuplicateAnAlreadyPresentPiece() {
         TangramPuzzle puzzle = new TangramPuzzle();

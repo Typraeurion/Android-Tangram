@@ -26,10 +26,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * Superclass of all pieces of a Tangram.  These are polygons whose
- * angles are in multiples of 15&deg; (stored as degrees clockwise
- * for easier reading).  Vertices of the polygon are given on a
- * unit scale using a two-integer system of the formula <i>a</i>
+ * Superclass of all pieces of a Tangram, also known as
+ * &ldquo;<i>Tans</i>&rdquo;.  These are polygons whose angles are
+ * in multiples of 15&deg; (stored as degrees clockwise for easier
+ * reading).  Vertices of the polygon are given on a unit scale
+ * using a two-integer system of the formula <i>a</i>
  * + <i>b</i>&#8730;2&#773; for each of the <i>x</i> and
  * <i>y</i> coordinates where both <i>a</i> and <i>b</i> are
  * relative to the closest point to the centroid of the polygon.

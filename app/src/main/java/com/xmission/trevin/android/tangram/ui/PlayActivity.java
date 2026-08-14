@@ -33,6 +33,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -69,7 +70,27 @@ public class PlayActivity extends TangramActivity {
     public static final String EXTRA_PUZZLE_GOAL =
             "com.xmission.trevin.android.tangram.PUZZLE_GOAL";
 
+    /**
+     * Intent extra carrying the placed pieces of a game being resumed.
+     * Present only when launched via {@link #createResumeIntent}.
+     */
+    public static final String EXTRA_RESUME_PLAYFIELD =
+            "com.xmission.trevin.android.tangram.RESUME_PLAYFIELD";
+
+    /**
+     * Intent extras carrying the viewport (zoom and pan) of a game being
+     * resumed.  Present only when launched via {@link #createResumeIntent}.
+     */
+    public static final String EXTRA_RESUME_ZOOM =
+            "com.xmission.trevin.android.tangram.RESUME_ZOOM";
+    public static final String EXTRA_RESUME_PAN_X =
+            "com.xmission.trevin.android.tangram.RESUME_PAN_X";
+    public static final String EXTRA_RESUME_PAN_Y =
+            "com.xmission.trevin.android.tangram.RESUME_PAN_Y";
+
     private TangramPreferences prefs;
+
+    private PuzzleLibrary library = null;
 
     private PlayTableView playTableView;
 
@@ -78,7 +99,11 @@ public class PlayActivity extends TangramActivity {
     /** Reference to the puzzle name toast if we show one, otherwise null */
     private Toast puzzleToast = null;
 
-    private PuzzleLibrary library = null;
+    /**
+     * This will be set when the user has solved the puzzle goal if
+     * there is one, or after saving a puzzle in free-play mode.
+     */
+    private boolean isFinished = false;
 
     /**
      * Build an intent to start this activity.
@@ -96,6 +121,34 @@ public class PlayActivity extends TangramActivity {
         return intent;
     }
 
+    /**
+     * Build an intent to resume the game saved in {@link GameState},
+     * carrying its goal (if any) and placed pieces, and consume that saved
+     * game.  Call only when {@link GameState#hasInProgressGame()} is true.
+     *
+     * @param context the launching context
+     * @return the intent to hand to {@code startActivity}
+     */
+    @NonNull
+    public static Intent createResumeIntent(@NonNull Context context) {
+        GameState state = GameState.getInstance();
+        Intent intent = new Intent(context, PlayActivity.class);
+        TangramPuzzle goal = state.getGoal();
+        if (goal != null)
+            intent.putExtra(EXTRA_PUZZLE_GOAL, goal);
+        TangramPuzzle playField = state.getPlayField();
+        if (playField != null)
+            intent.putExtra(EXTRA_RESUME_PLAYFIELD, playField);
+        intent.putExtra(EXTRA_RESUME_ZOOM, state.getZoom());
+        intent.putExtra(EXTRA_RESUME_PAN_X, state.getPanX());
+        intent.putExtra(EXTRA_RESUME_PAN_Y, state.getPanY());
+        // The game is now live in the launched activity; free the slot so
+        // the menu stops offering it (a fresh snapshot is saved on exit if
+        // the player leaves it unfinished again).
+        state.clear();
+        return intent;
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         // TangramActivity applies the hint-level theme (piece colors) before
@@ -109,17 +162,36 @@ public class PlayActivity extends TangramActivity {
         prefs = TangramPreferences.getInstance(this);
 
         playTableView = findViewById(R.id.play_table);
+        Intent intent = getIntent();
         TangramPuzzle goal = IntentCompat.getParcelableExtra(
-                getIntent(), EXTRA_PUZZLE_GOAL, TangramPuzzle.class);
+                intent, EXTRA_PUZZLE_GOAL, TangramPuzzle.class);
         playTableView.setSolution(goal);
         setUpDropTarget();
         setUpOverlayControls(goal);
         configureTraySlots();
 
+        // Restore a game being resumed.  Only on a fresh create: on a
+        // configuration change (savedInstanceState != null) the view
+        // hierarchy restores the placed pieces and tray counts itself.
+        boolean resuming = false;
+        if (savedInstanceState == null) {
+            TangramPuzzle resumeField = IntentCompat.getParcelableExtra(
+                    intent, EXTRA_RESUME_PLAYFIELD, TangramPuzzle.class);
+            if (resumeField != null) {
+                restoreInProgressPieces(resumeField);
+                // Restore the zoom and pan the game was saved at.
+                playTableView.setViewport(
+                        intent.getFloatExtra(EXTRA_RESUME_ZOOM, 1f),
+                        intent.getFloatExtra(EXTRA_RESUME_PAN_X, 0f),
+                        intent.getFloatExtra(EXTRA_RESUME_PAN_Y, 0f));
+                resuming = true;
+            }
+        }
+
         // If we have a goal, show a temporary toast giving
         // the name of the puzzle.  This is chiefly used during
         // development to identify malformed puzzles.
-        if (goal != null) {
+        if (goal != null && !resuming) {
             if (!goal.getName().isEmpty()) {
                 Log.d(LOG_TAG, "Goal: " + goal.getName());
                 puzzleToast = Toast.makeText(this,
@@ -146,6 +218,58 @@ public class PlayActivity extends TangramActivity {
     }
 
     /**
+     * Restore the placed pieces of a resumed game onto the (already
+     * goal-configured) play field and remove them from the tray, as if the
+     * player had dragged each one in.
+     *
+     * @param savedField the saved snapshot of placed pieces
+     */
+    private void restoreInProgressPieces(@NonNull TangramPuzzle savedField) {
+        Log.d(LOG_TAG, String.format(Locale.US,
+                "Restoring %d pieces from saved game",
+                savedField.getPieceCount()));
+        playTableView.getPuzzle().addPieces(savedField.getPieces());
+        ViewGroup tray = findViewById(R.id.piece_tray);
+        for (TangramPiece piece : savedField.getPieces()) {
+            for (int i = 0; i < tray.getChildCount(); i++) {
+                View child = tray.getChildAt(i);
+                if (child instanceof PieceTrayItemView slot
+                        && slot.accepts(piece)) {
+                    slot.setCount(Math.max(0, slot.getCount() - 1));
+                    break;
+                }
+            }
+        }
+        playTableView.invalidate();
+    }
+
+    /**
+     * Leave the play screen, saving an unfinished game that has some pieces
+     * placed so the main menu can offer to resume it.  (An empty board isn't
+     * worth saving, and leaving it alone preserves any earlier saved game.)
+     * Shared by the Exit hover control and the system Back button/gesture.
+     */
+    private void exitPlay() {
+        if (puzzleToast != null)
+            puzzleToast.cancel();
+        if (!isFinished && (playTableView.getPuzzle().getPieceCount() > 0)) {
+            Log.d(LOG_TAG, String.format(Locale.US,
+                    "Saving game state %s and %s pieces placed",
+                    (playTableView.getSolution() == null)
+                    ? "in free play" : ("with goal " +
+                            playTableView.getSolution().getName()),
+                    playTableView.getPuzzle().getPieceCount()));
+            GameState.getInstance().saveInProgress(
+                    playTableView.getSolution(),
+                    playTableView.getPuzzle(),
+                    playTableView.getZoom(),
+                    playTableView.getPanX(),
+                    playTableView.getPanY());
+        }
+        finish();
+    }
+
+    /**
      * Wire up the controls that hover over the play area: the back / exit
      * button, the goal preview (shown only when solving a puzzle), and the
      * contextual flip button (shown only while a flippable piece&mdash;the
@@ -158,11 +282,17 @@ public class PlayActivity extends TangramActivity {
         ViewGroup backFrame = findViewById(R.id.button_back_frame);
         moveControlToCorner(R.id.button_back_frame,
                 prefs.getBackButtonCorner());
-        findViewById(R.id.button_back).setOnClickListener((v) -> {
-            if (puzzleToast != null)
-                puzzleToast.cancel();
-            finish();
-        });
+        findViewById(R.id.button_back).setOnClickListener((v) -> exitPlay());
+        // The system Back button (and back gesture) must exit the same way,
+        // saving the in-progress game; the default dispatcher would just
+        // finish() without our save logic.
+        getOnBackPressedDispatcher().addCallback(this,
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        exitPlay();
+                    }
+                });
 
         ViewGroup goalFrame = findViewById(R.id.goal_view_frame);
         if (prefs.getHintLevel() != prefs.getPieceColoring()) {
@@ -230,6 +360,9 @@ public class PlayActivity extends TangramActivity {
             saveButtonFrame.setVisibility(
                     valid && (prefs.getUserPuzzlesDir() != null)
                             ? View.VISIBLE : View.GONE);
+            // Reset the finished flag if the puzzle is invalid.
+            if (!valid)
+                isFinished = false;
         } else if (valid) {
             // Puzzle mode: see whether this valid Tangram solves the goal.
             checkSolutionAgainstGoal();
@@ -255,6 +388,7 @@ public class PlayActivity extends TangramActivity {
         //     TPolygon target  = <goal as TPolygon>;
         //     if (current.isIdenticalTo(target)) {
         //         // ...puzzle solved...
+        //         isFinished = true;
         //     }
         // (TangramPuzzle -> TPolygon conversion is currently only stubbed.)
         Log.d(LOG_TAG, "Valid Tangram formed; goal-match check pending "
@@ -522,6 +656,7 @@ public class PlayActivity extends TangramActivity {
                             saveFile.getName(), e.getMessage()));
                     return;
                 }
+                isFinished = true;
                 runOnUiThread(() -> {
                     if (saveDialog != null)
                         saveDialog.dismiss();

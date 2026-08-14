@@ -180,7 +180,7 @@ public class TangramPuzzleView extends View {
     @Override
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         // Skip logging if this is the first time the view has been measured
-        if (w * h != 0)
+        if (oldw * oldh != 0)
             Log.d(LOG_TAG, String.format(Locale.US,
                     "onSizeChanged(%d×%d → %d×%d)", oldw, oldh, w, h));
         super.onSizeChanged(w, h, oldw, oldh);
