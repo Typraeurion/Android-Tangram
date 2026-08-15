@@ -1,0 +1,1762 @@
+[
+  {
+    "id": "alphabet-A",
+    "name": "Letter A",
+    "size": 33.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 5,
+          "yb": 4
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 45,
+        "position": {
+          "xb": 3,
+          "yb": -9
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": -3,
+          "yb": -8
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -5,
+          "yb": -4
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": 2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -7,
+          "yb": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-B",
+    "name": "Letter B",
+    "size": 36,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -3,
+          "xb": -2,
+          "yb": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": -3,
+          "xb": -2,
+          "yb": -8
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -3,
+          "xb": -2,
+          "ya": 0
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": -3,
+          "xb": 3,
+          "ya": 0
+        }
+      },
+      {
+        "name": "small_triangle",
+        "position": {
+          "xa": -1,
+          "xb": 6,
+          "ya": 0
+        },
+        "rotation": 90
+      },
+      {
+        "name": "small_triangle",
+        "position": {
+          "xa": -1,
+          "xb": 6,
+          "ya": -12
+        },
+        "rotation": 90
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 90,
+        "position": {
+          "xb": 6,
+          "ya": 9
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-C",
+    "name": "Letter C",
+    "size": 37.45584487915039,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -1,
+          "xb": -3,
+          "ya": 6,
+          "yb": -9
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -9,
+          "xb": 1,
+          "ya": 6,
+          "yb": -1
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -9,
+          "xb": 3,
+          "ya": 6,
+          "yb": 5
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 3,
+          "ya": -6,
+          "yb": -6
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xa": -9,
+          "xb": 9,
+          "ya": 6,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -9,
+          "xb": 13,
+          "ya": 6,
+          "yb": 1
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 5,
+          "xb": 3,
+          "yb": -9
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-D",
+    "name": "Letter D",
+    "size": 33.941123962402344,
+    "pieces": [
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 6,
+          "yb": -6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 5,
+          "yb": -2
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 1,
+          "yb": -8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "yb": -8
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xb": 3,
+          "yb": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-E",
+    "name": "Letter E",
+    "size": 33.941123962402344,
+    "pieces": [
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 1,
+          "yb": -8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "yb": -8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": 8
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xb": -5,
+          "ya": 0
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 45,
+        "position": {
+          "xb": 3,
+          "yb": 9
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 5,
+          "yb": -10
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-F",
+    "name": "Letter F",
+    "size": 45.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "ya": -6,
+          "yb": -8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 12,
+          "xb": -9,
+          "ya": -2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -5,
+          "ya": -6,
+          "yb": -2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": 3,
+          "ya": -6,
+          "yb": -9
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": 4,
+          "xb": -9,
+          "ya": 2
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -6,
+          "ya": 6,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -7,
+          "ya": 6,
+          "yb": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-G",
+    "name": "Letter G",
+    "size": 37.45584488,
+    "size_comment": "The height is 12+18√2; the width is 18√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 8,
+          "xb": -9,
+          "ya": 6,
+          "yb": -9
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "ya": 6,
+          "yb": -1
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xb": -3,
+          "ya": 6,
+          "yb": 5
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 14,
+          "xb": -9,
+          "yb": -9
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 1,
+          "ya": 6,
+          "yb": 7
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xb": 6,
+          "ya": 6,
+          "yb": 3
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": -6,
+          "xb": 9,
+          "ya": 6,
+          "yb": -3
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-H",
+    "name": "Letter H",
+    "size": 33.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 5,
+          "yb": -2
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "yb": -9
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 6,
+          "yb": 6
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": -4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -5,
+          "yb": -10
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -5,
+          "yb": 2
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 90,
+        "position": {
+          "xb": -7,
+          "yb": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-I",
+    "name": "Letter I",
+    "size": 42.4264069,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 1,
+          "yb": -11
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -5,
+          "yb": -13
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xa": 0,
+          "yb": -3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xb": 1,
+          "yb": 3
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 1,
+          "yb": 11
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -6,
+          "yb": 12
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 7,
+          "yb": 11
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-J",
+    "name": "Letter J",
+    "size": 48,
+    "pieces": [
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 90,
+        "position": {
+          "xa": 9,
+          "ya": 9
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 4,
+          "ya": 12
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 0,
+          "ya": 18
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -6,
+          "ya": 14
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 4,
+          "ya": 0
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 8,
+          "ya": -12
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": 4,
+          "ya": -20
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-K",
+    "name": "Letter K",
+    "size": 36.41365051269531,
+    "size_comment": "The height is exactly 36 units.  The width is 24+6√2.  First anchor is the large triangle at the lower left corner, second is the large triangle whose left vertex sits where the upper small triangle ends along the edge of the first large triangle.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -8,
+          "xb": -3,
+          "ya": 6,
+          "yb": 0
+        }
+      },
+      {
+        "name": "small_triangle",
+        "position": {
+          "xa": -12,
+          "xb": 1,
+          "ya": -6,
+          "yb": 2
+        },
+        "rotation": 45
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": -12,
+          "xb": 0,
+          "ya": -6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -12,
+          "xb": 1,
+          "ya": 18,
+          "yb": -2
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -4,
+          "xb": 3,
+          "ya": -6,
+          "yb": 6
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xa": 0,
+          "xb": 6,
+          "ya": -18,
+          "yb": 6
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": 4,
+          "xb": 3,
+          "ya": 14
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-L",
+    "name": "Letter L",
+    "size": 42.4264069,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -8,
+          "yb": -11
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xb": -8,
+          "yb": -3
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": -9,
+          "yb": 3
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -8,
+          "yb": 11
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -2,
+          "yb": 11
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 3,
+          "yb": 12
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 8,
+          "yb": 13
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-M",
+    "name": "Letter M",
+    "size": 33.9411255,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -8,
+          "yb": -4
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 8,
+          "yb": -4
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 0,
+          "yb": 2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 10,
+          "yb": 2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 9,
+          "yb": 6
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -9,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -10,
+          "yb": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-N",
+    "name": "Letter N",
+    "size": 33.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -5,
+          "yb": -4
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 90,
+        "position": {
+          "xb": 5,
+          "yb": -6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 7,
+          "yb": -10
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -4,
+          "xb": 9,
+          "ya": 12,
+          "yb": -6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -7,
+          "yb": 2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": -3,
+          "yb": 3
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -6,
+          "yb": 9
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-O",
+    "name": "Letter O",
+    "size": 34.97056198120117,
+    "pieces": [
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 3,
+          "xb": -6,
+          "ya": -3,
+          "yb": -6
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": 3,
+          "xb": 2,
+          "ya": -9,
+          "yb": -2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 90,
+        "position": {
+          "xb": -6,
+          "ya": 6,
+          "yb": -6
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -3,
+          "xb": -2,
+          "ya": 9,
+          "yb": 2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -3,
+          "xb": 6,
+          "ya": 5,
+          "yb": 6
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -1,
+          "xb": 6,
+          "ya": -1,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -1,
+          "xb": 6,
+          "ya": -9,
+          "yb": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-P",
+    "name": "Letter P",
+    "size": 33.94112777709961,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "yb": 4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -5,
+          "yb": 10
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "yb": -8
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -5,
+          "yb": -2
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": 3,
+          "yb": -8
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": 3,
+          "yb": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-Q",
+    "name": "Letter Q",
+    "size": 37.455848693847656,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": 9,
+          "xb": -4,
+          "ya": -6,
+          "yb": -5
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 9,
+          "xb": -12,
+          "yb": -9
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 90,
+        "position": {
+          "xa": 6,
+          "xb": -12,
+          "ya": 9,
+          "yb": -9
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": 3,
+          "xb": -8,
+          "ya": 12,
+          "yb": -1
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 5,
+          "ya": -6,
+          "yb": 3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -3,
+          "xb": 4,
+          "ya": 6,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -3,
+          "xb": 8,
+          "ya": 6,
+          "yb": 7
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-R",
+    "name": "Letter R",
+    "size": 33.94112777709961,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "yb": -8
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": 3,
+          "yb": -8
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -5,
+          "yb": -2
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "yb": 4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -5,
+          "yb": 10
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xb": 6,
+          "yb": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-S",
+    "name": "Letter S",
+    "size": 42,
+    "pieces": [
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": -3,
+          "xb": 3,
+          "ya": -21,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -3,
+          "xb": 8,
+          "ya": -21,
+          "yb": 4
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -7,
+          "ya": -9
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 90,
+        "position": {
+          "xa": 0,
+          "ya": 0
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 7,
+          "ya": 9
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 3,
+          "xb": -2,
+          "ya": 21,
+          "yb": -2
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 3,
+          "xb": -6,
+          "ya": 21,
+          "yb": -4
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-T",
+    "name": "Letter T",
+    "size": 33.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -8,
+          "yb": -8
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 8,
+          "yb": -8
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -1,
+          "yb": -4
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xa": 0,
+          "ya": 0
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 1,
+          "yb": 4
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": 9
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-U",
+    "name": "Letter U",
+    "size": 32.4852829,
+    "size_comment": "The width is 12+12√2; the height is 24+6√2.  The center of the U is offset a bit right from the center of the drawing due to the large triangle poking out from the left side by 12-6√2.",
+    "pieces": [
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 6,
+          "xb": -3,
+          "ya": 12
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 6,
+          "xb": 2,
+          "ya": 12,
+          "yb": -3
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 2,
+          "xb": 6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": 6,
+          "xb": 2,
+          "ya": -12,
+          "yb": -1
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xa": 6,
+          "xb": -9,
+          "ya": 12,
+          "yb": -3
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 2,
+          "xb": -6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": 6,
+          "xb": -10,
+          "ya": -12,
+          "yb": -1
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-V",
+    "name": "Letter V",
+    "size": 33.9411255,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -8,
+          "yb": -4
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 8,
+          "yb": -4
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -3,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -8,
+          "yb": 2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 2,
+          "yb": 2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 315,
+        "position": {
+          "xb": 6,
+          "yb": 3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 0,
+          "yb": 8
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-W",
+    "name": "Letter W",
+    "size": 33.9411255,
+    "pieces": [
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -2
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -8,
+          "yb": 4
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 8,
+          "yb": 4
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": -9,
+          "yb": -3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -10,
+          "yb": -8
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 10,
+          "yb": -2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xb": 9,
+          "yb": -6
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-X",
+    "name": "Letter X",
+    "size": 36,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -4,
+          "yb": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 4,
+          "yb": -8
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -90,
+        "position": {
+          "xa": -3,
+          "ya": -9
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": -10,
+          "ya": -14
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 2,
+          "ya": 6
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 6,
+          "ya": 12
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 12,
+          "ya": 16
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-Y",
+    "name": "Letter Y",
+    "size": 42.42640686035156,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -8,
+          "yb": -7
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 8,
+          "yb": -7
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xb": 3,
+          "yb": -1
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 45,
+        "position": {
+          "xb": -3,
+          "ya": 0
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 1,
+          "yb": 5
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": -1,
+          "yb": 7
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": 12
+        }
+      }
+    ]
+  },
+  {
+    "id": "alphabet-Z",
+    "name": "Letter Z",
+    "size": 42.42640686035156,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -7,
+          "yb": 8
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -1,
+          "yb": 8
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": 3,
+          "yb": 10
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xa": 0,
+          "ya": 0
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": 7,
+          "yb": -8
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -9
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -5,
+          "yb": -10
+        }
+      }
+    ]
+  }
+]

@@ -22,10 +22,11 @@
     </style>
 
     <!-- Block color variants for hinting -->
-    <!-- The default puzzle mode is all black, no outlines -->
+    <!-- The default puzzle mode is all black, just enough outline
+         to avoid seams but not so much that the corners might stick out. -->
     <style name="Theme.Tangram.Puzzle" parent="Theme.Tangram">
-        <item name="tangramOutlineWidth">0</item>
-        <item name="tableOutlineWidth">0dp</item>
+        <item name="tangramOutlineWidth">0.25</item>
+        <item name="tableOutlineWidth">0.25dp</item>
         <item name="tangramOutlineColor">?android:attr/textColorPrimary</item>
         <item name="tangramSmallTriangleColor">?android:attr/textColorPrimary</item>
         <item name="tangramSmallSquareColor">?android:attr/textColorPrimary</item>
