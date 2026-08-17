@@ -98,4 +98,36 @@ public class TangramPuzzleTests {
         }
     }
 
+    /**
+     * Test the alphabet puzzles file.  This one includes the square
+     * that Tangram pieces are made from, plus a group of puzzles
+     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     */
+    @Test
+    public void testReadAlphabetPuzzles() throws IOException, JSONException {
+        String jsonString = readAsset("puzzles-alphabet.json");
+        JSONArray json = new JSONArray(jsonString);
+        assertNotEquals("No puzzles found in puzzles-alphabet.json",
+                0, json.length());
+        for (int i = 0; i < json.length(); i++) {
+            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
+        }
+    }
+
+    /**
+     * Test the animal puzzles file.  This one includes the square
+     * that Tangram pieces are made from, plus a group of puzzles
+     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     */
+    @Test
+    public void testReadAnimalPuzzles() throws IOException, JSONException {
+        String jsonString = readAsset("puzzles-animals.json");
+        JSONArray json = new JSONArray(jsonString);
+        assertNotEquals("No puzzles found in puzzles-animals.json",
+                0, json.length());
+        for (int i = 0; i < json.length(); i++) {
+            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
+        }
+    }
+
 }
