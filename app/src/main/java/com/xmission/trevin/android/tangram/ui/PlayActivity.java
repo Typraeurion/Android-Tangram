@@ -106,6 +106,13 @@ public class PlayActivity extends TangramActivity {
     private boolean isFinished = false;
 
     /**
+     * The goal region, computed once on the first solution check (the goal
+     * is static) and reused; the play field&rsquo;s region is recomputed
+     * each check.  Null in free play or until the first check.
+     */
+    private TPolygon goalPolygon;
+
+    /**
      * Build an intent to start this activity.
      *
      * @param context the launching context
@@ -380,19 +387,28 @@ public class PlayActivity extends TangramActivity {
      * (e.g. congratulate the player and offer the next puzzle).</p>
      */
     private void checkSolutionAgainstGoal() {
+        if (isFinished)
+            return; // already solved; don't re-announce on further moves
         TangramPuzzle goal = playTableView.getSolution();
         if (goal == null)
             return;
-        // To Do: convert both puzzles to polygons and compare, e.g.
-        //     TPolygon current = <play field as TPolygon>;
-        //     TPolygon target  = <goal as TPolygon>;
-        //     if (current.isIdenticalTo(target)) {
-        //         // ...puzzle solved...
-        //         isFinished = true;
-        //     }
-        // (TangramPuzzle -> TPolygon conversion is currently only stubbed.)
-        Log.d(LOG_TAG, "Valid Tangram formed; goal-match check pending "
-                + "TangramPuzzle-to-TPolygon conversion.");
+        // The goal is static, so build its region once and reuse it; only
+        // the play field's region is recomputed on each check.
+        if (goalPolygon == null) {
+            goalPolygon = TPolygon.fromPuzzle(goal);
+            goalPolygon.build();
+        }
+        TPolygon current = TPolygon.fromPuzzle(playTableView.getPuzzle());
+        if (!current.isIdenticalTo(goalPolygon)) {
+            Log.d(LOG_TAG, "Valid Tangram formed, but it does not match the goal");
+            return;
+        }
+        Log.d(LOG_TAG, "Puzzle solved!");
+        isFinished = true;
+        // Placeholder feedback.  The final "solved" experience (e.g. a
+        // congratulations dialog with an option to move on to another puzzle)
+        // is still to be designed.
+        Toast.makeText(this, R.string.PuzzleSolved, Toast.LENGTH_LONG).show();
     }
 
     /**

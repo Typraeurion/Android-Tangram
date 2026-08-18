@@ -1,0 +1,64 @@
+{
+  "id": "basic-pinwheel",
+  "name": "Pinwheel",
+  "size": 42.42640686035156,
+  "pieces": [
+    {
+      "name": "large_triangle",
+      "rotation": 135,
+      "position": {
+        "xb": -7,
+        "yb": -1
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": 45,
+      "position": {
+        "xb": -5,
+        "yb": 5
+      }
+    },
+    {
+      "name": "medium_triangle",
+      "rotation": 180,
+      "position": {
+        "xb": 3,
+        "yb": 5
+      }
+    },
+    {
+      "name": "parallelogram",
+      "isMirrored": false,
+      "rotation": 45,
+      "position": {
+        "xa": 0,
+        "yb": 9
+      }
+    },
+    {
+      "name": "square",
+      "rotation": 0,
+      "position": {
+        "xb": 6,
+        "ya": 0
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": -45,
+      "position": {
+        "xb": 11,
+        "yb": -1
+      }
+    },
+    {
+      "name": "large_triangle",
+      "rotation": -135,
+      "position": {
+        "xb": 1,
+        "yb": -7
+      }
+    }
+  ]
+}

@@ -42,17 +42,17 @@ import org.junit.Test;
  */
 public class TangramPuzzleTests {
 
-    Context hostContext = null;
+    Context testContext = null;
 
     /**
      * Get the context in which the tests are running,
      * if not already set.
      */
     @Before
-    public void getHostContext() {
-        if (hostContext == null)
-            hostContext = InstrumentationRegistry.getInstrumentation()
-                    .getContext();
+    public void getTestContext() {
+        if (testContext == null)
+            testContext = InstrumentationRegistry.getInstrumentation()
+                    .getTargetContext();
     }
 
     /**
@@ -67,7 +67,7 @@ public class TangramPuzzleTests {
      * @throws IOException if the asset does not exist or cannot be read.
      */
     public String readAsset(String assetName) throws IOException {
-        try (InputStream iStream = hostContext.getAssets().open(assetName);
+        try (InputStream iStream = testContext.getAssets().open(assetName);
              BufferedReader reader = new BufferedReader(new InputStreamReader(
                      iStream, StandardCharsets.UTF_8))) {
             StringBuilder builder = new StringBuilder();
@@ -79,15 +79,15 @@ public class TangramPuzzleTests {
     }
 
     /**
-     * Test the basic puzzles file.  This one includes the square
+     * Test the base puzzles file.  This one includes the square
      * that Tangram pieces are made from, plus a group of puzzles
      * copied from (or based on) ones found on www.myhomeschoolmath.com.
      */
     @Test
-    public void testReadBasicPuzzles() throws IOException, JSONException {
-        String jsonString = readAsset("puzzles-basic.json");
+    public void testReadBasePuzzles() throws IOException, JSONException {
+        String jsonString = readAsset("puzzles-base.json");
         JSONArray json = new JSONArray(jsonString);
-        assertNotEquals("No puzzles found in puzzles-basic.json",
+        assertNotEquals("No puzzles found in puzzles-base.json",
                 0, json.length());
         for (int i = 0; i < json.length(); i++) {
             TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
@@ -99,9 +99,9 @@ public class TangramPuzzleTests {
     }
 
     /**
-     * Test the alphabet puzzles file.  This one includes the square
-     * that Tangram pieces are made from, plus a group of puzzles
-     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     * Test the alphabet puzzles file.  This one includes most of the
+     * letters found on Shutterstock image 2270175397 and a few
+     * substitutions from various other sources.
      */
     @Test
     public void testReadAlphabetPuzzles() throws IOException, JSONException {
@@ -115,15 +115,30 @@ public class TangramPuzzleTests {
     }
 
     /**
-     * Test the animal puzzles file.  This one includes the square
-     * that Tangram pieces are made from, plus a group of puzzles
-     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     * Test the animal puzzles file.  This one includes a group of
+     * puzzles copied from ones found on www.myhomeschoolmath.com,
+     * with a few name changes.
      */
     @Test
     public void testReadAnimalPuzzles() throws IOException, JSONException {
         String jsonString = readAsset("puzzles-animals.json");
         JSONArray json = new JSONArray(jsonString);
         assertNotEquals("No puzzles found in puzzles-animals.json",
+                0, json.length());
+        for (int i = 0; i < json.length(); i++) {
+            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
+        }
+    }
+
+    /**
+     * Test the number puzzles file.  This one includes a group of
+     * puzzles copied from ones found on www.myhomeschoolmath.com.
+     */
+    @Test
+    public void testReadNumberPuzzles() throws IOException, JSONException {
+        String jsonString = readAsset("puzzles-numbers.json");
+        JSONArray json = new JSONArray(jsonString);
+        assertNotEquals("No puzzles found in puzzles-numbers.json",
                 0, json.length());
         for (int i = 0; i < json.length(); i++) {
             TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));

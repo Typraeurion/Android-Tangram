@@ -1,0 +1,50 @@
+# Backup and scratch files
+*~
+*.txt
+
+# Exclude the LibreOffice Draw file used as
+# a template for crafting puzzle definitions.
+.~lock.*
+*.odg
+# Also exclude the Calc spreadsheet used for the testing checklist.
+*.ods
+
+# Most SVG files here were just temporary Inkscape
+# drawings used as the basis for vector drawables.
+*.svg
+
+# A number of images were downloaded as puzzle references;
+# these are attributed in the README.
+*.pdf
+*.webp
+
+# TeX intermediate and log files
+# (It can be very messy)
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.blx.aux
+*.blx.bib
+*.cb
+*.cb2
+*.cp
+*.cps
+*.fls
+*.fmt
+*.fn
+*.fns
+*.fot
+*.ky
+.*.lb
+*.lof
+*.log
+*.lot
+*.out
+*.pg
+*.run.xml
+*.st
+*.sts
+*.toc
+*.tp
+*.vr
