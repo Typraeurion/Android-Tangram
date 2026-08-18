@@ -883,18 +883,36 @@ public class TangramPuzzle implements Cloneable, Parcelable {
      */
     @Nullable
     private TPoint nearestPointOnAnEdge(@NonNull TPoint p) {
-        TPoint best = null;
+        TPoint bestPoint = null;
         double bestDistance = POINT_PROXIMITY;
         for (TangramPiece other : pieces) {
             for (TEdge edge : other.getEdges()) {
                 double d = edge.distanceToPoint(p);
                 if (d <= bestDistance) {
                     bestDistance = d;
-                    best = edge.nearestPointTo(p);
+                    TPoint exactNearest = edge.nearestPointTo(p);
+                    /*
+                     * Try to get the best alignment for the snap position
+                     * relative to the centroid of the piece we're snapping
+                     * against *if* that piece is aligned to the Q2 grid.
+                     */
+                    if (other.getPosition().isQ2Aligned()) {
+                        TPoint negatePiece = other.getPosition()
+                                .clone().mirrorX().mirrorY();
+                        bestPoint = exactNearest.clone()
+                                .add(negatePiece)
+                                .nearestQ2GridPoint()
+                                .add(other.getPosition());
+                        if (bestPoint.distanceTo(exactNearest)
+                                >= FUDGE_ALLOWANCE)
+                            bestPoint = exactNearest;
+                    } else {
+                        bestPoint = exactNearest;
+                    }
                 }
             }
         }
-        return best;
+        return bestPoint;
     }
 
     /**
@@ -930,7 +948,8 @@ public class TangramPuzzle implements Cloneable, Parcelable {
                     if (best == null || perp < best.perpDistance
                             || (perp == best.perpDistance
                                     && overlap > best.overlap))
-                        best = new EdgeContact(i, otherEdge, perp, overlap);
+                        best = new EdgeContact(other,
+                                i, otherEdge, perp, overlap);
                 }
             }
         }
@@ -984,7 +1003,24 @@ public class TangramPuzzle implements Cloneable, Parcelable {
                     perpDelta.getXa() + (float) (slide * ux), perpDelta.getXb(),
                     perpDelta.getYa() + (float) (slide * uy), perpDelta.getYb());
             TPoint exactPosition = translated(moved.getPosition(), delta);
-            TPoint snapPosition = exactPosition.nearestZGridPoint();
+            /*
+             * Try to get the best alignment for the snap position
+             * relative to the centroid of the piece we're snapping
+             * against *if* that piece is aligned to the Q2 grid.
+             */
+            TPoint snapPosition;
+            if (contact.neighbor.getPosition().isQ2Aligned()) {
+                TPoint negateNeigbor = contact.neighbor.getPosition()
+                        .clone().mirrorX().mirrorY();
+                snapPosition = exactPosition.clone()
+                        .add(negateNeigbor)
+                        .nearestQ2GridPoint()
+                        .add(contact.neighbor.getPosition());
+            } else {
+                // If the neighbor is not aligned,
+                // try snapping to the integer grid.
+                snapPosition = exactPosition.nearestZGridPoint();
+            }
             moved.setPosition((snapPosition.distanceTo(exactPosition)
                     < FUDGE_ALLOWANCE) ? snapPosition : exactPosition);
             return;
@@ -1235,13 +1271,16 @@ public class TangramPuzzle implements Cloneable, Parcelable {
 
     /** A detected edge-to-edge contact between the moved piece and a neighbor. */
     private static class EdgeContact {
+        final TangramPiece neighbor;
         final int movedEdgeIndex;
         final TEdge neighborEdge;
         final double perpDistance;
         final double overlap;
 
-        EdgeContact(int movedEdgeIndex, TEdge neighborEdge,
+        EdgeContact(TangramPiece neighbor,
+                    int movedEdgeIndex, TEdge neighborEdge,
                     double perpDistance, double overlap) {
+            this.neighbor = neighbor;
             this.movedEdgeIndex = movedEdgeIndex;
             this.neighborEdge = neighborEdge;
             this.perpDistance = perpDistance;

@@ -13,12 +13,34 @@ _Planned for release on F-Droid…_
 This application is free to use and modify according to the terms of
 the [Gnu General Public License (GPL) Version 3](doc/gpl-3.0.txt).
 
+Instructions for building the application from source on the to-do list…
+
+## Acknowledgements
+
 Parts of this program were generated or medified by Claude Code (Opus
 4.8) which has been indispensible in making sure the app follows
 modern Android development guidelines, figuring out the maths involved
 in rendering interactive tangram pieces, and troubleshooting bugs.
 
-Instructions for building the application from source on the to-do list…
+The "base" puzzles were downloaded from:
+https://www.myhomeschoolmath.com/Worksheets/Tangram-Objects.pdf
+
+The "alphabet" puzzles were mostly downloaded from:
+https://www.shutterstock.com/image-vector/alphabet-font-abc-tangram-collection-vector-2270175397
+with a few substitutions from other sources that had better-looking
+letters.
+
+The "animals" puzzles were downloaded from:
+https://www.myhomeschoolmath.com/Worksheets/Tangram-Animals.pdf
+
+The "Christmas" puzzles were downloaded from:
+https://www.myhomeschoolmath.com/Worksheets/Tangram-Christmas.pdf
+
+The "numbers" puzzles were downloaded from:
+https://www.myhomeschoolmath.com/Worksheets/Tangram-Numbers.pdf
+
+The "people" puzzles were donwloaded from:
+https://www.myhomeschoolmath.com/Worksheets/Tangram-People.pdf
 
 ## [Keep Android Open](https://keepandroidopen.org/)
 

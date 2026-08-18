@@ -20,6 +20,7 @@ import android.os.Parcel;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -237,6 +238,16 @@ public class ImmutableTPoint extends TPoint {
                     && (p2.getYa() == ya) && (p2.getYb() == yb);
         }
         return false;
+    }
+
+    /**
+     * Immutable points don&rsquo;t require cloning.
+     *
+     * @return this
+     */
+    @Override
+    public @NotNull ImmutableTPoint clone() {
+        return this;
     }
 
     /**

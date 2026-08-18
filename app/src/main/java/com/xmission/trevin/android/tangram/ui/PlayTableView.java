@@ -147,15 +147,14 @@ public class PlayTableView extends View {
     /**
      * Default playfield extent, in puzzle units, used for free-play /
      * sketch mode when no goal puzzle sets a size of its own.  This is
-     * the size of nine (3&times;3) compact squares, matching
-     * {@link TangramPuzzle}&rsquo;s default.
+     * roughly the average size of most puzzles.
      */
-    private static final float DEFAULT_PLAYFIELD_SIZE = 36f;
+    private static final float DEFAULT_PLAYFIELD_SIZE = 44f;
 
     /**
      * The playfield extent in puzzle units, used to fit the board to the
      * view.  Defaults to {@link #DEFAULT_PLAYFIELD_SIZE} until
-     * {@link #setPuzzle} or {@link #setSolution} overrides it.
+     * {@link #setSolution} overrides it.
      */
     private float playfieldSize = DEFAULT_PLAYFIELD_SIZE;
 
@@ -320,26 +319,6 @@ public class PlayTableView extends View {
         refreshThemeCache();
     }
 
-    /**
-     * Load the pieces and playfield size from a puzzle into this view.
-     * The view keeps its own references from here on; the puzzle is not
-     * retained.  Recomputes the fit-to-view scale if the view has already
-     * been laid out.
-     *
-     * @param puzzle the puzzle to load; must not be {@code null}
-     */
-    public void setPuzzle(@NonNull TangramPuzzle puzzle) {
-        playfieldSize = puzzle.getSize();
-        playField.clear();
-        playField.addPieces(puzzle.getPieces());
-        setSelectedPiece(null);
-        activePointerId = MotionEvent.INVALID_POINTER_ID;
-        panX = panY = 0f;
-        computeFitScale();
-        rebuildTransform();
-        invalidate();
-    }
-
     /** @return the current puzzle */
     @NonNull
     public TangramPuzzle getPuzzle() {
@@ -358,8 +337,13 @@ public class PlayTableView extends View {
      */
     public void setSolution(@Nullable TangramPuzzle puzzle) {
         solution = puzzle;
+        /*
+         * Set the normal size of the playfield large enough to
+         * contain the puzzle with a 25% margin.
+         */
         playfieldSize = (puzzle != null)
-                ? puzzle.getSize() : DEFAULT_PLAYFIELD_SIZE;
+                ? (puzzle.getSize() * 1.25f)
+                : DEFAULT_PLAYFIELD_SIZE;
         playField.clear();
         setSelectedPiece(null);
         activePointerId = MotionEvent.INVALID_POINTER_ID;
@@ -458,6 +442,12 @@ public class PlayTableView extends View {
         TangramPiece removed = selectedPiece;
         playField.removePiece(removed);
         setSelectedPiece(null);
+        // If this leaves no pieces on the table, re-center the view.
+        if (playField.getPieceCount() == 0) {
+            panX = 0f;
+            panY = 0f;
+            rebuildTransform();
+        }
         invalidate();
         if (pieceReturnedListener != null)
             pieceReturnedListener.onPieceReturnedToTray(removed);
@@ -643,11 +633,12 @@ public class PlayTableView extends View {
 
     /**
      * @return the largest pan magnitude, in pixels, along the given view
-     * extent that still keeps the playfield covering the viewport; 0 when
-     * the field is not larger than the viewport (so it stays centered).
+     * extent that still keeps the fully zoomed-out playfield covering the
+     * viewport; 0 when the expanded field is not larger than the viewport
+     * (so it stays centered).
      */
     private float maxPan(int viewExtent) {
-        float fieldExtent = playfieldSize * getUnitScale();
+        float fieldExtent = playfieldSize * getUnitScale() / MIN_ZOOM;
         return Math.max(0f, (fieldExtent - viewExtent) / 2f);
     }
 
@@ -681,11 +672,6 @@ public class PlayTableView extends View {
         invalidate();
     }
 
-    // For debugging
-    long lastDrawMessageTime = 0;
-    int suppressedDrawMessages = 0;
-    long lastSuppressedMessageTime = 0;
-
     @Override
     /*
      * Linting is suppressed for the `new float[...]'
@@ -694,26 +680,6 @@ public class PlayTableView extends View {
      */
     @SuppressLint("DrawAllocation")
     protected void onDraw(@NonNull Canvas canvas) {
-        /*
-         * Log the call to DEBUG, but avoid spamming too many calls.
-         * We'll allow one message per second.
-         */
-        long now = System.nanoTime();
-        if (now - lastDrawMessageTime < 1_000_000_000) {
-            suppressedDrawMessages++;
-            lastSuppressedMessageTime = now;
-        } else {
-            if (suppressedDrawMessages > 0)
-                Log.d(getClass().getSimpleName(), String.format(Locale.US,
-                        ".onDraw() (%d prior calls suppressed for %.3f seconds)",
-                        suppressedDrawMessages,
-                        (lastSuppressedMessageTime - lastDrawMessageTime)
-                                / 1_000_000_000.0));
-            else
-                Log.d(getClass().getSimpleName(), ".onDraw()");
-            lastDrawMessageTime = now;
-            suppressedDrawMessages = 0;
-        }
         super.onDraw(canvas);
 
         Resources.Theme currentTheme = getContext().getTheme();

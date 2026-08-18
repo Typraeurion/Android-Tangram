@@ -299,6 +299,17 @@ public class MutableTPoint extends TPoint {
     }
 
     /**
+     * Copy this point; use to make another point which can be modified
+     * without disturbing the original.
+     *
+     * @return a point with the same coordinates as this one.
+     */
+    @Override
+    public @NonNull MutableTPoint clone() {
+        return new MutableTPoint(xa, xb, ya, yb);
+    }
+
+    /**
      * Create a point from a {@link Parcel}.
      */
     public static final Creator<MutableTPoint> CREATOR = new Creator<>() {

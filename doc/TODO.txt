@@ -1,0 +1,5 @@
+* Add the "easy" level puzzles from The Tangram Channel:
+    https://www.tangram-channel.com/tangram-solutions/
+* Write up a public-facing README
+* Flesh out the "About..." text
+* Grab a few sample screenshots when the UI is close enough for release.

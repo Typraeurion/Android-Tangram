@@ -36,7 +36,7 @@ import org.json.JSONObject;
  *
  * @author Trevin Beattie
  */
-public abstract class TPoint implements Parcelable {
+public abstract class TPoint implements Cloneable, Parcelable {
 
     public static final double SQRT2 = Math.sqrt(2);
 
@@ -129,6 +129,16 @@ public abstract class TPoint implements Parcelable {
     public abstract @NonNull TPoint mirrorY();
 
     /**
+     * @return {@code true} if this point is aligned to the integer
+     * grid, i.e. both <i>a</i> coefficients are integers and <i>b</i>
+     * coefficients are 0.
+     */
+    public boolean isZAligned() {
+        return (getXa() == Math.floor(getXa())) && (getXb() == 0) &&
+                (getYa() == Math.floor(getYa())) && (getYb() == 0);
+    }
+
+    /**
      * Locate the nearest point to this point on an integer puzzle grid
      * (<i>a</i> &#8714; &#8484;, <i>b</i> = 0).
      *
@@ -137,12 +147,23 @@ public abstract class TPoint implements Parcelable {
      * that is close to this point.
      */
     public @NonNull TPoint nearestZGridPoint() {
-        if ((getXa() == Math.floor(getXa())) && (getXb() == 0) &&
-                (getYa() == Math.floor(getYa())) && (getYb() == 0))
+        if (isZAligned())
             return this;
 
         return new ImmutableTPoint((float) Math.round(getX()), 0f,
                 (float) Math.round(getY()), 0f);
+    }
+
+    /**
+     * @return  {@code true} if this point is aligned to the
+     * &#8474;&#8730;2&#773; grid, i.e. all <i>a</i> and <i>b</i>
+     * coefficients are integers.
+     */
+    public boolean isQ2Aligned() {
+        return (getXa() == Math.floor(getXa())) &&
+                (getXb() == Math.floor(getXb())) &&
+                (getYa() == Math.floor(getYa())) &&
+                (getYb() == Math.floor(getYb()));
     }
 
     /**
@@ -156,10 +177,7 @@ public abstract class TPoint implements Parcelable {
      * is close to this point.
      */
     public @NonNull TPoint nearestQ2GridPoint() {
-        if ((getXa() == Math.floor(getXa())) &&
-                (getXb() == Math.floor(getXb())) &&
-                (getYa() == Math.floor(getYa())) &&
-                (getYb() == Math.floor(getYb())))
+        if (isQ2Aligned())
             return this;
 
         long[] coefX = approximateQ2Field(getX());
@@ -257,6 +275,9 @@ public abstract class TPoint implements Parcelable {
             json.put(JSON_Y_B, getYb());
         return json;
     }
+
+    @Override
+    public abstract @NonNull TPoint clone();
 
     /**
      * Save this point to a {@link Parcel} (typically as part of a
