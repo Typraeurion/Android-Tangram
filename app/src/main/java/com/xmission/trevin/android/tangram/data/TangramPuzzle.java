@@ -727,11 +727,11 @@ public class TangramPuzzle implements Cloneable, Parcelable {
     }
 
     /**
-     * Rule 1: snap the piece&rsquo;s rotation to the nearest 45&deg; and its
+     * Rule 1: snap the piece&rsquo;s rotation to the nearest 15&deg; and its
      * centroid to the integer puzzle grid.
      */
     private void snapFree(@NonNull TangramPiece moved) {
-        moved.setRotation(45 * Math.round(moved.getRotation() / 45f));
+        moved.setRotation(15 * Math.round(moved.getRotation() / 15f));
         moved.setPosition(moved.getPosition().nearestZGridPoint());
     }
 
@@ -783,7 +783,7 @@ public class TangramPuzzle implements Cloneable, Parcelable {
      * ({@link #findBestEdgeContact}) and no moved vertex near a neighbor
      * ({@link #snapToVertex})&mdash;e.g. a triangle&rsquo;s leg or hypotenuse
      * resting against the tip of another piece.  Rotation is snapped to the
-     * nearest 45&deg; (all edges of a valid tangram lie at 45&deg; multiples)
+     * nearest 15&deg; (all edges of a valid tangram lie at 15&deg; multiples)
      * and the piece shifted perpendicular so the edge passes through that
      * vertex, closing the gap.
      *
@@ -818,8 +818,8 @@ public class TangramPuzzle implements Cloneable, Parcelable {
         if (bestEdgeIndex < 0)
             return false;
 
-        // Rotation → nearest 45°.
-        moved.setRotation(45f * Math.round(moved.getRotation() / 45f));
+        // Rotation → nearest 15°.
+        moved.setRotation(15f * Math.round(moved.getRotation() / 15f));
 
         // Shift the piece so the (re-read) edge's line passes through the
         // neighbor vertex: the delta from the vertex's perpendicular foot on
@@ -959,8 +959,8 @@ public class TangramPuzzle implements Cloneable, Parcelable {
     /**
      * Snap rules 2, 2.1&ndash;2.3, and 2.4 for a touching edge: rotate the
      * moved piece so its contact edge is parallel to the neighbor edge
-     * (snapped to the nearest 45&deg;, since all edges in a valid tangram lie
-     * at 45&deg; multiples), which leaves one degree of freedom&mdash;sliding
+     * (snapped to the nearest 15&deg;, since all edges in a valid tangram lie
+     * at 15&deg; multiples), which leaves one degree of freedom&mdash;sliding
      * along the edge.  A second contact fixes that slide, in precedence order:
      * rule 2.1 (a second moved edge made collinear with a neighbor edge at a
      * different angle), 2.2 (a moved vertex brought onto a neighbor vertex or
@@ -982,7 +982,7 @@ public class TangramPuzzle implements Cloneable, Parcelable {
         double diff = neighbor.angleDegrees() - movedEdge.angleDegrees();
         diff -= 180 * Math.round(diff / 180.0); // fold to nearest parallel
         double parallel = moved.getRotation() + diff;
-        moved.setRotation(45f * Math.round(parallel / 45.0));
+        moved.setRotation(15f * Math.round(parallel / 15.0));
 
         // 2. Re-read the contact edge in its new orientation, and compute the
         //    perpendicular shift that makes it collinear with the neighbor

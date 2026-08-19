@@ -145,4 +145,19 @@ public class TangramPuzzleTests {
         }
     }
 
+    /**
+     * Test the Christmas puzzles file.  This one includes a group of
+     * puzzles copied from ones found on www.myhomeschoolmath.com.
+     */
+    @Test
+    public void testReadChristmasPuzzles() throws IOException, JSONException {
+        String jsonString = readAsset("puzzles-Christmas.json");
+        JSONArray json = new JSONArray(jsonString);
+        assertNotEquals("No puzzles found in puzzles-Christmas.json",
+                0, json.length());
+        for (int i = 0; i < json.length(); i++) {
+            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
+        }
+    }
+
 }

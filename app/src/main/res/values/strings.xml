@@ -1,10 +1,10 @@
 <resources>
     <string name="InfoPopupText">Tangram\n
-version 0.8 (2026.08.18)\n
+version 0.8 (2026.08.19)\n
 by Trevin Beattie\n
 \n
-Documentation for this app can be found on its GitHub project page
-(TBD)\n
+Documentation for this app can be found on its GitHub project page:
+https://github.com/Typraeurion/Android-Tangram/releases\n
 \n
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -15,7 +15,9 @@ the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
 PURPOSE. See the GNU General Public License at
 https://opensource.org/license/gpl-3.0 for more details.\n
 \n
-(Puzzle licensing TBD…)\n
+The tangram puzzles used in this app were obtained from publicly
+available sources.  Generic tangrams are considered public domain
+concepts that cannot be copyrighted.\n
 </string>
     <string name="app_name">Tangram</string>
     <string name="ButtonSave">Save Pattern</string>
