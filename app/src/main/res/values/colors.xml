@@ -8,6 +8,10 @@
     <color name="gray7">#FF121212</color>
     <color name="dodger_blue">#FF1E90FF</color>
     <color name="forest_green">#FF228B22</color>
+    <color name="green">#FF00FF00</color>
+    <color name="lawn_green">#FF7CFC00</color>
+    <color name="green_yellow">#FFADFF2F</color>
+    <color name="yellow_2">#FFEEEE00</color>
     <color name="gold">#FFFFD700</color>
     <color name="dark_orange">#FFFF8C00</color>
     <color name="crimson">#FFDC143C</color>

@@ -8,11 +8,13 @@
         android:id="@+id/ListPuzzleView"
         android:layout_width="@dimen/goal_view_size"
         android:layout_height="@dimen/goal_view_size"
+        android:layout_weight="0"
         android:padding="@dimen/piece_tray_padding"
         android:scaleType="fitCenter" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/goal_view_size"
+        android:layout_weight="2"
         android:orientation="vertical"
         android:layout_gravity="center_vertical"
         android:padding="@dimen/piece_tray_padding">
@@ -33,4 +35,11 @@
             android:ellipsize="end"
             android:maxLines="2" />
     </LinearLayout>
+    <ImageView android:id="@+id/ListPuzzleDifficultyDot"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="end|center_vertical"
+        android:layout_weight="0"
+        android:layout_margin="@dimen/piece_tray_padding"
+        android:src="@drawable/difficulty_dot_1" />
 </LinearLayout>

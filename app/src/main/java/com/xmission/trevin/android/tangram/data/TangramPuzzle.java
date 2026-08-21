@@ -16,6 +16,7 @@
  */
 package com.xmission.trevin.android.tangram.data;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -108,6 +109,13 @@ public class TangramPuzzle implements Cloneable, Parcelable {
     protected @Nullable String name;
 
     /**
+     * Estimated difficulty of this puzzle, in the range 0 (easy)
+     * to 100 (very hard).  If unset, the difficulty has not yet
+     * been calculated.
+     */
+    protected @Nullable Float difficulty;
+
+    /**
      * The larger of width or height of the puzzle.
      * The value must be at least 12, which is the size of the
      * square the Tangram pieces are cut from.
@@ -127,7 +135,6 @@ public class TangramPuzzle implements Cloneable, Parcelable {
      * Default constructor.  The puzzle is unnamed and will have
      * no pieces yet; the pieces will need to be added later.
      */
-    // To Do: If it turns out there's no need for this constructor, remove it.
     public TangramPuzzle() {
         // Set the default bounds of the puzzle
         // to the size of 9 (3×3) compact squares.
@@ -192,6 +199,7 @@ public class TangramPuzzle implements Cloneable, Parcelable {
         id = original.id;
         name = original.name;
         size = original.size;
+        difficulty = original.difficulty;
         for (TangramPiece piece : original.pieces)
             pieces.add(piece.clone());
         validationErrors = (original.validationErrors == null) ? null
@@ -330,6 +338,9 @@ public class TangramPuzzle implements Cloneable, Parcelable {
         }
     }
 
+    /** The expected total number of pieces of the puzzle */
+    private static final int EXPECTED_PIECE_COUNT = 7;
+
     private static final Map<Class<? extends TangramPiece>, PieceTypeInfo>
             PIECE_INFO = Map.of(
             TangramLargeTriangle.class, new PieceTypeInfo(
@@ -375,6 +386,10 @@ public class TangramPuzzle implements Cloneable, Parcelable {
      * @return true if the puzzle has no validation errors, false otherwise
      */
     public boolean isValid(boolean earlyExit) {
+        if (earlyExit && (pieces.size() < EXPECTED_PIECE_COUNT)) {
+            // Earliest possible exit: don't bother reporting the errors.
+            return false;
+        }
         List<TangramException> errors = new ArrayList<>();
         Map<Class<? extends TangramPiece>, Integer> counts = new HashMap<>();
         for (TangramPiece piece : pieces) {
@@ -1333,6 +1348,76 @@ public class TangramPuzzle implements Cloneable, Parcelable {
                 (min.getXb() + max.getXb()) / 2,
                 (min.getYa() + max.getYa()) / 2,
                 (min.getYb() + max.getYb()) / 2);
+    }
+
+    /**
+     * The total perimeter of the individual pieces of a tangram,
+     * used in calculating the difficulty.
+     */
+    private static final float TOTAL_PIECES_PERIMETER = 204.3025667f;
+
+    /**
+     * The total number of vertices of the individual pieces of a tangram,
+     * used in calculating the difficulty.
+     */
+    private static final int TOTAL_PIECES_VERTICES = 23;
+
+    /**
+     * Relative weight of the perimeter ratio towards the overall difficulty.
+     */
+    private static final double DIFFICULTY_WEIGHT_PERIMITER = 60;
+
+    /**
+     * Relative weight of the vertex ration towards the overall difficulty.
+     */
+    private static final double DIFFICULTY_WEIGHT_VERTICES = 25;
+
+    /**
+     * Relative weight of the presence of a mirrored piece
+     * towards the overall difficulty.
+     */
+    private static final double DIFFICULTY_WEIGHT_MIRROR = 15;
+
+    /**
+     * Get the estimated difficulty of the puzzle.  If it hasn&rsquo;t
+     * been determined yet, this will convert the puzzle to a
+     * {link TPolygon} in order to find the perimeter and outer
+     * vertices of its silhouette which are used in calculating the
+     * difficulty.  This should <i>only</i> be used for valid
+     * puzzles.  If the puzzle is empty or missing any pieces,
+     * this will throw an {@link IllegalStateException}.  If the
+     * puzzle is otherwise invalid, the difficulty will be inaccurate.
+     *
+     * @return the estimated difficulty of this puzzle
+     *
+     * @throws IllegalStateException if the puzzle does not have
+     * all of its pieces.
+     */
+    public float getDifficulty() throws IllegalStateException {
+        if (difficulty == null) {
+            if (pieces.size() < 7)
+                throw new IllegalStateException(
+                        "Cannot compute the difficulty of an incomplete puzzle");
+            TPolygon poly = TPolygon.fromPuzzle(this);
+            double perimeterRatio = poly.getPerimeter()
+                    / TOTAL_PIECES_PERIMETER;
+            double vertexRatio = poly.countVertices() / TOTAL_PIECES_VERTICES;
+            boolean hasMirror = false;
+            for (TangramPiece piece : pieces) {
+                if (piece.isMirrored()) {
+                    hasMirror = true;
+                    break;
+                }
+            }
+            difficulty = (float) (100 *
+                    (DIFFICULTY_WEIGHT_PERIMITER * Math.max(0, 1 - perimeterRatio)
+                   + DIFFICULTY_WEIGHT_VERTICES * Math.max(0, 1 - vertexRatio)
+                   + (hasMirror ? DIFFICULTY_WEIGHT_MIRROR : 0))
+                    / (DIFFICULTY_WEIGHT_PERIMITER
+                     + DIFFICULTY_WEIGHT_VERTICES
+                     + DIFFICULTY_WEIGHT_MIRROR));
+        }
+        return difficulty;
     }
 
 }

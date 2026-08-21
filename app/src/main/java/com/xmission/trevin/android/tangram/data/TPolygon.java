@@ -529,6 +529,42 @@ public class TPolygon implements Parcelable {
         }
     }
 
+    // ---- helpers for TangramPuzzle.getDifficulty() ------------------------
+
+    /**
+     * Find the length of the perimeter of this polygon.  This builds the
+     * loops if we haven&rsquo;t already done that.
+     *
+     * @return the perimeter of the polygon in puzzle units
+     */
+    public double getPerimeter() {
+        build();
+        if (loops == null)
+            return 0;
+        double p = 0;
+        for (Loop loop : loops) {
+            for (int i = 0; i < loop.loopEdges.size(); i++)
+                p += loop.loopEdges.get(i).length();
+        }
+        return p;
+    }
+
+    /**
+     * Find the number of vertices in this polygon.  This builds the
+     * loops if we haven&rsquo;t already done that.
+     *
+     * @return the number of vertices in the polygon
+     */
+    public int countVertices() {
+        build();
+        if (loops == null)
+            return 0;
+        int counter = 0;
+        for (Loop loop : loops)
+            counter += loop.loopEdges.size();
+        return counter;
+    }
+
     // ---- Parcelable & Object ----------------------------------------------
 
     @Override

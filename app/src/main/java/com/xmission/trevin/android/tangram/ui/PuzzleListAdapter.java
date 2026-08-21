@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 
@@ -176,10 +177,13 @@ public class PuzzleListAdapter extends BaseAdapter {
             TangramPuzzleView puzzleView = vg.findViewById(R.id.ListPuzzleView);
             TextView puzzleName = vg.findViewById(R.id.ListPuzzleName);
             TextView puzzleSource = vg.findViewById(R.id.ListPuzzleSource);
-            if ((puzzleView != null) && (puzzleName != null)) {
+            ImageView difficultyDot = vg.findViewById(R.id.ListPuzzleDifficultyDot);
+            if ((puzzleView != null) && (puzzleName != null) &&
+                    (difficultyDot != null)) {
                 puzzleView.setPuzzle(puzzle);
                 puzzleName.setText(puzzle.getName());
                 puzzleSource.setText(getPuzzleSource(puzzle));
+                difficultyDot.setImageResource(getDifficultyDot(puzzle));
                 return vg;
             }
         }
@@ -189,6 +193,7 @@ public class PuzzleListAdapter extends BaseAdapter {
                 R.layout.puzzle_list_item, parent, false);
         TangramPuzzleView puzzleView = vg.findViewById(R.id.ListPuzzleView);
         TextView puzzleName = vg.findViewById(R.id.ListPuzzleName);
+        ImageView difficultyDot = vg.findViewById(R.id.ListPuzzleDifficultyDot);
         // Make the name just a bit (20%) larger
         puzzleName.setTextSize(TypedValue.COMPLEX_UNIT_PX,
                 puzzleName.getTextSize() * 1.2f);
@@ -196,7 +201,29 @@ public class PuzzleListAdapter extends BaseAdapter {
         puzzleView.setPuzzle(puzzle);
         puzzleName.setText(puzzle.getName());
         puzzleSource.setText(getPuzzleSource(puzzle));
+        difficultyDot.setImageResource(getDifficultyDot(puzzle));
         return vg;
+    }
+
+    /**
+     * Get the drawable ID of a difficulty dot for the given puzzle.
+     * There are 7 dots available and the difficulty scale is 0&ndash;100,
+     * so we break it down into buckets of roughly 14 units.
+     */
+    protected int getDifficultyDot(TangramPuzzle puzzle) {
+        if (puzzle.getDifficulty() < 15)
+            return R.drawable.difficulty_dot_1;
+        if (puzzle.getDifficulty() < 29)
+            return R.drawable.difficulty_dot_2;
+        if (puzzle.getDifficulty() < 43)
+            return R.drawable.difficulty_dot_3;
+        if (puzzle.getDifficulty() < 58)
+            return R.drawable.difficulty_dot_4;
+        if (puzzle.getDifficulty() < 72)
+            return R.drawable.difficulty_dot_5;
+        if (puzzle.getDifficulty() < 86)
+            return R.drawable.difficulty_dot_6;
+        return R.drawable.difficulty_dot_7;
     }
 
     /**

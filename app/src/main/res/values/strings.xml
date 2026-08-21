@@ -1,6 +1,6 @@
 <resources>
     <string name="InfoPopupText">Tangram\n
-version 0.8 (2026.08.19)\n
+version 0.8 (2026.08.21)\n
 by Trevin Beattie\n
 \n
 Documentation for this app can be found on its GitHub project page:
@@ -91,8 +91,8 @@ concepts that cannot be copyrighted.\n
     <string name="PrefsTextUITheme">UI Theme: </string>
     <string name="SaveDialogButtonCancel">Cancel</string>
     <string name="SaveDialogButtonSave">Save</string>
-    <string name="SaveDialogCategory">Category: </string>
-    <string name="SaveDialogCategoryHint">default</string>
+    <string name="SaveDialogCollection">Collection: </string>
+    <string name="SaveDialogCollectionHint">default</string>
     <string name="SaveDialogID">ID: </string>
     <string name="SaveDialogIDHint">default-my-shape</string>
     <string name="SaveDialogName">Puzzle Name: </string>

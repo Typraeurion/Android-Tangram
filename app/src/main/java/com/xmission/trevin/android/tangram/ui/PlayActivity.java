@@ -559,7 +559,7 @@ public class PlayActivity extends TangramActivity {
                         .replaceFirst("^[-._]+", "")
                         .replaceFirst("[-._]+$", "");
                 if (category.isEmpty())
-                    category = getString(R.string.SaveDialogCategoryHint);
+                    category = getString(R.string.SaveDialogCollectionHint);
 
                 if (id.isEmpty()) {
                     // By default, set the ID to the category plus

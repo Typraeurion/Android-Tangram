@@ -14,12 +14,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|end"
-                android:text="@string/SaveDialogCategory" />
+                android:text="@string/SaveDialogCollection" />
             <EditText android:id="@+id/SaveDialogCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="@string/SaveDialogCategoryHint"
+                android:hint="@string/SaveDialogCollectionHint"
                 android:inputType="textAutoComplete|textAutoCorrect"
                 android:autofillHints="none" />
         </TableRow>
