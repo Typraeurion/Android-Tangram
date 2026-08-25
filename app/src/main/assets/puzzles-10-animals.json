@@ -289,6 +289,77 @@
     ]
   },
   {
+    "id": "animals-camel",
+    "name": "Camel",
+    "size": 42,
+    "pieces": [
+      {
+	"name": "large_triangle",
+	"rotation": 45,
+	"position": {
+          "xa": 9,
+          "xb": 2,
+          "ya": 3,
+          "yb": 4
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 0,
+	"position": {
+          "xa": 9,
+          "ya": 3,
+          "yb": -2
+	}
+      },
+      {
+	"name": "square",
+	"rotation": 45,
+	"position": {
+          "xa": 9,
+          "xb": -6,
+          "ya": -3
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 90,
+	"position": {
+          "xa": 7,
+          "xb": -6,
+          "ya": 9
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": true,
+	"rotation": 90,
+	"position": {
+          "xb": -6,
+          "ya": -6
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": -90,
+	"position": {
+          "xa": 1,
+          "xb": -6,
+          "ya": -15
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 180,
+	"position": {
+          "xa": -3,
+          "xb": -6,
+          "ya": -19
+	}
+      }
+    ]
+  },
+  {
     "id": "animals-cat",
     "name": "Cat",
     "size": 50.1837662,
@@ -442,6 +513,71 @@
     ]
   },
   {
+    "id": "animals-crab",
+    "name": "Crab",
+    "size": 50.91168975830078,
+    "pieces": [
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 0,
+          "ya": 6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 8,
+          "yb": 1
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 14,
+          "yb": 1
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 16,
+          "yb": 5
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -8,
+          "yb": 1
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -5
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xb": -15,
+          "yb": 3
+        }
+      }
+    ]
+  },
+  {
     "id": "animals-dog",
     "name": "Dog",
     "size": 46.970563,
@@ -515,6 +651,78 @@
 	  "ya": -6,
 	  "yb": -3
 	}
+      }
+    ]
+  },
+  {
+    "id": "animals-fish",
+    "name": "Fish",
+    "size": 37.45584487915039,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "position": {
+          "xa": -6,
+          "xb": -1,
+          "ya": -62,
+          "yb": 40
+        },
+        "rotation": 135
+      },
+      {
+        "name": "large_triangle",
+        "position": {
+          "xa": -6,
+          "xb": -1,
+          "ya": -62,
+          "yb": 48
+        },
+        "rotation": 45
+      },
+      {
+        "name": "medium_triangle",
+        "position": {
+          "xa": -6,
+          "xb": 5,
+          "yb": -3
+        },
+        "rotation": 90
+      },
+      {
+        "name": "parallelogram",
+        "position": {
+          "xa": -6,
+          "xb": 6,
+          "yb": 3
+        },
+        "isMirrored": true,
+        "rotation": 315
+      },
+      {
+        "name": "small_triangle",
+        "position": {
+          "xa": -2,
+          "xb": 3,
+          "yb": 9
+        },
+        "rotation": 270
+      },
+      {
+        "name": "small_triangle",
+        "position": {
+          "xa": -2,
+          "xb": 3,
+          "yb": -9
+        },
+        "rotation": 270
+      },
+      {
+        "name": "square",
+        "position": {
+          "xb": 9,
+          "ya": 0
+        },
+        "rotation": 45
       }
     ]
   },
@@ -898,6 +1106,79 @@
     ]
   },
   {
+    "id": "animals-penguin",
+    "name": "Penguin",
+    "size": 44.48528289794922,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "position": {
+          "xa": -8,
+          "xb": 6,
+          "ya": 6,
+          "yb": 3
+        },
+        "rotation": 90
+      },
+      {
+        "name": "large_triangle",
+        "position": {
+          "xa": -4,
+          "xb": 6,
+          "ya": -6,
+          "yb": 3
+        },
+        "rotation": 270
+      },
+      {
+        "name": "parallelogram",
+        "position": {
+          "xa": 0,
+          "ya": -18,
+          "yb": 6
+        },
+        "isMirrored": false,
+        "rotation": 315
+      },
+      {
+        "name": "medium_triangle",
+        "position": {
+          "xb": -6,
+          "ya": -18,
+          "yb": 11
+        },
+        "rotation": 180
+      },
+      {
+        "name": "square",
+        "position": {
+          "xb": 3,
+          "ya": -18
+        },
+        "rotation": 0
+      },
+      {
+        "name": "small_triangle",
+        "position": {
+          "xb": 8,
+          "ya": -18,
+          "yb": -1
+        },
+        "rotation": 315
+      },
+      {
+        "name": "small_triangle",
+        "position": {
+          "xa": -8,
+          "xb": 8,
+          "ya": 18,
+          "yb": 1
+        },
+        "rotation": 0
+      }
+    ]
+  },
+  {
     "id": "animals-pigeon",
     "name": "Pigeon",
     "size": 42.4264069,
@@ -1038,6 +1319,79 @@
 	  "ya": -10.29422863,
 	  "yb": -6
 	}
+      }
+    ]
+  },
+  {
+    "id": "animals-snail",
+    "name": "Snail",
+    "size": 45.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 10,
+          "ya": 0
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 2,
+          "ya": 0
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 6,
+          "xb": 4,
+          "ya": 12,
+          "yb": -2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": 6,
+          "xb": 8,
+          "ya": 12,
+          "yb": -2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 45,
+        "position": {
+          "xa": 6,
+          "xb": -6,
+          "ya": 12,
+          "yb": -3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 6,
+          "xb": -12,
+          "ya": 12,
+          "yb": -2
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xb": -12,
+          "ya": 12,
+          "yb": -6
+        }
       }
     ]
   },

@@ -18,7 +18,6 @@ package com.xmission.trevin.android.tangram.ui;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,7 +26,6 @@ import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -44,6 +42,7 @@ import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.*;
 import com.xmission.trevin.android.tangram.util.BackgroundExecutor;
 import com.xmission.trevin.android.tangram.util.FileUtils;
+import com.xmission.trevin.android.tangram.util.PuzzleNaming;
 
 import java.io.File;
 import java.util.Locale;
@@ -60,7 +59,8 @@ import java.util.Locale;
  *
  * @author Claude Opus 4.8
  */
-public class PlayActivity extends TangramActivity {
+public class PlayActivity extends TangramActivity
+        implements SavePuzzleDialogFragment.OnSavePuzzleListener {
 
     private static final String LOG_TAG = "PlayActivity";
 
@@ -111,6 +111,14 @@ public class PlayActivity extends TangramActivity {
      * each check.  Null in free play or until the first check.
      */
     private TPolygon goalPolygon;
+
+    /**
+     * The values last entered in the save dialog this session, remembered so
+     * the dialog can pre-fill them when saving a series of related puzzles.
+     */
+    private String lastSaveCollection = "";
+    private String lastSaveName = "";
+    private String lastSaveId = "";
 
     /**
      * Build an intent to start this activity.
@@ -340,7 +348,11 @@ public class PlayActivity extends TangramActivity {
         // and *if* the user has set up a directory for user puzzles.
         if ((goal == null) && (prefs.getUserPuzzlesDir() != null)) {
             ImageButton saveButton = findViewById(R.id.button_save);
-            saveButton.setOnClickListener(new SavePuzzleListener());
+            saveButton.setOnClickListener(v ->
+                    SavePuzzleDialogFragment.newInstance(lastSaveCollection,
+                                    lastSaveName, lastSaveId)
+                            .show(getSupportFragmentManager(),
+                                    SavePuzzleDialogFragment.TAG));
         }
 
         // React each time the play field becomes (or stops being) a valid
@@ -487,229 +499,158 @@ public class PlayActivity extends TangramActivity {
     }
 
     /**
-     * Called when the user clicks the save button.
+     * Maximum distance a piece may be re-snapped to the &#8474;[&#8730;2]
+     * grid while centering a saved puzzle, without compromising its integrity.
      */
-    private class SavePuzzleListener implements View.OnClickListener {
-        private final SavePuzzleCallback callback = new SavePuzzleCallback();
-        private AlertDialog saveDialog = null;
-        @Override
-        public void onClick(View v) {
-            if (saveDialog == null) {
-                saveDialog = new AlertDialog.Builder(PlayActivity.this)
-                        .setTitle(R.string.SaveDialogTitle)
-                        .setView(R.layout.dialog_save_puzzle)
-                        .setPositiveButton(R.string.SaveDialogButtonSave,
-                                // MUST pass null here to prevent Android from
-                                // closing the dialog before the save is finished.
-                                null)
-                        .setNegativeButton(R.string.SaveDialogButtonCancel,
-                                (d, w) -> d.dismiss())
-                        .create();
-                saveDialog.setOnShowListener((d) -> {
-                    // The button views only exist once the dialog is shown,
-                    // so getButton() returns null before this point.
-                    saveDialog.setCancelable(true);
-                    saveDialog.setCanceledOnTouchOutside(false);
-                    saveDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                            .setEnabled(true);
-                    saveDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-                            .setEnabled(true);
-                    // Override the Save button's own click handling so it
-                    // does NOT auto-dismiss the dialog; SavePuzzleCallback
-                    // dismisses it only once the save finishes.
-                    saveDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                            .setOnClickListener(callback);
-                });
-            }
-            saveDialog.show();
+    private static final double SAVE_FUDGE_TOLERANCE = 0.125;
+
+    /**
+     * Save the current play field as a user puzzle.  Called back by
+     * {@link SavePuzzleDialogFragment} once the user confirms, with the values
+     * as entered; this finalizes (sanitizes) them and remembers the raw
+     * entries so the dialog can pre-fill them for the next save.
+     *
+     * @param collection the collection name as entered
+     * @param name the puzzle name as entered (not blank)
+     * @param id the ID as entered (blank for the default)
+     */
+    @Override
+    public void onSavePuzzle(@NonNull String collection,
+                            @NonNull String name, @NonNull String id) {
+        // Remember the raw entries to pre-fill the dialog next time.
+        lastSaveCollection = collection;
+        lastSaveName = name;
+        lastSaveId = id;
+
+        String dir = prefs.getUserPuzzlesDir();
+        if (dir == null) {
+            Log.w(LOG_TAG, "User puzzle directory has disappeared");
+            showSaveError(getString(R.string.ErrorUserDirNotSet));
+            return;
         }
+        if (library == null)
+            library = PuzzleLibrary.getInstance();
 
-        /**
-         * Called when the user clicks "Save" in the save dialog.
-         */
-        private class SavePuzzleCallback implements View.OnClickListener {
-            /**
-             * Maximum distance we can re-snap any puzzle piece
-             * while maintaining puzzle integrity.
-             */
-            private static final double FUDGE_TOLERANCE = 0.125;
+        // Finalize the entered values: a filename-safe collection (defaulting
+        // to the resource hint), the puzzle name, and either the entered ID or
+        // the default derived from the collection and name.
+        String puzzleName = name.strip();
+        String collectionName = PuzzleNaming.normalizeCollection(collection);
+        if (collectionName.isEmpty())
+            collectionName = PuzzleNaming.normalizeCollection(
+                    getString(R.string.SaveDialogCollectionHint));
+        String puzzleId = id.isBlank()
+                ? PuzzleNaming.defaultId(collectionName, puzzleName)
+                : PuzzleNaming.sanitizeId(id);
 
-            @Override
-            public void onClick(View button) {
-                // Disable dismissing the dialog until we're done with it.
-                saveDialog.getButton(DialogInterface.BUTTON_POSITIVE)
-                        .setEnabled(false);
-                saveDialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-                        .setEnabled(false);
-                saveDialog.setCancelable(false);
+        // Build the independent, centered copy to save on the main thread
+        // (cheap, and it reads the live play field).
+        TangramPuzzle puzzle = playTableView.getPuzzle().clone();
+        puzzle.setName(puzzleName);
+        puzzle.setId(puzzleId);
+        centerPuzzle(puzzle);
 
-                EditText categoryEdit =
-                        saveDialog.findViewById(R.id.SaveDialogCategory);
-                EditText nameEdit =
-                        saveDialog.findViewById(R.id.SaveDialogName);
-                EditText idEdit =
-                        saveDialog.findViewById(R.id.SaveDialogID);
-                String category = categoryEdit.getText().toString().strip();
-                String name = nameEdit.getText().toString().strip();
-                String id = idEdit.getText().toString().strip();
+        // The Storage Access Framework work (resolving/creating the file and
+        // writing it) can be slow, so do it off the main thread.
+        final String fileName = getString(R.string.UserPuzzleFilePrefix)
+                + collectionName + ".json";
+        final Uri folderUri = Uri.parse(dir);
+        BackgroundExecutor.runInBackground(
+                () -> savePuzzleInBackground(puzzle, folderUri, fileName));
+    }
 
-                // Convert any unsafe filename characters to '_'
-                // FIXME: Should also allow non-ASCII alpha characters
-                category = category.replaceAll("[^-.0-9A-Z_a-z]", "_")
-                        .replaceFirst("^[-._]+", "")
-                        .replaceFirst("[-._]+$", "");
-                if (category.isEmpty())
-                    category = getString(R.string.SaveDialogCollectionHint);
+    /**
+     * Center a puzzle&rsquo;s pieces about the origin, re-aligning each to the
+     * &#8474;[&#8730;2] grid where doing so barely moves it (the drop position
+     * may not have landed on the cleanest coordinates).
+     *
+     * @param puzzle the puzzle to center in place
+     */
+    private void centerPuzzle(@NonNull TangramPuzzle puzzle) {
+        TPoint centerAdjust = puzzle.getCenter().mirrorX().mirrorY();
+        Log.d(LOG_TAG, String.format(Locale.US,
+                "Adjusting puzzle center by %s", centerAdjust));
+        for (TangramPiece piece : puzzle.getPieces()) {
+            TPoint newCentroid = piece.getPosition().add(centerAdjust);
+            TPoint reSnap = newCentroid.nearestQ2GridPoint();
+            if (reSnap.distanceTo(newCentroid) < SAVE_FUDGE_TOLERANCE)
+                newCentroid = reSnap;
+            piece.setPosition(newCentroid);
+        }
+    }
 
-                if (id.isEmpty()) {
-                    // By default, set the ID to the category plus
-                    // the name with spaces replaced by dashes.
-                    id = (category + "-" + name).replaceAll(" ", "-");
-                }
-                // Ensure the ID only has valid characters
-                // FIXME: Should also allow non-ASCII alpha characters
-                id = id.replaceAll("[^-.0-9A-Z_a-z]", "_");
-                if (id.matches("[-.0-9].*"))
-                    id = "_" + id;
-
-                String dir = prefs.getUserPuzzlesDir();
-                // Sanity check
-                if (dir == null) {
-                    Log.w(LOG_TAG, "User puzzle directory has disappeared");
-                    showError(getString(R.string.ErrorUserDirNotSet));
-                    return;
-                }
-
-                if (library == null)
-                    library = PuzzleLibrary.getInstance();
-
-                // Build the independent, centered copy to save on the main
-                // thread (cheap, and it reads the live play field).
-                TangramPuzzle puzzle = playTableView.getPuzzle().clone();
-                puzzle.setName(name);
-                puzzle.setId(id);
-                TPoint centerAdjust = puzzle.getCenter().mirrorX().mirrorY(); // FIXME: Skip if already centered
-                Log.d(LOG_TAG, String.format(Locale.US,
-                        "Adjusting puzzle center by %s", centerAdjust));
-                for (TangramPiece piece : puzzle.getPieces()) {
-                    TPoint newCentroid = piece.getPosition().add(centerAdjust);
-                    /*
-                     * The offset where the pieces were originally placed
-                     * may not have had the best alignment for our ℚ√2
-                     * space, so try re-aligning them after centering.
-                     */
-                    TPoint reSnap = newCentroid.nearestQ2GridPoint();
-                    if (reSnap.distanceTo(newCentroid) < FUDGE_TOLERANCE) { // FIXME: Not a fudge if reSnap.equals(newCentroid).
-                        Log.d(LOG_TAG, String.format(Locale.US,
-                                "Fudging %s from %s → %s → %s",
-                                piece.getClass().getSimpleName(),
-                                piece.getPosition(), newCentroid, reSnap));
-                        newCentroid = reSnap;
-                    } else {
-                        Log.d(LOG_TAG, String.format(Locale.US,
-                                "%s moved cleanly from %s → %s",
-                                piece.getClass().getSimpleName(),
-                                piece.getPosition(), newCentroid));
-                    }
-                    piece.setPosition(newCentroid);
-                }
-
-                // The remaining Storage Access Framework work (resolving and
-                // creating the file, then writing it) can be slow, so do it
-                // off the main thread.
-                final String fileName = getString(R.string.UserPuzzleFilePrefix)
-                        + category + ".json";
-                final Uri folderUri = Uri.parse(dir);
-                BackgroundExecutor.runInBackground(
-                        () -> savePuzzleInBackground(puzzle, folderUri, fileName));
-            }
-
-            /**
-             * Resolve the target file under the chosen directory and write
-             * the puzzle to it, off the main thread.  Success dismisses the
-             * dialog; any failure is reported via {@link #showError(String)}.
-             *
-             * @param puzzle the centered puzzle copy to save
-             * @param folderUri the tree {@link Uri} of the puzzle directory
-             * @param fileName the file name to save into
-             */
-            private void savePuzzleInBackground(@NonNull TangramPuzzle puzzle,
-                                                @NonNull Uri folderUri,
-                                                @NonNull String fileName) {
-                DocumentFile saveFolder = DocumentFile.fromTreeUri(
-                        PlayActivity.this, folderUri);
-                // Verify we still have write access to this directory.  A
-                // persisted tree permission grants access to documents within
-                // it, so canWrite() (permission-aware) is the check we want.
-                if (saveFolder == null || !saveFolder.canWrite()) {
-                    Log.w(LOG_TAG, String.format(Locale.US,
-                            "Permission to use %s has been revoked", folderUri));
-                    String dirName = FileUtils.getFriendlyName(folderUri);
-                    showErrorOnMain(getString(
-                            R.string.ErrorUserDirRevoked, dirName));
-                    return;
-                }
-                DocumentFile saveFile = saveFolder.findFile(fileName);
-                if (saveFile == null) {
-                    saveFile = saveFolder.createFile(
-                            "application/json", fileName);
-                    if (saveFile == null) {
-                        String displayFullName = saveFolder.getName()
-                                + File.separator + fileName;
-                        Log.e(LOG_TAG, String.format(Locale.US,
-                                "Error creating file %s", displayFullName));
-                        showErrorOnMain(getString(
-                                R.string.ErrorCannotCreateSaveFile,
-                                displayFullName));
-                        return;
-                    }
-                }
-                puzzle.setSourceFileName(saveFile.getName());
-                try {
-                    library.savePuzzle(PlayActivity.this, puzzle, saveFile);
-                } catch (Exception e) {
-                    showErrorOnMain(getString(R.string.ErrorWritingPuzzle,
-                            saveFile.getName(), e.getMessage()));
-                    return;
-                }
-                isFinished = true;
-                runOnUiThread(() -> {
-                    if (saveDialog != null)
-                        saveDialog.dismiss();
-                    Toast.makeText(PlayActivity.this, getString(
-                            R.string.NotificationPuzzleSaved, puzzle.getName(),
-                            puzzle.getSourceFileName()), Toast.LENGTH_LONG).show();
-                    // Hide the save button, at least until
-                    // the player changes the puzzle.
-                    saveButtonFrame.setVisibility(View.GONE);
-                });
-            }
-
-            /** Post {@link #showError(String)} to the main thread. */
-            private void showErrorOnMain(String message) {
-                runOnUiThread(() -> showError(message));
-            }
-
-            /**
-             * Show an error message if we fail to save the puzzle.
-             * This also dismisses the save dialog and hides the Save
-             * button.
-             *
-             * @param message the message to display
-             */
-            void showError(String message) {
-                saveDialog.dismiss();
-                saveButtonFrame.setVisibility(View.GONE);
-                new AlertDialog.Builder(PlayActivity.this)
-                        .setTitle(R.string.ErrorCannotSave)
-                        .setMessage(message)
-                        .setNegativeButton(
-                                R.string.SaveDialogButtonCancel, null)
-                        .setCancelable(true)
-                        .show();
+    /**
+     * Resolve the target file under the chosen directory and write the puzzle
+     * to it, off the main thread.  Success reports via a toast and hides the
+     * Save button; any failure is reported via {@link #showSaveError(String)}.
+     *
+     * @param puzzle the centered puzzle copy to save
+     * @param folderUri the tree {@link Uri} of the puzzle directory
+     * @param fileName the file name to save into
+     */
+    private void savePuzzleInBackground(@NonNull TangramPuzzle puzzle,
+                                        @NonNull Uri folderUri,
+                                        @NonNull String fileName) {
+        DocumentFile saveFolder = DocumentFile.fromTreeUri(this, folderUri);
+        // A persisted tree permission grants access to documents within it,
+        // so canWrite() (permission-aware) is the check we want.
+        if (saveFolder == null || !saveFolder.canWrite()) {
+            Log.w(LOG_TAG, String.format(Locale.US,
+                    "Permission to use %s has been revoked", folderUri));
+            showErrorOnMain(getString(R.string.ErrorUserDirRevoked,
+                    FileUtils.getFriendlyName(folderUri)));
+            return;
+        }
+        DocumentFile saveFile = saveFolder.findFile(fileName);
+        if (saveFile == null) {
+            saveFile = saveFolder.createFile("application/json", fileName);
+            if (saveFile == null) {
+                String displayFullName = saveFolder.getName()
+                        + File.separator + fileName;
+                Log.e(LOG_TAG, String.format(Locale.US,
+                        "Error creating file %s", displayFullName));
+                showErrorOnMain(getString(
+                        R.string.ErrorCannotCreateSaveFile, displayFullName));
+                return;
             }
         }
+        puzzle.setSourceFileName(saveFile.getName());
+        try {
+            library.savePuzzle(this, puzzle, saveFile);
+        } catch (Exception e) {
+            showErrorOnMain(getString(R.string.ErrorWritingPuzzle,
+                    saveFile.getName(), e.getMessage()));
+            return;
+        }
+        isFinished = true;
+        final String savedName = puzzle.getName();
+        final String savedFile = puzzle.getSourceFileName();
+        runOnUiThread(() -> {
+            Toast.makeText(this, getString(R.string.NotificationPuzzleSaved,
+                    savedName, savedFile), Toast.LENGTH_LONG).show();
+            // Hide the Save button, at least until the player changes the puzzle.
+            saveButtonFrame.setVisibility(View.GONE);
+        });
+    }
 
+    /** Post {@link #showSaveError(String)} to the main thread. */
+    private void showErrorOnMain(String message) {
+        runOnUiThread(() -> showSaveError(message));
+    }
+
+    /**
+     * Show an error message after a failed save, and hide the Save button.
+     *
+     * @param message the message to display
+     */
+    private void showSaveError(String message) {
+        saveButtonFrame.setVisibility(View.GONE);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.ErrorCannotSave)
+                .setMessage(message)
+                .setNegativeButton(R.string.SaveDialogButtonCancel, null)
+                .setCancelable(true)
+                .show();
     }
 
 }

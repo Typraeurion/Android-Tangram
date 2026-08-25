@@ -32,6 +32,7 @@ import androidx.annotation.NonNull;
 import com.xmission.trevin.android.tangram.R;
 import com.xmission.trevin.android.tangram.data.PuzzleLibrary;
 import com.xmission.trevin.android.tangram.data.TangramPuzzle;
+import com.xmission.trevin.android.tangram.util.PuzzleNaming;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +57,7 @@ public class PuzzleListAdapter extends BaseAdapter {
 
     /** Pattern for puzzle sources loaded from our own assets */
     private static final Pattern ASSET_SOURCE_PATTERN =
-            Pattern.compile("^assets/puzzles-(.+)\\.json$");
+            Pattern.compile("^assets/puzzles-(\\d+-)?(.+)\\.json$");
 
     /** Pattern for puzzles loaded from a user-designated folder */
     private final Pattern userSourcePattern;
@@ -138,12 +139,12 @@ public class PuzzleListAdapter extends BaseAdapter {
         Matcher m = ASSET_SOURCE_PATTERN.matcher(puzzle.getSourceFileName());
         if (m.matches())
             return context.getString(
-                    R.string.ListPuzzleAssetSource, m.group(1));
+                    R.string.ListPuzzleAssetSource, m.group(2));
         m = userSourcePattern.matcher(puzzle.getSourceFileName());
         if (m.matches())
             return context.getString(
                     R.string.ListPuzzleUserSource,
-                    m.group(1).replaceAll("_", " "));
+                    PuzzleNaming.displayCollection(m.group(1)));
         return context.getString(
                 R.string.ListPuzzleUserSourceFallback,
                 puzzle.getSourceFileName());

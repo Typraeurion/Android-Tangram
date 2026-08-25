@@ -1,61 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TableLayout
+    android:layout_height="wrap_content">
+    <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TableRow
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:text="@string/SaveDialogCollection" />
+        <EditText android:id="@+id/SaveDialogCollection"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|end"
-                android:text="@string/SaveDialogCollection" />
-            <EditText android:id="@+id/SaveDialogCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/SaveDialogCollectionHint"
-                android:inputType="textAutoComplete|textAutoCorrect"
-                android:autofillHints="none" />
-        </TableRow>
-        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/SaveDialogCollectionHint"
+            android:inputType="textAutoComplete|textAutoCorrect"
+            android:autofillHints="none" />
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:text="@string/SaveDialogName" />
+        <EditText android:id="@+id/SaveDialogName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|end"
-                android:text="@string/SaveDialogName" />
-            <EditText android:id="@+id/SaveDialogName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/SaveDialogNameHint"
-                android:inputType="textAutoComplete|textAutoCorrect|textCapWords"
-                android:autofillHints="name" />
-            <!-- FIXME: the "name" hint is deprecated; there doesn't appear to
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/SaveDialogNameHint"
+            android:inputType="textAutoComplete|textAutoCorrect|textCapWords"
+            android:autofillHints="name" />
+        <!-- FIXME: the "name" hint is deprecated; there doesn't appear to
                  be an equivalent for object names as opposed to person names. -->
-        </TableRow>
-        <TableRow
+    </TableRow>
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:text="@string/SaveDialogID" />
+        <EditText android:id="@+id/SaveDialogID"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|end"
-                android:text="@string/SaveDialogID" />
-            <EditText android:id="@+id/SaveDialogID"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/SaveDialogIDHint"
-                android:inputType="textNoSuggestions"
-                android:autofillHints="none" />
-        </TableRow>
-    </TableLayout>
-</LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/SaveDialogIDHint"
+            android:inputType="textNoSuggestions"
+            android:autofillHints="none" />
+    </TableRow>
+</TableLayout>

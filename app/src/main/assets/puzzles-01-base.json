@@ -1,0 +1,66 @@
+[
+  {
+    "id": "root-square",
+    "name": "Square",
+    "size": 24,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -8,
+          "ya": 0
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": 8,
+          "ya": -8
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 0,
+        "position": {
+          "xa": -3,
+          "ya": -9
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 6,
+          "ya": 0
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 0,
+          "ya": -4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 10,
+          "ya": 6
+        }
+      }
+    ]
+  }
+]
