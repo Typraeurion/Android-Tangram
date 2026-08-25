@@ -1,0 +1,363 @@
+[
+  {
+    "id": "people-begging",
+    "name": "Begging",
+    "size": 47.97056275,
+    "size_comment": "The width is exactly 30.  The height is 31+12√2.",
+    "pieces": [
+      {
+	"name": "large_triangle",
+	"rotation": -45,
+	"position": {
+	  "xa": -15,
+	  "xb": 4,
+	  "ya": 15.5,
+	  "yb": -2
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": -90,
+	"position": {
+	  "xa": -17,
+	  "xb": 12,
+	  "ya": 21.5,
+	  "yb": -6
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": true,
+	"rotation": 0,
+	"position": {
+	  "xa": -6,
+	  "ya": 12.5,
+	  "yb": -6
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 0,
+	"position": {
+	  "xa": -3,
+	  "ya": 5.5,
+	  "yb": -6
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 180,
+	"position": {
+	  "xa": 9,
+	  "ya": 5.5,
+	  "yb": -6
+	}
+      },
+      {
+	"name": "square",
+	"rotation": 45,
+	"position": {
+	  "xa": -1,
+	  "ya": -6.5,
+	  "yb": -6
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": -45,
+	"position": {
+	  "xa": -6,
+	  "ya": -11.5,
+	  "yb": -6
+	}
+      }
+    ]
+  },
+  {
+    "id": "people-dancer",
+    "name": "Dancer",
+    "size": 50.69848481,
+    "size_comment": "The medium triangle is offset a quarter of the way down the vertical side of the lower large triangle, making the total height 21+21√2.  The width is 27√2.",
+    "pieces": [
+      {
+	"name": "large_triangle",
+	"rotation": 135,
+	"position": {
+	  "xb": -2.5,
+	  "ya": 1.5,
+	  "yb": 3.5
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": -45,
+	"position": {
+	  "xb": -11.5,
+	  "ya": 1.5,
+	  "yb": 9.5
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 90,
+	"position": {
+	  "xb": 3.5,
+	  "ya": 1.5,
+	  "yb": 4.5
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": -90,
+	"position": {
+	  "xa": 1,
+	  "xb": 1.5,
+	  "ya": 4.5,
+	  "yb": 10.5
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": -45,
+	"position": {
+	  "xb": -0.5,
+	  "ya": 1.5,
+	  "yb": -6.5
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": false,
+	"rotation": -45,
+	"position": {
+	  "xb": 7.5,
+	  "ya": 1.5,
+	  "yb": -7.5
+	}
+      },
+      {
+	"name": "square",
+	"rotation": 45,
+	"position": {
+	  "xb": -4.5,
+	  "ya": -4.5,
+	  "yb": -10.5
+	}
+      }
+    ]
+  },
+  {
+    "id": "people-dancing-lady",
+    "name": "Dancing Lady",
+    "size": 45.9411255,
+    "pieces": [
+      {
+	"name": "large_triangle",
+	"rotation": 135,
+	"position": {
+	  "xb": -4,
+	  "ya": 6,
+	  "yb": 8
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": -135,
+	"position": {
+	  "xb": 4,
+	  "ya": 6,
+	  "yb": 8
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": false,
+	"rotation": 45,
+	"position": {
+	  "xa": 0,
+	  "ya": 6,
+	  "yb": -3
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 180,
+	"position": {
+	  "xa": 0,
+	  "ya": 6,
+	  "yb": -10
+	}
+      },
+      {
+	"name": "square",
+	"rotation": 45,
+	"position": {
+	  "xa": 0,
+	  "yb": -12
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": -135,
+	"position": {
+	  "xb": -8,
+	  "ya": 6,
+	  "yb": -14
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 135,
+	"position": {
+	  "xb": 8,
+	  "ya": 6,
+	  "yb": -14
+	}
+      }
+    ]
+  },
+  {
+    "id": "people-falling",
+    "name": "Falling",
+    "size": 50.4852814,
+    "size_comment": "The width is 42+6√2; the height is exactly 36.",
+    "pieces": [
+      {
+	"name": "large_triangle",
+	"rotation": 180,
+	"position": {
+	  "xa": 3,
+	  "xb": -3,
+	  "ya": 10
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 0,
+	"position": {
+	  "xa": -9,
+	  "xb": -3,
+	  "ya": 2
+	}
+      },
+      {
+	"name": "square",
+	"rotation": 0,
+	"position": {
+	  "xa": -9,
+	  "xb": -3,
+	  "ya": -6,
+	  "yb": -3
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 0,
+	"position": {
+	  "xa": 15,
+	  "ya": 6,
+	  "yb": -2
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 180,
+	"position": {
+	  "xa": 15,
+	  "xb": 6,
+	  "ya": 8
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": false,
+	"rotation": 90,
+	"position": {
+	  "xa": 18,
+	  "xb": -9,
+	  "ya": -3
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 90,
+	"position": {
+	  "xa": 23,
+	  "xb": -9,
+	  "ya": -12
+	}
+      }
+    ]
+  },
+  {
+    "id": "people-kid-and-umbrella",
+    "name": "Kid and Umbrella",
+    "size": 46.66904756,
+    "size_comment": "This one might be a bit tricky to get right, as both the head and umbrella are at odd 15° offsets.  The width is 6+12√2+6√3; the height is 6+21√2+6√3.  To avoid irrational positions for the rest of the tans we're rounding the size up to 24√2 wide and 33√2 high.",
+    "pieces": [
+      {
+	"name": "small_triangle",
+	"rotation": 135,
+	"position": {
+	  "xb": 1,
+	  "yb": 14.5
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": true,
+	"rotation": -45,
+	"position": {
+	  "xb": 6,
+	  "yb": 4.5
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 90,
+	"position": {
+	  "xa": 2,
+	  "xb": 6,
+	  "ya": 6,
+	  "yb": 7.5
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 180,
+	"position": {
+	  "xb": 6,
+	  "yb": -2.5
+	}
+      },
+      {
+	"name": "square",
+	"rotation": -15,
+	"position": {
+	  "xa": 3,
+	  "xb": 6,
+	  "ya": -5.196152422706632,
+	  "yb": -4.5
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 150,
+	"position": {
+	  "xa": -4,
+	  "ya": -6.928203230275509,
+	  "yb": -4.5
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 60,
+	"position": {
+	  "xa": -6.928203230275509,
+	  "ya": 4,
+	  "yb": -4.5
+	}
+      }
+    ]
+  }
+]

@@ -1,198 +1,153 @@
 [
   {
-    "id": "christmas-tree-short",
-    "name": "Tree (short)",
-    "size": 33.941123962402344,
+    "id": "christmas-caroler",
+    "name": "Caroler",
+    "size": 40.97056198120117,
+    "size_comment": "The width is 30+6√2.  If the head were straight the height would be 24+12√2, but tilting the head back 15° brings that down to 30+6√3.  We're leaving the height where it would be without the tilt to keep the original alignment.",
     "pieces": [
       {
         "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 3,
+          "xb": 3,
+          "ya": 8,
+          "yb": 6
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 3,
+          "xb": 3,
+          "ya": -8,
+          "yb": 6
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 90,
+        "position": {
+          "xa": -12,
+          "xb": 3,
+          "ya": -3,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -13,
+          "xb": 3,
+          "ya": -12,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
         "rotation": 135,
+        "position": {
+          "xa": -15,
+          "xb": 1,
+          "ya": -18,
+          "yb": 10
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 15,
+        "position": {
+	  "xb": 3,
+          "ya": -17.19615242,
+          "yb": 6
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 15,
+        "position": {
+          "xa": 5.92820323,
+          "xb": 3,
+          "ya": -22.92820323,
+          "yb": 6
+        }
+      }
+    ]
+  },
+  {
+    "id": "christmas-fairy",
+    "name": "Fairy",
+    "size": 42.8629035949707,
+    "size_comment": "The height is 9+24√2; due to the rear wing placement, the width is 9+9√2+6√6.  In order to get all pieces but the parallelogram aligned, we shift everything to the left (by 3√6-1.5√2-4.5) so the wing attachment is at x=0.",
+    "pieces": [
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 3,
+          "xb": 6,
+          "ya": 1.5,
+          "yb": -12
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": 2,
+          "ya": 4.5,
+          "yb": -4
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": 4,
+          "xb": -6,
+          "ya": 8.5
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 12,
+          "xb": -10,
+          "ya": 4.5,
+          "yb": 8
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": -2,
+          "ya": 4.5,
+          "yb": -10
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
         "position": {
           "xb": -4,
-          "yb": 2
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": -135,
-        "position": {
-          "xb": 4,
-          "yb": 2
-        }
-      },
-      {
-        "name": "square",
-        "rotation": 0,
-        "position": {
-          "xa": 0,
-          "yb": 9
+          "ya": 4.5,
+          "yb": -14
         }
       },
       {
         "name": "parallelogram",
         "isMirrored": false,
-        "rotation": -45,
+        "rotation": -15,
         "position": {
-          "xb": -6,
-          "yb": -3
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 45,
-        "position": {
-          "xb": 4,
-          "yb": -4
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": -135,
-        "position": {
-          "xb": 8,
-          "yb": -2
-        }
-      },
-      {
-        "name": "medium_triangle",
-        "rotation": 0,
-        "position": {
-          "xa": 0,
-          "yb": -8
-        }
-      }
-    ]
-  },
-  {
-    "id": "christmas-tree",
-    "name": "Tree",
-    "size": 40.97056579589844,
-    "pieces": [
-      {
-        "name": "parallelogram",
-        "isMirrored": false,
-        "rotation": -45,
-        "position": {
-          "xb": -6,
-          "yb": 3
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 45,
-        "position": {
-          "xb": 4,
-          "yb": 2
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": -135,
-        "position": {
-          "xb": 8,
-          "yb": 4
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": 0,
-        "position": {
-          "xa": 0,
-          "ya": 8
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": 0,
-        "position": {
-          "xa": 0,
-          "ya": -4
-        }
-      },
-      {
-        "name": "medium_triangle",
-        "rotation": 0,
-        "position": {
-          "xa": 0,
-          "ya": -12,
-          "yb": -2
-        }
-      },
-      {
-        "name": "square",
-        "rotation": 0,
-        "position": {
-          "xa": 0,
-          "ya": 12,
-          "yb": 3
-        }
-      }
-    ]
-  },
-  {
-    "id": "christmas-sled",
-    "name": "Sled",
-    "size": 57.941123962402344,
-    "pieces": [
-      {
-        "name": "large_triangle",
-        "rotation": 0,
-        "position": {
-          "xa": 0,
-          "ya": 8
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": 135,
-        "position": {
-          "xa": 12,
-          "xb": 8,
-          "ya": 12,
-          "yb": -4
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 180,
-        "position": {
-          "xa": 12,
-          "ya": 8
-        }
-      },
-      {
-        "name": "medium_triangle",
-        "rotation": 0,
-        "position": {
-          "xa": -12,
-          "xb": -6,
-          "ya": 12,
-          "yb": -2
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 180,
-        "position": {
-          "xa": -12,
-          "ya": 8
-        }
-      },
-      {
-        "name": "square",
-        "rotation": 45,
-        "position": {
-          "xa": 0,
-          "ya": -6
-        }
-      },
-      {
-        "name": "parallelogram",
-        "isMirrored": true,
-        "rotation": 0,
-        "position": {
-          "xa": -9,
-          "ya": -9
+          "xa": -7.34846922835,
+          "xb": -1.5,
+          "ya": 8.1742346142,
+          "yb": -9
         }
       }
     ]
@@ -275,47 +230,33 @@
     ]
   },
   {
-    "id": "christmas-fairy",
-    "name": "Fairy",
-    "size": 42.8629035949707,
-    "size_comment": "The height is 9+24√2; due to the rear wing placement, the width is 9+9√2+6√6.  In order to get all pieces but the parallelogram aligned, we shift everything to the left (by 3√6-1.5√2-4.5) so the wing attachment is at x=0.",
+    "id": "christmas-present-with-bow",
+    "name": "Present with Bow",
+    "size": 33.9411255,
+    "size_comment": "Both the parallelogram and medium triangle are at odd angles.  The exact width is 18√2+3√6; the exact height is 6+12√2+6√3.  To get the rest of the pieces aligned, the puzzle is nudged down and to the left so the bow connects at the origin.",
     "pieces": [
       {
-        "name": "square",
-        "rotation": 45,
+        "name": "large_triangle",
+        "rotation": 135,
         "position": {
-          "xa": 3,
-          "xb": 6,
-          "ya": 1.5,
-          "yb": -12
+          "xb": -4,
+          "yb": 8
         }
       },
       {
         "name": "large_triangle",
-        "rotation": 135,
-        "position": {
-          "xb": 2,
-          "ya": 4.5,
-          "yb": -4
-        }
-      },
-      {
-        "name": "medium_triangle",
         "rotation": -45,
         "position": {
-          "xa": 4,
-          "xb": -6,
-          "ya": 8.5
+          "xb": -8,
+          "yb": 4
         }
       },
       {
-        "name": "large_triangle",
-        "rotation": 135,
+        "name": "square",
+        "rotation": 0,
         "position": {
-          "xa": 12,
-          "xb": -10,
-          "ya": 4.5,
-          "yb": 8
+          "xb": -9,
+          "yb": -3
         }
       },
       {
@@ -323,8 +264,7 @@
         "rotation": 45,
         "position": {
           "xb": -2,
-          "ya": 4.5,
-          "yb": -10
+          "yb": -4
         }
       },
       {
@@ -332,19 +272,163 @@
         "rotation": -135,
         "position": {
           "xb": -4,
-          "ya": 4.5,
-          "yb": -14
+          "yb": -2
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 105,
+        "position": {
+          "xa": 4.92820323,
+          "ya": -7.464101615
         }
       },
       {
         "name": "parallelogram",
         "isMirrored": false,
-        "rotation": -15,
+        "rotation": 15,
         "position": {
-          "xa": -7.34846922835,
-          "xb": -1.5,
-          "ya": 8.1742346142,
-          "yb": -9
+	  "xa": 3.674234614,
+          "xb": 3,
+          "ya": 7.348469228,
+          "yb": -1.5
+        }
+      }
+    ]
+  },
+  {
+    "id": "christmas-sled",
+    "name": "Sled",
+    "size": 57.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 12,
+          "xb": 8,
+          "ya": 12,
+          "yb": -4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 12,
+          "ya": 8
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": -12,
+          "xb": -6,
+          "ya": 12,
+          "yb": -2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -12,
+          "ya": 8
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 0,
+          "ya": -6
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 0,
+        "position": {
+          "xa": -9,
+          "ya": -9
+        }
+      }
+    ]
+  },
+  {
+    "id": "christmas-sleigh",
+    "name": "Sleigh",
+    "size": 42.42640686035156,
+    "pieces": [
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xb": -11,
+          "ya": -3
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -45,
+        "position": {
+          "xb": -5,
+          "ya": -3,
+          "yb": -2
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -1,
+          "ya": -3,
+          "yb": 2
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "ya": -3,
+          "yb": 3
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
+        "position": {
+          "xb": 12,
+          "ya": -3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "ya": 1,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": -6,
+          "ya": 1,
+          "yb": 6
         }
       }
     ]
@@ -415,75 +499,6 @@
         "position": {
           "xa": 0,
           "ya": -18
-        }
-      }
-    ]
-  },
-  {
-    "id": "christmas-sleigh",
-    "name": "Sleigh",
-    "size": 42.42640686035156,
-    "pieces": [
-      {
-        "name": "medium_triangle",
-        "rotation": -90,
-        "position": {
-          "xb": -11,
-          "ya": -3
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": -45,
-        "position": {
-          "xb": -5,
-          "ya": -3,
-          "yb": -2
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": 135,
-        "position": {
-          "xb": -1,
-          "ya": -3,
-          "yb": 2
-        }
-      },
-      {
-        "name": "square",
-        "rotation": 0,
-        "position": {
-          "xb": 6,
-          "ya": -3,
-          "yb": 3
-        }
-      },
-      {
-        "name": "parallelogram",
-        "isMirrored": true,
-        "rotation": -45,
-        "position": {
-          "xb": 12,
-          "ya": -3
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 0,
-        "position": {
-          "xb": 6,
-          "ya": 1,
-          "yb": 6
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 0,
-        "position": {
-          "xb": -6,
-          "ya": 1,
-          "yb": 6
         }
       }
     ]
@@ -561,6 +576,136 @@
     ]
   },
   {
+    "id": "christmas-tree",
+    "name": "Tree",
+    "size": 40.97056579589844,
+    "pieces": [
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": -6,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 4,
+          "yb": 2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 8,
+          "yb": 4
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": -4
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": -12,
+          "yb": -2
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 12,
+          "yb": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "christmas-tree-short",
+    "name": "Tree (short)",
+    "size": 33.941123962402344,
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xb": -4,
+          "yb": 2
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 4,
+          "yb": 2
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": 9
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xb": -6,
+          "yb": -3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 45,
+        "position": {
+          "xb": 4,
+          "yb": -4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xb": 8,
+          "yb": -2
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "yb": -8
+        }
+      }
+    ]
+  },
+  {
     "id": "christmas-votive-candle",
     "name": "Votive Candle",
     "size": 52.91168825,
@@ -629,151 +774,6 @@
           "xb": 3,
 	  "ya": -6.34846923,
           "yb": -7.5
-        }
-      }
-    ]
-  },
-  {
-    "id": "christmas-present-with-bow",
-    "name": "Present with Bow",
-    "size": 33.9411255,
-    "size_comment": "Both the parallelogram and medium triangle are at odd angles.  The exact width is 18√2+3√6; the exact height is 6+12√2+6√3.  To get the rest of the pieces aligned, the puzzle is nudged down and to the left so the bow connects at the origin.",
-    "pieces": [
-      {
-        "name": "large_triangle",
-        "rotation": 135,
-        "position": {
-          "xb": -4,
-          "yb": 8
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": -45,
-        "position": {
-          "xb": -8,
-          "yb": 4
-        }
-      },
-      {
-        "name": "square",
-        "rotation": 0,
-        "position": {
-          "xb": -9,
-          "yb": -3
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 45,
-        "position": {
-          "xb": -2,
-          "yb": -4
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": -135,
-        "position": {
-          "xb": -4,
-          "yb": -2
-        }
-      },
-      {
-        "name": "medium_triangle",
-        "rotation": 105,
-        "position": {
-          "xa": 4.92820323,
-          "ya": -7.464101615
-        }
-      },
-      {
-        "name": "parallelogram",
-        "isMirrored": false,
-        "rotation": 15,
-        "position": {
-	  "xa": 3.674234614,
-          "xb": 3,
-          "ya": 7.348469228,
-          "yb": -1.5
-        }
-      }
-    ]
-  },
-  {
-    "id": "christmas-caroler",
-    "name": "Caroler",
-    "size": 40.97056198120117,
-    "size_comment": "The width is 30+6√2.  If the head were straight the height would be 24+12√2, but tilting the head back 15° brings that down to 30+6√3.  We're leaving the height where it would be without the tilt to keep the original alignment.",
-    "pieces": [
-      {
-        "name": "large_triangle",
-        "rotation": 0,
-        "position": {
-          "xa": 3,
-          "xb": 3,
-          "ya": 8,
-          "yb": 6
-        }
-      },
-      {
-        "name": "large_triangle",
-        "rotation": 180,
-        "position": {
-          "xa": 3,
-          "xb": 3,
-          "ya": -8,
-          "yb": 6
-        }
-      },
-      {
-        "name": "parallelogram",
-        "isMirrored": false,
-        "rotation": 90,
-        "position": {
-          "xa": -12,
-          "xb": 3,
-          "ya": -3,
-          "yb": 6
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 90,
-        "position": {
-          "xa": -13,
-          "xb": 3,
-          "ya": -12,
-          "yb": 6
-        }
-      },
-      {
-        "name": "small_triangle",
-        "rotation": 135,
-        "position": {
-          "xa": -15,
-          "xb": 1,
-          "ya": -18,
-          "yb": 10
-        }
-      },
-      {
-        "name": "square",
-        "rotation": 15,
-        "position": {
-	  "xb": 3,
-          "ya": -17.19615242,
-          "yb": 6
-        }
-      },
-      {
-        "name": "medium_triangle",
-        "rotation": 15,
-        "position": {
-          "xa": 5.92820323,
-          "xb": 3,
-          "ya": -22.92820323,
-          "yb": 6
         }
       }
     ]

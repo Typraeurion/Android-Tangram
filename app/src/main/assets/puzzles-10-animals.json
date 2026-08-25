@@ -657,72 +657,71 @@
   {
     "id": "animals-fish",
     "name": "Fish",
-    "size": 37.45584487915039,
+    "size": 37.45584412,
+    "size_comment": "The size is square 12+18√2 on each side.",
     "pieces": [
       {
         "name": "large_triangle",
+        "rotation": 135,
         "position": {
           "xa": -6,
           "xb": -1,
-          "ya": -62,
-          "yb": 40
-        },
-        "rotation": 135
+          "yb": -4
+        }
       },
       {
         "name": "large_triangle",
+        "rotation": 45,
         "position": {
           "xa": -6,
           "xb": -1,
-          "ya": -62,
-          "yb": 48
-        },
-        "rotation": 45
+          "yb": 4
+        }
       },
       {
         "name": "medium_triangle",
+        "rotation": 90,
         "position": {
           "xa": -6,
           "xb": 5,
           "yb": -3
-        },
-        "rotation": 90
+        }
       },
       {
         "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": -45,
         "position": {
           "xa": -6,
           "xb": 6,
           "yb": 3
-        },
-        "isMirrored": true,
-        "rotation": 315
+        }
       },
       {
         "name": "small_triangle",
+        "rotation": -90,
         "position": {
           "xa": -2,
           "xb": 3,
           "yb": 9
-        },
-        "rotation": 270
+        }
       },
       {
         "name": "small_triangle",
+        "rotation": -90,
         "position": {
           "xa": -2,
           "xb": 3,
           "yb": -9
-        },
-        "rotation": 270
+        }
       },
       {
         "name": "square",
+        "rotation": 45,
         "position": {
           "xb": 9,
           "ya": 0
-        },
-        "rotation": 45
+        }
       }
     ]
   },
@@ -1109,72 +1108,73 @@
     "id": "animals-penguin",
     "name": "Penguin",
     "size": 44.48528289794922,
+    "size_comment": "The width is 24√2; the height is 36+6√2.",
     "pieces": [
       {
         "name": "large_triangle",
+        "rotation": 90,
         "position": {
           "xa": -8,
           "xb": 6,
           "ya": 6,
           "yb": 3
-        },
-        "rotation": 90
+        }
       },
       {
         "name": "large_triangle",
+        "rotation": -90,
         "position": {
           "xa": -4,
           "xb": 6,
           "ya": -6,
           "yb": 3
-        },
-        "rotation": 270
+        }
       },
       {
         "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
         "position": {
           "xa": 0,
           "ya": -18,
           "yb": 6
-        },
-        "isMirrored": false,
-        "rotation": 315
+        }
       },
       {
         "name": "medium_triangle",
+        "rotation": 180,
         "position": {
           "xb": -6,
           "ya": -18,
           "yb": 11
-        },
-        "rotation": 180
+        }
       },
       {
         "name": "square",
+        "rotation": 0,
         "position": {
           "xb": 3,
           "ya": -18
-        },
-        "rotation": 0
+        }
       },
       {
         "name": "small_triangle",
+        "rotation": -45,
         "position": {
           "xb": 8,
           "ya": -18,
           "yb": -1
-        },
-        "rotation": 315
+        }
       },
       {
         "name": "small_triangle",
+        "rotation": 0,
         "position": {
-          "xa": -8,
-          "xb": 8,
-          "ya": 18,
-          "yb": 1
-        },
-        "rotation": 0
+          "xa": -5,
+          "xb": 6,
+          "ya": 15,
+          "yb": 3
+        }
       }
     ]
   },

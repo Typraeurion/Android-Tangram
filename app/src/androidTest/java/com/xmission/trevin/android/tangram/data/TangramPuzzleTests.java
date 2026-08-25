@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,16 +80,18 @@ public class TangramPuzzleTests {
     }
 
     /**
-     * Test the base puzzles file.  This one includes the square
-     * that Tangram pieces are made from, plus a group of puzzles
-     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     * Run the test for a given file.
+     *
+     * @param assetName the name of the puzzle asset to read
+     *
+     * @throws IOException if the asset does not exist or cannot be read.
+     * @throws JSONException if the asset is not a valid JSON array.
      */
-    @Test
-    public void testReadBasePuzzles() throws IOException, JSONException {
-        String jsonString = readAsset("puzzles-base.json");
+    private void runTest(String assetName) throws IOException, JSONException {
+        String jsonString = readAsset(assetName);
         JSONArray json = new JSONArray(jsonString);
-        assertNotEquals("No puzzles found in puzzles-base.json",
-                0, json.length());
+        assertNotEquals(String.format(Locale.US, "No puzzles found in %s",
+                        assetName), 0, json.length());
         for (int i = 0; i < json.length(); i++) {
             TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
             /*
@@ -99,19 +102,31 @@ public class TangramPuzzleTests {
     }
 
     /**
-     * Test the alphabet puzzles file.  This one includes most of the
-     * letters found on Shutterstock image 2270175397 and a few
-     * substitutions from various other sources.
+     * Test the base puzzles file.  This one includes the square
+     * that Tangram pieces are made from, plus a group of puzzles
+     * copied from (or based on) ones found on www.myhomeschoolmath.com.
      */
     @Test
-    public void testReadAlphabetPuzzles() throws IOException, JSONException {
-        String jsonString = readAsset("puzzles-alphabet.json");
-        JSONArray json = new JSONArray(jsonString);
-        assertNotEquals("No puzzles found in puzzles-alphabet.json",
-                0, json.length());
-        for (int i = 0; i < json.length(); i++) {
-            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
-        }
+    public void testReadBasePuzzles() throws IOException, JSONException {
+        runTest("puzzles-01-base.json");
+    }
+
+    /**
+     * Test the geometric puzzles file.  This one includes a group of puzzles
+     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     */
+    @Test
+    public void testReadGeometricPuzzles() throws IOException, JSONException {
+        runTest("puzzles-02-geometric.json");
+    }
+
+    /**
+     * Test the objects puzzles file.  This one includes a group of puzzles
+     * copied from (or based on) ones found on www.myhomeschoolmath.com.
+     */
+    @Test
+    public void testReadObjectPuzzles() throws IOException, JSONException {
+        runTest("puzzles-06-objects.json");
     }
 
     /**
@@ -121,28 +136,17 @@ public class TangramPuzzleTests {
      */
     @Test
     public void testReadAnimalPuzzles() throws IOException, JSONException {
-        String jsonString = readAsset("puzzles-animals.json");
-        JSONArray json = new JSONArray(jsonString);
-        assertNotEquals("No puzzles found in puzzles-animals.json",
-                0, json.length());
-        for (int i = 0; i < json.length(); i++) {
-            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
-        }
+        runTest("puzzles-10-animals.json");
     }
 
     /**
-     * Test the number puzzles file.  This one includes a group of
-     * puzzles copied from ones found on www.myhomeschoolmath.com.
+     * Test the people puzzles file.  This one includes a group of
+     * puzzles copied from ones found on www.myhomeschoolmath.com,
+     * with a few name changes.
      */
     @Test
-    public void testReadNumberPuzzles() throws IOException, JSONException {
-        String jsonString = readAsset("puzzles-numbers.json");
-        JSONArray json = new JSONArray(jsonString);
-        assertNotEquals("No puzzles found in puzzles-numbers.json",
-                0, json.length());
-        for (int i = 0; i < json.length(); i++) {
-            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
-        }
+    public void testReadPeoplePuzzles() throws IOException, JSONException {
+        runTest("puzzles-14-people.json");
     }
 
     /**
@@ -151,13 +155,26 @@ public class TangramPuzzleTests {
      */
     @Test
     public void testReadChristmasPuzzles() throws IOException, JSONException {
-        String jsonString = readAsset("puzzles-Christmas.json");
-        JSONArray json = new JSONArray(jsonString);
-        assertNotEquals("No puzzles found in puzzles-Christmas.json",
-                0, json.length());
-        for (int i = 0; i < json.length(); i++) {
-            TangramPuzzle puzzle = new TangramPuzzle(json.getJSONObject(i));
-        }
+        String jsonString = readAsset("puzzles-18-Christmas.json");
+    }
+
+    /**
+     * Test the number puzzles file.  This one includes a group of
+     * puzzles copied from ones found on www.myhomeschoolmath.com.
+     */
+    @Test
+    public void testReadNumberPuzzles() throws IOException, JSONException {
+        runTest("puzzles-22-numbers.json");
+    }
+
+    /**
+     * Test the alphabet puzzles file.  This one includes most of the
+     * letters found on Shutterstock image 2270175397 and a few
+     * substitutions from various other sources.
+     */
+    @Test
+    public void testReadAlphabetPuzzles() throws IOException, JSONException {
+        runTest("puzzles-26-alphabet.json");
     }
 
 }

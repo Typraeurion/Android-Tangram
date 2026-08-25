@@ -1,0 +1,404 @@
+\input texinfo   @c -*-texinfo-*-
+@setfilename Building_Tangram.info
+@settitle Building the Tangram application for Android
+
+@smallbook
+@setchapternewpage on
+
+@titlepage
+@title Building the Tangram application
+@subtitle for Android
+@author Trevin Beattie
+
+@page
+Copyleft @copyright{} 2026 Trevin Beattie
+
+Tangram for Android is distributed under the terms of the Gnu Public
+License, version 3.0.  A copy of this license is distributed along
+with the code.
+
+This manual was created by Trevin Beattie and is shared according to
+the terms described in the Creative Commons 3.0 Attribution-ShareAlike
+License.  The images used in the application are tangrams and as such
+are not subject to copyright.
+@end titlepage
+
+@contents
+
+@ifnottex
+@node Top, Code Organization, (dir), (dir)
+@top Menu
+@menu
+* Code Organization::
+* Building from the Source::
+* To Do::
+@end menu
+@end ifnottex
+
+@node Code Organization, Creating Puzzle Assets, , Top
+@chapter Code Organization
+
+As with all Android projects, the @file{AndroidManifest.xml} file
+under @file{app/src/main/} describes the main components of the
+application (its activities).  Some of the specifics such as the
+version number and supported SDK range are contained in
+@file{app/build.gradle} instead of the manifest.
+
+All code is under the top-level package
+@code{com.xmission@/.trevin@/.android@/.tangram}.  The sub-packages
+are:
+
+@table @code
+@item .data
+Java objects that have little or no dependencies on Android
+
+@item .exception
+Custom exceptions used for reporting invalid puzzle definitions
+
+@item .ui
+Classes that implement the user interface of the application
+
+@item .util
+Utility classes; helper functions
+@end table
+
+The puzzles that are bundled with the application are located in
+@file{app/src/main/assets/}.  All other resources used by the
+application (UI layout, language-dependent strings, icons, etc.) are
+under @file{app/src/main/res/}.
+
+@node Data Classes, UI Classes, Code Organization, Code Organization
+@section Data Classes
+
+Following is an overview of the high-level Java objects used in
+Tangram.
+
+@table @code
+@item TangramPuzzle
+This is the basic container for puzzles.  It includes their name,
+source, list of @code{TangramPiece}s, and methods for reading,
+building, and validating puzzles.
+
+@item TangramPiece
+An abstract class representing a single tan.  It defines its shape,
+rotation, position, and in the case of the parallelogram whether it is
+flipped over.  It includes a few helper methods for checking whether
+the edges of two tans are touching.  There are subclasses of this for
+each type of tan.
+
+@item TPoint
+@c texi2pdf is incapable of emitting Unicode letterlike symbols like ℚ. :(
+An @math{x, y} coordinate in @math{Q\sqrt{2}} space, which is known as
+the @url{https://mathworld.wolfram.com/QuadraticField.html,Real
+Quadratic Field}.  Coordinates are defined as
+@math{a\sub{x}+b\sub{x}\sqrt{2}}, @math{a\sub{y}+b\sub{y}\sqrt{2}}.
+Since most puzzles have tans oriented at multiples of 45@textdegree{},
+using separate coefficients for the rational part and a multiple of
+@math{\sqrt{2}} allows them to be integers in the vast majority of
+cases.  This is an abstract class, with separate
+@code{ImmutableTPoint} and @code{MutableTPoint} implementations that
+are alternately used depending on whether ease of math operations or
+reducing Java object allocations is needed more.
+
+@item TEdge
+A line segment in @math{Q\sqrt{2}} space.  This utility class is used
+to help snap tans together, test for overlaps, and is a component of
+@code{TPolygon}s.
+
+@item TPolygon
+A polygon in @math{Q\sqrt{2}} space.  This is used to find the
+silhouette of a puzzle and compare two puzzles to see whether they are
+identical (i.e. make the same shape).
+@end table
+
+@node UI Classes, Creating Puzzle Assets, Data Classes, Code Organization
+@section UI Classes
+
+Following are just a few of the UI components which are specialized
+for the Tangram application.
+
+@table @code
+@item PieceTrayLayout
+A custom layout which holds tans not yet placed on the playing field.
+This contains operations for dragging tans to and from the playing
+field, keeping track of how many pieces are available.
+
+@item PlayTableView
+The main play area where puzzles can be built.  This contains most of
+the code for drawing the tans in play, moving them as the user drags
+within a tan boundary, rotating them as the user moves them with two
+fingers, moving the play field when the user drags outside of any
+tans, and zooming in and out of the play field when the user pinches
+or stretches it with two fingers.
+
+@item TangramPuzzleView
+A custom view that displays a static Tangram puzzle.  It contains
+mostly the same drawing code as @code{PlayTableView}, but none of the
+interactions.  This is used both to display the goal in the corner
+when working on a puzzle and also to show previews of puzzles when
+browsing the library.
+@end table
+
+@node Creating Puzzle Assets, Building from the Source, Code Organization, Top
+@chapter Creating Puzzle Assets
+
+Many puzzles can simply be created in the app.  When a valid tangram
+is made in free-form mode, it can be saved to a folder that has been
+configured in the application Preferences.  The program does it best
+to ensure the puzzle is centered and aligned so that the tans'
+positions use the simplest form, and for many puzzle where the tans
+are all oriented in multiples of 45@textdegree{} and lined up at
+their vertices the resulting puzzle definition can be used without
+modification.  To add these puzzles to the program assets, copy the
+user puzzle file from your emulator or device to the
+@file{app/@/src/@/main/@/assets/} folder in your development
+environment.
+
+Some puzzles may require manual tweaking, especially if their edges
+don't line up at the vertices or they are rotated at offsets of
+15@textdegree{} or 30@textdegree{} from the normal 45@textdegree{}
+angles.  For these cases I've used a vector drawing program with
+templates of the tans laid out on a grid, and each tan has grid lines
+and bisecting lines drawn through it to help measure out distances
+between them.  Then measurements are taken by counting out grid points
+for each coefficient: orthogonal lines count for the @math{a}
+coefficient, and diagonals count for the @math{b} coefficient.  For
+reference, here are the measurements for the tans in puzzle units:
+
+@table @asis
+@item Large Triangle
+The long edge is 24 units wide, and the two short edges
+@math{12\sqrt{2}} units long.  Its centroid is 4 units from the bottom
+edge and 8 units from the right vertex, @math{4\sqrt{2}} units from
+each short edge and @math{8\sqrt{2}} units from the acute vertices.
+
+@item Medium Triangle
+The long edge is @math{12\sqrt{2}} units wide, and the two short edges
+12 units long.  Its centroid is @math{2\sqrt{2}} units from the bottom
+edge and @math{4\sqrt{2}} units from the right vertex, 4 units from
+each short edge and 8 units from the acute vertices.
+
+@item Small Triangle
+The long edge is 12 units wide, and the two short edges
+@math{6\sqrt{2}} units long.  Its centroid is 2 units from the bottom
+edge and 4 units from the right vertex, @math{2\sqrt{2}} units from
+each short edge and @math{4\sqrt{2}} units from the acute vertices.
+
+@item Square
+The edges are @math{6\sqrt{2}} units long.  Its centroid is
+@math{3\sqrt{2}} units from the edges and 6 units from the vertices.
+
+@item Parallelogram
+The long edges are 12 units long and the short edges @math{6\sqrt{2}}.
+Its centroid is 3 units from the long edges, 6 units from the short
+edges, @math{3\sqrt{2}} units from the obtuse vertices, and
+@math{3\sqrt{10}} units from the acute vertices.
+@end table
+
+The coordinate system is oriented with @math{x} going from left
+(negative) to right (positive), and @math{y} going from top (negative)
+to bottom (positive).  Rotation is therefore defined with positive
+values going clockwise.  Due to the use of @math{Q\sqrt{2}}
+coefficients rotating tans by 45@textdegree{} involves simple addition
+and division while swapping the coefficients:
+
+@iftex
+@tex
+$$a_x^\prime = b_x - b_y$$
+$$b_x^\prime = \frac{a_x}{2} - \frac{a_y}{2}$$
+$$a_y^\prime = b_x + b_y$$
+$$b_y^\prime = \frac{a_x}{2} + \frac{a_y}{2}$$
+@end tex
+@end iftex
+@ifnottex
+@table @asis
+@item
+@math{a\sub{x}\sup{\prime} = b\sub{x} - b\sub{y}}
+
+@item
+@math{b\sub{x}\sup{\prime} = \frac{a\sub{x}}{2} - \frac{a\sub{y}}{2}}
+
+@item
+@math{a\sub{y}\sup{\prime} = b\sub{x} + b\sub{y}}
+
+@item
+@math{b\sub{y}\sup{\prime} = \frac{a\sub{x}}{2} + \frac{a\sub{y}}{2}}
+@end table
+@end ifnottex
+
+For other angles, it is recommended to start with the coefficients
+best lined up to the nearest 90@textdegree{} angle at the point of
+rotation and then apply the standard trigonometric transformations to
+the relative coordinate of the centroid:
+
+@iftex
+@tex
+$$x^\prime = x \cdot cos(\theta) - y \cdot sin(\theta)$$
+$$y^\prime = x \cdot sin(\theta) + y \cdot cos(\theta)$$
+@end tex
+@end iftex
+@ifnottex
+@table @asis
+@item
+@math{x\sup{\prime} = x \cdot cos(\theta) - y \cdot sin(\theta)}
+
+@item
+@math{y\sup{\prime} = x \cdot sin(\theta) + y \cdot cos(\theta)}
+@end table
+@end ifnottex
+
+If the resulting rotation ends up changing the width or height of the
+tangram such that it is not in integer @math{Q\sqrt{2}} space, you may
+want to add a bit of padding to one side to make the majority of tans
+line up.  Several of the puzzles bundled with this app include an
+extra @code{size_comment} field describing their alignments.
+
+@node Building from the Source, To Do, Code Organization, Top
+@chapter Building from the Source
+
+When making any changes to the code, you also need to change the
+release date in the ``About@dots{}'' dialog
+(@file{res/@/values/@/strings.xml}: @code{Info@/Popup@/Text}) as well
+as the application's internal version number (@file{app/build.gradle}:
+@code{android@/.defaultConfig@/.versionCode} and @code{.versionName}).
+
+@ifnottex
+@menu
+* Development Environment::
+* Testing::
+* Generating the Application Package::
+* Generating Documentation::
+@end menu
+@end ifnottex
+
+@node Development Environment, Testing, Building from the Source, Building from the Source
+@section Development Environment
+
+Building the application @file{.apk} has been done using:
+@itemize @bullet
+
+@item Java 21 (bundled with Android Studio)
+
+@item Android Studio Quail (2026.1.1), downloaded from the official
+@url{https://developer.android.com/studio/,Android Studio} web site.
+
+@item Gradle 9.4.1, installed by running
+@code{./gradlew  wrapper --gradle-version=9.4.1}.
+
+@item The Android Gradle Plugin version 9.2.1, as specified in the file
+@file{gradle/libs.versions.toml}.
+
+@end itemize
+
+See @uref{http://developer.android.com/sdk/index.html} for information
+on how to set up a project using the Android SDK.
+
+@node Testing, Generating the Application Package, Generating Icons, Building from the Source
+@section Testing
+
+There are a variety of automated tests both stand-alone and
+instrumented for testing on emulators.  These are in the
+@file{app/src/test} and @file{app/src/androidTest} directories
+respectively.
+
+Running the stand-alone tests can be done from the command line:
+
+@example
+./gradlew :app:testDebugUnitTest
+@end example
+
+For the instrumented tests, it's recommended that you run these in
+Android Studio where you can manage the virtual devices that the tests
+run on.  At the moment the only instrumented tests are those which
+check the puzzle asset files; these do not have any dependencies on
+SDK features other than reading the assets, so it should only be
+necessary to run them on a device with the minimum SDK level (23) and
+target SDK (37).
+
+@node Generating the Application Package, Generating Documentation, Testing, Building from the Source
+@section Generating the Application Package (APK)
+
+In Android Studio, click on the Build menu then ``Build APK''.  If
+there were no errors, this should produce
+@file{app/release/app-release.apk} (in Android Studio 2024+).  You
+should rename this file to a more descriptive name like
+@file{tangram-1.0.0.apk}.
+
+Alternatively from the command line, run the following commands:
+
+@example
+./gradlew assembleRelease
+@end example
+This will produce an @emph{unsigned} APK in
+@file{app/build/@/outputs/apk/@/release/@/app-release-unsigned.apk}.
+To sign this, you will need to locate the build tools for the version
+specified in @file{app/build.gradle} under
+@code{android.buildToolsVersion} (if present; otherwise the most
+recent build tools supported by the Android Gradle plugin).  You will
+also need to know where the keystore of your app signing key is
+located.
+@verbatim
+${BUILD_TOOLS_VERSION_DIRECTORY}/apksigner sign \
+  --alignment-preserved \
+  --ks ${ANDROID_KEYSTORE} --ks-key-alias ${SIGNING_KEY_ALIAS} \
+  --out app/${APP_NAME}-${VERSION}.apk \
+  app/build/outputs/apk/release/app-release-unsigned.apk
+@end verbatim
+
+@emph{(The @code{--alignment-preserved} option may be needed if you
+are using build tools 35 or higher.)}
+
+@node Generating Documentation,  , Generating the Application Package, Building from the Source
+@section Generating Documentation
+
+Lastly, if you need to generate a new edition of this manual or the
+user manual, you will need
+@uref{http://www.gnu.org/software/texinfo/,@command{texinfo}} and
+@uref{https://www.gnu.org/software/texinfo/manual/texinfo/html_node/Format-with-texi2dvi-or-texi2pdf.html,@command{texi2pdf}}
+and/or @uref{http://www.nongnu.org/texi2html/,@command{texi2html}}.
+If you have @command{make} there is a @file{Makefile} which will make
+running @code{texinfo} more convenient.
+
+To generate the manuals in PDF, simply run:
+
+@example
+make pdf
+@end example
+
+if you have @command{make}, or:
+
+@example
+texi2pdf Building_Tangram.texinfo
+texi2pdf Tangram.texinfo
+@end example
+
+To generate the manuals in HTML, run:
+
+@example
+make html
+@end example
+
+or:
+
+@example
+texi2html --split node Building_Tangram.texinfo
+texi2html --split node Tangram.texinfo
+@end example
+@noindent
+which will produce the manuals under
+@file{doc/Building_Tangram/Building_Tangram.html} and
+@file{doc/Tangram/Tangram.html}.
+
+@node To Do, , Building from the Source, Top
+@chapter To Do
+
+@itemize @bullet
+@item Polish the look of the UI
+
+@item Write up a brief user guide
+
+@item Add more puzzles
+
+@end itemize
+
+@bye
