@@ -59,10 +59,11 @@ underneath.
 
 ### Puzzles
 
-From the main menu, clicking on “Puzzle Library” will show a list of all
-the puzzles the app knows.  Clicking on any of these will start the
-game with that puzzle as your goal.  Alternatively you can click “Random
-Puzzle” from the main menu to have the app choose a puzzle for you.
+From the main menu, clicking on “Puzzle Library” will show a list of
+all the puzzles the app knows.  The app comes with over 100 puzzles.
+Clicking on any of these will start the game with that puzzle as your
+goal.  Alternatively you can click “Random Puzzle” from the main menu
+to have the app choose a puzzle for you.
 
 When you solve the puzzle, the app will let you know.  Some puzzles may
 have more than one solution; it doesn’t matter which arrangement you
@@ -117,16 +118,14 @@ Parts of this program were generated or medified by Claude Code (Opus
 modern Android development guidelines, figuring out the maths involved
 in rendering interactive tangram pieces, and troubleshooting bugs.
 
-The "base" puzzles were downloaded from:
+The "geometric" and "objects" puzzles were downloaded from:
 https://www.myhomeschoolmath.com/Worksheets/Tangram-Objects.pdf
-
-The "alphabet" puzzles were mostly downloaded from:
-https://www.shutterstock.com/image-vector/alphabet-font-abc-tangram-collection-vector-2270175397
-with a few substitutions from other sources that had better-looking
-letters.
 
 The "animals" puzzles were downloaded from:
 https://www.myhomeschoolmath.com/Worksheets/Tangram-Animals.pdf
+
+The "people" puzzles were donwloaded from:
+https://www.myhomeschoolmath.com/Worksheets/Tangram-People.pdf
 
 The "Christmas" puzzles were downloaded from:
 https://www.myhomeschoolmath.com/Worksheets/Tangram-Christmas.pdf
@@ -134,8 +133,10 @@ https://www.myhomeschoolmath.com/Worksheets/Tangram-Christmas.pdf
 The "numbers" puzzles were downloaded from:
 https://www.myhomeschoolmath.com/Worksheets/Tangram-Numbers.pdf
 
-The "people" puzzles were donwloaded from:
-https://www.myhomeschoolmath.com/Worksheets/Tangram-People.pdf
+The "alphabet" puzzles were mostly downloaded from:
+https://www.shutterstock.com/image-vector/alphabet-font-abc-tangram-collection-vector-2270175397
+with a few substitutions from other sources that had better-looking
+letters.
 
 ## [Keep Android Open](https://keepandroidopen.org/)
 

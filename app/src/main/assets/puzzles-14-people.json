@@ -255,6 +255,7 @@
 	"rotation": 0,
 	"position": {
 	  "xa": 15,
+	  "xb": -3,
 	  "ya": 6,
 	  "yb": -2
 	}
@@ -264,7 +265,7 @@
 	"rotation": 180,
 	"position": {
 	  "xa": 15,
-	  "xb": 6,
+	  "xb": 3,
 	  "ya": 8
 	}
       },
@@ -286,6 +287,162 @@
 	  "xb": -9,
 	  "ya": -12
 	}
+      }
+    ]
+  },
+  {
+    "id": "people-horse-rider",
+    "name": "Horse Rider",
+    "size": 51.941123962402344,
+    "size_comment": "The height is 21+12√2.  The width is 18+24√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": -9,
+          "xb": 8,
+          "ya": 10.5,
+          "yb": -2
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -9,
+          "xb": -2,
+          "ya": 10.5,
+          "yb": -4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": -9,
+          "xb": -4,
+          "ya": 10.5,
+          "yb": 2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -9,
+          "xb": -8,
+          "ya": 10.5,
+          "yb": -8
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 0,
+        "position": {
+          "xb": 12,
+          "ya": 7.5,
+          "yb": -6
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -7,
+          "xb": 6,
+          "ya": 6.5,
+          "yb": -6
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": -6,
+          "xb": 6,
+          "ya": -4.5,
+          "yb": -6
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-jumping",
+    "name": "Jumping",
+    "size": 49.455841064453125,
+    "size_comment": "The width is 12+9√2; the height is 24+18√2.  The head is tilted back -15° from diagonal, but it doesn't affect the bounding box.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -6,
+          "xb": 4.5,
+          "ya": 4,
+          "yb": -9
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -6,
+          "xb": 6.5,
+          "ya": 12,
+          "yb": -7
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 2,
+          "xb": 4.5,
+          "ya": -4,
+          "yb": -9
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 15,
+        "position": {
+          "xa": -9,
+          "xb": 4.5,
+          "ya": -5.196152423,
+          "yb": -9
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xa": -6,
+          "xb": 4.5,
+          "ya": 12
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 315,
+        "position": {
+          "xa": -6,
+          "xb": -2.5,
+          "ya": 12,
+          "yb": -4
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 315,
+        "position": {
+          "xa": -6,
+          "xb": -2.5,
+          "ya": 12,
+          "yb": 5
+        }
       }
     ]
   },
@@ -357,6 +514,602 @@
 	  "ya": 4,
 	  "yb": -4.5
 	}
+      }
+    ]
+  },
+  {
+    "id": "people-man-in-a-boat",
+    "name": "Man in a Boat",
+    "size": 48,
+    "size_comment": "The width is exactly 48.  If the head were not tilted, the height would be 24+6√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 0,
+          "ya": 8,
+          "yb": 3
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -12,
+          "ya": 4,
+          "yb": 3
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 0,
+        "position": {
+          "xa": 9,
+          "ya": 3,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 18,
+          "ya": 2,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 12,
+          "ya": 8,
+          "yb": 3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -8,
+          "ya": -4,
+          "yb": 3
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 15,
+        "position": {
+          "xa": -6.803847577,
+          "ya": -15,
+          "yb": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-reading",
+    "name": "Reading",
+    "size": 59.9411255,
+    "size_comment": "The head, hat, and back foot are tilted 15°.  The tipped hat makes the width 19.5+9√2+4.5√3+3√6, and the height 28.5+15√2+1.5√3+3√6.  To make the rest of the tans aligned we're going to nudge it down and to the left where the central large triangle is at -7x, 1y making the height a more even 26+24√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -7,
+          "ya": 1
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -11,
+          "xb": 4,
+          "ya": 13
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": true,
+        "rotation": 0,
+        "position": {
+          "xa": -2,
+          "xb": 6,
+          "ya": 10,
+          "yb": -6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -11,
+          "xb": 8,
+          "ya": 13,
+          "yb": 10
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": -13,
+          "xb": 3,
+          "ya": 19,
+          "yb": 3
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 15,
+        "position": {
+          "xa": -5.80384758,
+          "ya": -14
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 15,
+        "position": {
+          "xa": -3.670495186,
+          "ya": -21.9617795
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-resting",
+    "name": "Resting",
+    "size": 40.97056198120117,
+    "size_comment": "The width is 24+12√2.  Due to the tilt of the head the height is 42-9√2+3√6, but to align the rest of the tans we'll bump it down to 54-12√2.  The foot is a bit lower than the seat which accounts for large corrections in the body pieces.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 2,
+          "xb": 6,
+          "ya": -3,
+          "yb": 6
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": 6,
+          "xb": -2,
+          "ya": 9,
+          "yb": 2
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 90,
+        "position": {
+          "xa": 9,
+          "xb": 6,
+          "yb": 6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": 8,
+          "xb": 6,
+          "ya": -9,
+          "yb": 6
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": 2,
+          "xb": -6,
+          "ya": 17,
+          "yb": -6
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -6,
+          "xb": -6,
+          "ya": 23,
+          "yb": -6
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 30,
+        "position": {
+          "xa": 2.325765386,
+          "xb": 7.5,
+          "ya": -18.6742346,
+          "yb": 4.5
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-sitting",
+    "name": "Sitting",
+    "size": 45.9411255,
+    "size_comment": "The width is 12+12√2.  If not for the tilt of the head, the height would be 12+24√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -6,
+          "xb": -2,
+          "ya": 6,
+          "yb": 8
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": -6,
+          "xb": 2,
+          "ya": 6,
+          "yb": 4
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": -14,
+          "xb": 6,
+          "ya": 2
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -4,
+          "xb": 6,
+          "ya": 12
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xb": 6,
+          "ya": 16
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xa": -18,
+          "xb": 9,
+          "ya": -6
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 15,
+        "position": {
+          "xa": -12.80384758,
+          "xb": 6,
+          "ya": -9,
+          "yb": -6
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-skater",
+    "name": "Skater",
+    "size": 46.2426407,
+    "size_comment": "The width is 30+9√2; the height is 42+3√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": -3,
+          "xb": 4.5,
+          "ya": 5,
+          "yb": -1.5
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 3,
+          "xb": 4.5,
+          "ya": -5,
+          "yb": -1.5
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 3,
+          "xb": 4.5,
+          "ya": -15,
+          "yb": -1.5
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": 5,
+          "xb": 4.5,
+          "ya": 13,
+          "yb": -1.5
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -135,
+        "position": {
+          "xa": 9,
+          "xb": 3.5,
+          "ya": 21,
+          "yb": -0.5
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": -45,
+        "position": {
+          "xa": -15,
+          "xb": 4.5,
+          "ya": 9,
+          "yb": 1.5
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": -15,
+          "xb": -2.5,
+          "ya": 9,
+          "yb": 3.5
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-standing",
+    "name": "Standing",
+    "size": 60,
+    "size_comment": "The height is exactly 60.  The width is exactly 15.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -3.5,
+          "ya": 9
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": -90,
+        "position": {
+          "xa": 0.5,
+          "ya": -3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": -45,
+        "position": {
+          "xa": -3.5,
+          "ya": -11
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": -1.5,
+          "ya": -17
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 45,
+        "position": {
+          "xa": 1.5,
+          "ya": -24
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 90,
+        "position": {
+          "xa": -1.5,
+          "ya": 21
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 1.5,
+          "ya": 28
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-waiter",
+    "name": "Waiter",
+    "size": 50.48528134,
+    "size_comment": "The height is 36+6√2; the width is 42+6√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": 3,
+          "xb": -3,
+          "ya": -10,
+          "yb": 3
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": 3,
+          "xb": -3,
+          "ya": -18
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 15,
+          "xb": -3,
+          "ya": -10,
+          "yb": 3
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": 21,
+          "xb": -3,
+          "ya": -12,
+          "yb": -1
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 180,
+        "position": {
+          "xa": -9,
+          "xb": -3,
+          "ya": -2,
+          "yb": 3
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 90,
+        "position": {
+          "xa": -6,
+          "xb": -3,
+          "ya": 9,
+          "yb": 3
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+	  "xa": -3,
+          "xb": -3,
+          "ya": 16,
+          "yb": 3
+        }
+      }
+    ]
+  },
+  {
+    "id": "people-walking",
+    "name": "Walking",
+    "size": 58.15433120727539,
+    "size_comment": "The height is 3+39√2.  The width is 6+12√2.",
+    "pieces": [
+      {
+        "name": "large_triangle",
+        "rotation": 45,
+        "position": {
+          "xa": -3,
+          "xb": 2,
+          "ya": -1.5,
+          "yb": 8.5
+        }
+      },
+      {
+        "name": "large_triangle",
+        "rotation": 135,
+        "position": {
+          "xa": -3,
+          "xb": 2,
+          "ya": -1.5,
+          "yb": 0.5
+        }
+      },
+      {
+        "name": "parallelogram",
+        "isMirrored": false,
+        "rotation": 45,
+        "position": {
+          "xa": -3,
+          "ya": -1.5,
+          "yb": 13.5
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": -6,
+          "xb": 3,
+          "ya": -0.5,
+          "yb": 19.5
+        }
+      },
+      {
+        "name": "small_triangle",
+        "rotation": 90,
+        "position": {
+          "xa": -1,
+          "xb": 6,
+          "ya": -1.5,
+          "yb": 16.5
+        }
+      },
+      {
+        "name": "square",
+        "rotation": 0,
+        "position": {
+          "xa": -3,
+          "xb": 3,
+          "ya": -1.5,
+          "yb": -10.5
+        }
+      },
+      {
+        "name": "medium_triangle",
+        "rotation": 0,
+        "position": {
+          "xa": -3,
+          "xb": 3,
+          "ya": -1.5,
+          "yb": -15.5
+        }
       }
     ]
   }

@@ -160,10 +160,14 @@ don't line up at the vertices or they are rotated at offsets of
 angles.  For these cases I've used a vector drawing program with
 templates of the tans laid out on a grid, and each tan has grid lines
 and bisecting lines drawn through it to help measure out distances
-between them.  Then measurements are taken by counting out grid points
-for each coefficient: orthogonal lines count for the @math{a}
-coefficient, and diagonals count for the @math{b} coefficient.  For
-reference, here are the measurements for the tans in puzzle units:
+between them, as shown in the example below:
+
+@image{Tan_placement_graph_example,5in,,Tan placement graph example,.png}
+
+Then measurements are taken by counting out grid points for each
+coefficient: orthogonal lines count for the @math{a} coefficient, and
+diagonals count for the @math{b} coefficient.  For reference, here are
+the measurements for the tans in puzzle units:
 
 @table @asis
 @item Large Triangle
@@ -194,6 +198,12 @@ Its centroid is 3 units from the long edges, 6 units from the short
 edges, @math{3\sqrt{2}} units from the obtuse vertices, and
 @math{3\sqrt{10}} units from the acute vertices.
 @end table
+
+So in the illustration shown above, the total width (ignoring the tilt
+of the medium triangle) would be 48 units, and the height would be
+@math{12 + 12\sqrt{2}} units (12 for the large triangles, and
+@math{6\sqrt{2}} each for the square and small triangle above it which
+are turned diagonally.)
 
 The coordinate system is oriented with @math{x} going from left
 (negative) to right (positive), and @math{y} going from top (negative)
@@ -248,10 +258,74 @@ $$y^\prime = x \cdot sin(\theta) + y \cdot cos(\theta)$$
 @end ifnottex
 
 If the resulting rotation ends up changing the width or height of the
-tangram such that it is not in integer @math{Q\sqrt{2}} space, you may
-want to add a bit of padding to one side to make the majority of tans
-line up.  Several of the puzzles bundled with this app include an
-extra @code{size_comment} field describing their alignments.
+tangram such that it is not in integer @math{Q\sqrt{2}} space (as is
+the case for the previous illustration), you may want to add a bit of
+padding to one side to make the majority of tans line up.  Several of
+the puzzles bundled with this app include an extra @code{size_comment}
+field describing their alignments.  To show how this would work for
+the earlier example, take the placement of the medium triangle which
+is tilted -15@textdegree{} from the orthogonal grid: the lower right
+vertex of the purple large triangle is positioned 12 units right of
+center (@math{a_x = 12}) and at the bottom which is half the height
+from center (@math{a_y = 6, b_y = 6}).  The centroid of the medium
+(green) triangle would be 4 units right and up from that vertex if
+lying flat (@math{\Delta a_x = 4, \Delta a_y = -4}).  Plugging those
+numbers into the rotation formula we get:
+
+@iftex
+@tex
+$$\Delta a_x ^\prime = 4 cos(-15\textdegree) + 4 sin(-15\textdegree)$$
+$$\Delta a_y ^\prime = 4 sin(-15\textdegree) - 4 cos(-15\textdegree)$$
+@end tex
+@end iftex
+@ifnottex
+@table @asis
+@item
+@math{\Delta a_x ^\prime = 4 cos(-15\textdegree) + 4 sin(-15\textdegree)}
+@item
+@math{\Delta a_y ^\prime = 4 sin(-15\textdegree) - 4 cos(-15\textdegree)}
+@end table
+@end ifnottex
+
+@noindent
+which given @math{cos(-15\textdegree) = \frac{\sqrt{6} + \sqrt{2}}{4}}
+and @math{sin(-15\textdegree) = \frac{\sqrt{2} - \sqrt{6}}{4}}
+evaluate to:
+
+@iftex
+@tex
+$$\Delta a_x ^\prime = 2\sqrt{2}$$
+$$\Delta a_y ^\prime = -2\sqrt{6}$$
+@end tex
+@end iftex
+@ifnottex
+@table @asis
+@item
+@math{\Delta a_x ^\prime = 2\sqrt{2}}
+@item
+@math{\Delta a_y ^\prime = -2\sqrt{6}}
+@end table
+@end ifnottex
+
+@noindent
+Adding those to the point of rotation puts the medium triangle's
+position at @math{a_x = 12, b_x = 2, a_y = 6 - 2\sqrt{6} \approx
+1.1010205, b_y = 6}.  Its full rotation is -150@textdegree{}, since
+its starting orientation is with its right angle at the top.  The JSON
+description of the tan is specified as:
+
+@example
+    @{
+      "name": "medium_triangle",
+      "rotation": -150,
+      "position": @{
+        "xa": 12,
+        "xb": 2,
+        "ya": 1.1010205144336438,
+        "yb": 6
+      @}
+    @}
+@end example
 
 @node Building from the Source, To Do, Code Organization, Top
 @chapter Building from the Source
