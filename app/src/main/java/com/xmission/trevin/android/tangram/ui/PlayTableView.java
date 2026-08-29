@@ -707,7 +707,7 @@ public class PlayTableView extends View {
             pointBuffer[0] = (float) piece.getPosition().getX();
             pointBuffer[1] = (float) piece.getPosition().getY();
             puzzleToView.mapPoints(pointBuffer);
-            float radius = piece.getMaxRadius() * scale;
+            double radius = piece.getMaxRadius() * scale;
             if (pointBuffer[0] + radius < 0
                     || pointBuffer[0] - radius > w
                     || pointBuffer[1] + radius < 0

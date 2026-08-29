@@ -20,11 +20,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import android.util.Log;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
@@ -37,7 +42,9 @@ import java.nio.charset.StandardCharsets;
  */
 public class TPolygonTest {
 
-    private static TPolygon regionOf(String fixture) throws Exception {
+    private static final String LOG_TAG = "TPolygonTest";
+
+    private static TPolygon regionOf(String fixture) {
         try (InputStream in = TPolygonTest.class
                 .getResourceAsStream("/puzzles/" + fixture)) {
             assertNotNull("fixture /puzzles/" + fixture + " not found", in);
@@ -47,24 +54,34 @@ public class TPolygonTest {
             while ((n = in.read(buffer)) >= 0)
                 out.write(buffer, 0, n);
             JSONObject json = new JSONObject(
-                    out.toString(StandardCharsets.UTF_8.name()));
+                    out.toString(StandardCharsets.UTF_8));
             return TPolygon.fromPuzzle(new TangramPuzzle(json));
+        } catch (IOException x) {
+            Log.e(LOG_TAG, fixture, x);
+            fail("I/O error reading /puzzles/" + fixture);
+            // Unreachable
+            throw new RuntimeException(x);
+        } catch (JSONException x) {
+            Log.e(LOG_TAG, fixture, x);
+            fail("Invalid JSON in /puzzles/" + fixture);
+            // Unreachable
+            throw new RuntimeException(x);
         }
     }
 
     @Test
-    public void testPinwheelHasAHole() throws Exception {
+    public void testPinwheelHasAHole() {
         // Outer outline plus one interior hole.
         assertEquals(2, regionOf("pinwheel.json").loopCount());
     }
 
     @Test
-    public void testNumberTwoIsSolid() throws Exception {
+    public void testNumberTwoIsSolid() {
         assertEquals(1, regionOf("two.json").loopCount());
     }
 
     @Test
-    public void testRegionMatchesItself() throws Exception {
+    public void testRegionMatchesItself() {
         assertTrue(regionOf("pinwheel.json")
                 .isIdenticalTo(regionOf("pinwheel.json")));
         assertTrue(regionOf("two.json")
@@ -72,7 +89,7 @@ public class TPolygonTest {
     }
 
     @Test
-    public void testPinwheelMatchesRotatedCopy() throws Exception {
+    public void testPinwheelMatchesRotatedCopy() {
         // A 180°-rotated pinwheel is the same silhouette (hole and all),
         // and its pieces differ, exercising both the hole handling and
         // piece substitution via the shape's rotational symmetry.
@@ -83,7 +100,7 @@ public class TPolygonTest {
     }
 
     @Test
-    public void testNumberTwoMatchesSquishedVariant() throws Exception {
+    public void testNumberTwoMatchesSquishedVariant() {
         // The two large triangles overlap by 3√2 in one and 5 in the other;
         // the resulting edge-length differences are within tolerance.
         TPolygon two = regionOf("two.json");
@@ -93,11 +110,89 @@ public class TPolygonTest {
     }
 
     @Test
-    public void testDifferentSilhouettesDoNotMatch() throws Exception {
+    public void testDifferentSilhouettesDoNotMatch() {
         // Different shapes (and different hole counts) must not match.
         assertFalse(regionOf("pinwheel.json")
                 .isIdenticalTo(regionOf("two.json")));
         assertFalse(regionOf("two.json")
                 .isIdenticalTo(regionOf("pinwheel.json")));
     }
+
+    @Test
+    public void testCandleMatchesReverseOrder() {
+        TPolygon candleDown = regionOf("candle-down.json");
+        TPolygon candleUp = regionOf("candle-up.json");
+        if (!candleUp.isIdenticalTo(candleDown)) {
+            Log.i(LOG_TAG, "Polygon of candle built top-down: " + candleDown);
+            Log.i(LOG_TAG, "Polygon of candle built bottom-up: " + candleUp);
+            fail("Candles built in different directions do not match.");
+        }
+    }
+
+    @Test
+    public void testTouchingVertices1Matches2() {
+        TPolygon poly1 = regionOf("touching-vertices-1.json");
+        TPolygon poly2 = regionOf("touching-vertices-2.json");
+        if (!poly1.isIdenticalTo(poly2)) {
+            Log.i(LOG_TAG, "Polygon 1: " + poly1);
+            Log.i(LOG_TAG, "Polygon 2: " + poly2);
+            fail("Polygons specified in different orders do not match.");
+        }
+    }
+
+    @Test
+    public void testTouchingVertices2Matches3() {
+        TPolygon poly2 = regionOf("touching-vertices-2.json");
+        TPolygon poly3 = regionOf("touching-vertices-3.json");
+        if (!poly2.isIdenticalTo(poly3)) {
+            Log.i(LOG_TAG, "Polygon 2: " + poly2);
+            Log.i(LOG_TAG, "Polygon 3: " + poly3);
+            fail("Polygons specified in different orders do not match.");
+        }
+    }
+
+    @Test
+    public void testTouchingVertices3Matches4() {
+        TPolygon poly3 = regionOf("touching-vertices-3.json");
+        TPolygon poly4 = regionOf("touching-vertices-4.json");
+        if (!poly3.isIdenticalTo(poly4)) {
+            Log.i(LOG_TAG, "Polygon 3: " + poly3);
+            Log.i(LOG_TAG, "Polygon 4: " + poly4);
+            fail("Polygons specified in different orders do not match.");
+        }
+    }
+
+    @Test
+    public void testTouchingVertices1Matches3() {
+        TPolygon poly1 = regionOf("touching-vertices-1.json");
+        TPolygon poly3 = regionOf("touching-vertices-3.json");
+        if (!poly1.isIdenticalTo(poly3)) {
+            Log.i(LOG_TAG, "Polygon 1: " + poly1);
+            Log.i(LOG_TAG, "Polygon 3: " + poly3);
+            fail("Polygons specified in different orders do not match.");
+        }
+    }
+
+    @Test
+    public void testTouchingVertices2Matches4() {
+        TPolygon poly2 = regionOf("touching-vertices-2.json");
+        TPolygon poly4 = regionOf("touching-vertices-4.json");
+        if (!poly2.isIdenticalTo(poly4)) {
+            Log.i(LOG_TAG, "Polygon 2: " + poly2);
+            Log.i(LOG_TAG, "Polygon 4: " + poly4);
+            fail("Polygons specified in different orders do not match.");
+        }
+    }
+
+    @Test
+    public void testTouchingVertices1Matches4() {
+        TPolygon poly1 = regionOf("touching-vertices-1.json");
+        TPolygon poly4 = regionOf("touching-vertices-4.json");
+        if (!poly1.isIdenticalTo(poly4)) {
+            Log.i(LOG_TAG, "Polygon 1: " + poly1);
+            Log.i(LOG_TAG, "Polygon 4: " + poly4);
+            fail("Polygons specified in different orders do not match.");
+        }
+    }
+
 }

@@ -1,0 +1,70 @@
+{
+  "id": "test-candle-up",
+  "name": "Candle",
+  "size": 64.9705628,
+  "comment": "This candle is built from the base upward.",
+  "pieces": [
+    {
+      "name": "medium_triangle",
+      "rotation": 0,
+      "position": {
+        "xa": 0,
+        "ya": 23,
+        "yb": 4
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": -90,
+      "position": {
+        "xa": 4,
+        "ya": 23
+      }
+    },
+    {
+      "name": "large_triangle",
+      "rotation": 90,
+      "position": {
+        "xa": -2,
+        "ya": 17
+      }
+    },
+    {
+      "name": "large_triangle",
+      "rotation": -90,
+      "position": {
+        "xa": 2,
+        "ya": 5
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": 90,
+      "position": {
+        "xa": -4,
+        "ya": -1
+      }
+    },
+    {
+      "name": "square",
+      "rotation": 45,
+      "position": {
+        "xa": 0,
+        "ya": -7
+      }
+    },
+    {
+      "name": "parallelogram",
+      "isMirrored": false,
+	"pointOfRotation": {
+	  "xa": 9,
+	  "ya": 3
+	},
+      "rotation": 75,
+      "position": {
+        "xa": 0,
+        "ya": -13
+      }
+    }
+  ]
+}

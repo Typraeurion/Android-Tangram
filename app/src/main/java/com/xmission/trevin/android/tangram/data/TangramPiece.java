@@ -301,7 +301,7 @@ public abstract class TangramPiece implements Cloneable, Parcelable {
      * @return the radius from the piece&rsquo;s centroid
      * to the farthest vertex.
      */
-    public abstract float getMaxRadius();
+    public abstract double getMaxRadius();
 
     /**
      * @return the ID of the Android drawable used to draw this piece.

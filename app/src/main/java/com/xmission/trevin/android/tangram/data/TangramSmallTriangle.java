@@ -51,8 +51,8 @@ public class TangramSmallTriangle extends TangramPiece {
         return VERTICES;
     }
 
-    public float getMaxRadius() {
-        return 6.32455532f;
+    public double getMaxRadius() {
+        return 6.324555320336758664;
     }
 
     @Override

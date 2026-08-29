@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -155,29 +156,28 @@ public class TPolygon implements Parcelable {
         if (loops.isEmpty())
             return true;
 
-        Loop outer1 = largestLoop(loops);
-        Loop outer2 = largestLoop(poly2.loops);
-        if (!loopsMatch(outer1, outer2))
-            return false;
-
-        // Match each hole to an unused hole of the same shape whose position
-        // relative to the outer outline's anchor agrees within tolerance.
-        List<Loop> holes2 = new ArrayList<>(poly2.loops);
-        holes2.remove(outer2);
-        for (Loop hole1 : loops) {
-            if (hole1 == outer1)
-                continue;
-            double dx1 = hole1.anchorX - outer1.anchorX;
-            double dy1 = hole1.anchorY - outer1.anchorY;
+        // Match loops as a set: each loop must pair with a distinct loop of
+        // the same shape whose position, relative to a single deterministic
+        // anchor for the whole region, agrees within tolerance.  Measuring
+        // every loop against one global anchor (rather than a chosen "outer"
+        // loop) avoids ambiguity when several loops share the largest area
+        // (e.g. two identical large triangles), which would otherwise pick
+        // different reference loops in the two regions.
+        Loop anchor1 = globalAnchorLoop(loops);
+        Loop anchor2 = globalAnchorLoop(poly2.loops);
+        List<Loop> remaining = new ArrayList<>(poly2.loops);
+        for (Loop loop1 : loops) {
+            double dx1 = loop1.anchorX - anchor1.anchorX;
+            double dy1 = loop1.anchorY - anchor1.anchorY;
             boolean matched = false;
-            for (int j = 0; j < holes2.size(); j++) {
-                Loop hole2 = holes2.get(j);
-                if (!loopsMatch(hole1, hole2))
+            for (int j = 0; j < remaining.size(); j++) {
+                Loop loop2 = remaining.get(j);
+                if (!loopsMatch(loop1, loop2))
                     continue;
-                double dx2 = hole2.anchorX - outer2.anchorX;
-                double dy2 = hole2.anchorY - outer2.anchorY;
+                double dx2 = loop2.anchorX - anchor2.anchorX;
+                double dy2 = loop2.anchorY - anchor2.anchorY;
                 if (vectorsMatch(dx1, dy1, dx2, dy2)) {
-                    holes2.remove(j);
+                    remaining.remove(j);
                     matched = true;
                     break;
                 }
@@ -186,6 +186,21 @@ public class TPolygon implements Parcelable {
                 return false;
         }
         return true;
+    }
+
+    /**
+     * @return the loop whose anchor is the region&rsquo;s extreme (min-y, then
+     * min-x) vertex&mdash;a deterministic reference point, independent of loop
+     * order, against which every loop&rsquo;s relative position is measured
+     */
+    private static Loop globalAnchorLoop(@NonNull List<Loop> loops) {
+        Loop anchor = loops.get(0);
+        for (Loop loop : loops)
+            if (loop.anchorY < anchor.anchorY
+                    || (loop.anchorY == anchor.anchorY
+                            && loop.anchorX < anchor.anchorX))
+                anchor = loop;
+        return anchor;
     }
 
     /** @return the number of boundary loops (one outer plus one per hole). */
@@ -230,7 +245,12 @@ public class TPolygon implements Parcelable {
     public void build() {
         if (loops != null)
             return;
-        // Group edges onto common supporting lines.
+        // Group edges onto common supporting lines.  Bucketing is greedy
+        // (each bucket takes its reference from its first edge), so process the
+        // edges in a canonical, position-independent order; otherwise the same
+        // silhouette built from pieces added in a different order could bucket
+        // and cancel differently.
+        sortCanonically(edges);
         List<LineBucket> lines = new ArrayList<>();
         for (TEdge edge : edges) {
             if (edge.length() < BUILD_TOLERANCE)
@@ -250,10 +270,56 @@ public class TPolygon implements Parcelable {
             }
         }
         // Each line contributes its uncancelled, merged boundary segments.
+        // (Buckets are created in canonical edge order, so this list&mdash;and
+        // the loops assembled from it&mdash;are deterministic.)
         List<TEdge> boundary = new ArrayList<>();
         for (LineBucket line : lines)
             line.appendBoundary(boundary);
         loops = assembleLoops(boundary);
+    }
+
+    /**
+     * Order boundary segments deterministically and independently of position:
+     * by their endpoints relative to the region&rsquo;s extreme (min-y, then
+     * min-x) vertex, rounded to absorb floating-point noise.
+     *
+     * @param segments the boundary segments to sort in place
+     */
+    private static void sortCanonically(@NonNull List<TEdge> segments) {
+        if (segments.isEmpty())
+            return;
+        double ax = Double.POSITIVE_INFINITY, ay = Double.POSITIVE_INFINITY;
+        for (TEdge e : segments) {
+            double x = e.getStart().getX(), y = e.getStart().getY();
+            if (y < ay || (y == ay && x < ax)) {
+                ay = y;
+                ax = x;
+            }
+        }
+        final double originX = ax, originY = ay;
+        // Collections.sort + Long.compare rather than List.sort /
+        // Comparator.comparingLong (those are API 24+; min SDK is 23).
+        Collections.sort(segments, (e1, e2) -> {
+            int c = Long.compare(rounded(e1.getStart().getX() - originX),
+                    rounded(e2.getStart().getX() - originX));
+            if (c != 0)
+                return c;
+            c = Long.compare(rounded(e1.getStart().getY() - originY),
+                    rounded(e2.getStart().getY() - originY));
+            if (c != 0)
+                return c;
+            c = Long.compare(rounded(e1.getEnd().getX() - originX),
+                    rounded(e2.getEnd().getX() - originX));
+            if (c != 0)
+                return c;
+            return Long.compare(rounded(e1.getEnd().getY() - originY),
+                    rounded(e2.getEnd().getY() - originY));
+        });
+    }
+
+    /** @return {@code v} snapped to a 0.001 grid, for a transitive sort key. */
+    private static long rounded(double v) {
+        return Math.round(v * 1000.0);
     }
 
     /**
@@ -283,14 +349,16 @@ public class TPolygon implements Parcelable {
     }
 
     /**
-     * Find the unused segment that continues the loop from the given
-     * segment&rsquo;s end.  Where several segments meet (a point the boundary
-     * touches itself, e.g. the waist of a figure-8), the correct continuation
-     * is the one making the sharpest left turn, which keeps the region on a
-     * consistent side and traces self-touching outlines canonically&mdash;so
-     * congruent shapes always yield the same loops.
+     * Find the segment that continues the loop from the given segment&rsquo;s
+     * end.  Where several segments meet (a point the boundary touches itself,
+     * e.g. the waist of a figure-8, or pieces joined only at a vertex), the
+     * continuation is the one making the sharpest left turn, which keeps the
+     * region on a consistent side and traces self-touching outlines
+     * canonically&mdash;so congruent shapes always yield the same loops
+     * regardless of the order the edges were added.
      *
-     * @return the index of the next segment, or -1 if none continues the loop
+     * @return the index of the next segment; or -1 if none continues the loop,
+     * or if the chosen successor is already part of a loop (closing this one)
      */
     private static int findNext(@NonNull List<TEdge> segments,
                                 @NonNull boolean[] used, @NonNull TEdge from) {
@@ -299,8 +367,6 @@ public class TPolygon implements Parcelable {
         int best = -1;
         double bestTurn = Double.NEGATIVE_INFINITY;
         for (int i = 0; i < segments.size(); i++) {
-            if (used[i])
-                continue;
             TEdge candidate = segments.get(i);
             double sx = candidate.getStart().getX();
             double sy = candidate.getStart().getY();
@@ -312,6 +378,15 @@ public class TPolygon implements Parcelable {
                 best = i;
             }
         }
+        // The successor is chosen purely by geometry (the sharpest left turn
+        // at the shared vertex), including edges already used, so the loop
+        // decomposition is deterministic regardless of the order edges were
+        // added.  If that successor already belongs to a loop, this loop is
+        // complete&mdash;returning -1 avoids stealing another loop's edge (the
+        // bug where, e.g., a candle's flame merged into its body depending on
+        // piece order).
+        if (best >= 0 && used[best])
+            return -1;
         return best;
     }
 
@@ -331,14 +406,6 @@ public class TPolygon implements Parcelable {
     // ---- comparison helpers -----------------------------------------------
 
     @NonNull
-    private static Loop largestLoop(@NonNull List<Loop> loops) {
-        Loop largest = loops.get(0);
-        for (Loop loop : loops)
-            if (Math.abs(loop.area) > Math.abs(largest.area))
-                largest = loop;
-        return largest;
-    }
-
     /**
      * @return whether two loops have the same cyclic sequence of edge angles
      * and lengths, within tolerance, at some rotational offset
@@ -526,7 +593,7 @@ public class TPolygon implements Parcelable {
         @NonNull
         private TPoint pointAt(double t) {
             return new ImmutableTPoint(
-                    (float) (px + t * ux), 0f, (float) (py + t * uy), 0f);
+                    (px + t * ux), 0f, (py + t * uy), 0f);
         }
     }
 
@@ -594,13 +661,10 @@ public class TPolygon implements Parcelable {
     public @NonNull String toString() {
         build();
         StringBuilder sb = new StringBuilder("TPolygon[");
-        if (loops.isEmpty())
-            return sb.append("empty]").toString();
-        for (int i = 0; i < loops.size(); i++) {
-            if (i > 0)
-                sb.append("; ");
-            sb.append(loops.get(i).angles.length).append(" edges");
-        }
+        if ((loops == null) || loops.isEmpty())
+            sb.append("empty");
+        else
+            sb.append(describeLoops());
         return sb.append(']').toString();
     }
 }

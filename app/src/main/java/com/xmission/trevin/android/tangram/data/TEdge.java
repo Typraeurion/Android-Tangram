@@ -29,7 +29,7 @@ import java.util.Locale;
  * parallelism, projection, point-to-segment distance, and overlap.
  *
  * <p>This is the geometry foundation for snapping.  Detection is done in
- * ordinary Cartesian (float/double) space via {@link TPoint#getX()}/
+ * ordinary Cartesian space via {@link TPoint#getX()}/
  * {@link TPoint#getY()}; the exact <i>a</i>&nbsp;+&nbsp;<i>b</i>&#8730;2&#773;
  * form is preserved only where it is naturally exact (e.g.
  * {@link #midpoint()}).  A {@code TEdge} holds references to its endpoints;
@@ -165,8 +165,8 @@ public class TEdge implements Parcelable {
     @NonNull
     public TPoint pointAtFraction(double fraction) {
         return new ImmutableTPoint(
-                (float) (start.getX() + fraction * getDx()), 0f,
-                (float) (start.getY() + fraction * getDy()), 0f);
+                start.getX() + fraction * getDx(), 0f,
+                start.getY() + fraction * getDy(), 0f);
     }
 
     /**

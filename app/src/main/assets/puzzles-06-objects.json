@@ -190,7 +190,7 @@
         "name": "large_triangle",
         "rotation": 180,
         "position": {
-	  "xb": -12,
+          "xb": -12,
           "ya": -8,
           "yb": 6
         }
@@ -199,7 +199,7 @@
         "name": "large_triangle",
         "rotation": 180,
         "position": {
-	  "xb": 12,
+          "xb": 12,
           "ya": -8,
           "yb": 6
         }
@@ -399,10 +399,10 @@
       {
         "name": "parallelogram",
         "isMirrored": false,
-	"pointOfRotation": {
-	  "xa": 9,
-	  "ya": 3
-	},
+        "pointOfRotation": {
+          "xa": 9,
+          "ya": 3
+        },
         "rotation_comment": "To get the far ends of the parallelogram lined up, the base has to be rotated 18.435° from vertical.  There is no rational value for this angle.  Instead we're going to snap this to 15°, which puts the centroid at 1.5×√2-0.75×√6 x, -0.75×√2-1.5×√6 y from the lowest point.",
         "rotation": 75,
         "position": {
@@ -731,7 +731,7 @@
           "xa": -6,
           "xb": -6,
           "ya": 18,
-	  "yb": -12
+          "yb": -12
         }
       },
       {

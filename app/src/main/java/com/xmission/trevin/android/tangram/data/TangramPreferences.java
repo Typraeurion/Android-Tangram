@@ -459,7 +459,7 @@ public class TangramPreferences
     /** @return the current piece coloring theme */
     public @NonNull PiecesTheme getPieceColoring() {
         String levelName = prefs.getString(PREF_PIECE_COLOR,
-                PiecesTheme.OPAQUE.name());
+                PiecesTheme.OUTLINE.name());
         try {
             return PiecesTheme.valueOf(levelName);
         } catch (IllegalArgumentException e) {

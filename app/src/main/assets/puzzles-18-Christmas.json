@@ -58,20 +58,29 @@
       },
       {
         "name": "square",
+	"pointOfRotation": {
+	  "xb": 3,
+	  "yb": 3
+	},
         "rotation": 15,
         "position": {
-	  "xb": 3,
-          "ya": -17.19615242,
+	  "xa": 3,
+          "xb": 3,
+          "ya": -12,
           "yb": 6
         }
       },
       {
         "name": "medium_triangle",
+	"pointOfRotation": {
+	  "xb": 0,
+	  "yb": 8
+	},
         "rotation": 15,
         "position": {
-          "xa": 5.92820323,
+          "xa": 3,
           "xb": 3,
-          "ya": -22.92820323,
+          "ya": -12,
           "yb": 6
         }
       }
@@ -142,12 +151,15 @@
       {
         "name": "parallelogram",
         "isMirrored": false,
+	"pointOfRotation": {
+	  "xa": 9,
+	  "ya": 3
+	},
         "rotation": -15,
         "position": {
-          "xa": -7.34846922835,
-          "xb": -1.5,
-          "ya": 8.1742346142,
-          "yb": -9
+          "xb": 0,
+          "ya": 4.5,
+          "yb": -6
         }
       }
     ]
@@ -277,21 +289,27 @@
       },
       {
         "name": "medium_triangle",
+	"pointOfRotation": {
+	  "xb": 6,
+	  "yb": 2
+	},
         "rotation": 105,
         "position": {
-          "xa": 4.92820323,
-          "ya": -7.464101615
+          "xb": 0,
+          "yb": 0
         }
       },
       {
         "name": "parallelogram",
         "isMirrored": false,
+	"pointOfRotation": {
+	  "xa": -9,
+	  "ya": -3
+	},
         "rotation": 15,
         "position": {
-	  "xa": 3.674234614,
-          "xb": 3,
-          "ya": 7.348469228,
-          "yb": -1.5
+          "xb": 0,
+          "yb": 0
         }
       }
     ]
@@ -768,12 +786,16 @@
       {
         "name": "parallelogram",
         "isMirrored": false,
+	"pointOfRotation": {
+	  "xa": 9,
+	  "ya": 3
+	},
         "rotation": 75,
         "position": {
-          "xa": -3.674234614,
-          "xb": 3,
-	  "ya": -6.34846923,
-          "yb": -7.5
+          "xa": 0,
+          "xb": 0,
+          "ya": 1,
+          "yb": -6
         }
       }
     ]

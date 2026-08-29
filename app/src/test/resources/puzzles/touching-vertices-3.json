@@ -1,0 +1,82 @@
+{
+  "id": "test-touching-vertices-3",
+  "name": "Touching Vertices",
+  "size": 40,
+  "comment": "In this shape all tans are only touching at their vertices, and there are two vertices which have three tans touching them.  Importantly at these points the tans all meet at their first vertices, so the order in which they are traversed when converting the puzzle to a polygon is highly dependent on how their edges are arranged.",
+  "pieces": [
+    {
+      "name": "medium_triangle",
+      "pointOfRotation": {
+	"xb": 0,
+	"yb": -4
+      },
+      "rotation": -120,
+      "position": {
+	"xa": -2,
+	"ya": 6
+      },
+      "comment": "For reference, the right vertex should land at 9.591109915468819441x, 9.105828541230249148y."
+    },
+    {
+      "comment": "The placement of this is based on the right vertex of the medium triangle.",
+      "name": "small_triangle",
+      "rotation": -90,
+      "position": {
+	"xa": 13.591109915468819441,
+	"ya": 9.105828541230249148
+      }
+    },
+    {
+      "comment": "The placement of this is based on the top vertex of the parallelogram, which has been pre-computed.  The rotation is important in spite of rotational symmetry: the first vertex MUST be joined with the parallelogram and small triangle.",
+      "name": "square",
+      "rotation": 135,
+      "position": {
+	"xa": 4.72792206135785543878,
+	"ya": -9.83375060258810458746
+      }
+    },
+    {
+      "comment": "The placement of this is doubly tricky, because we have a non-45° rotation about a vertex of the medium triangle which itself has a non-45° rotation.  We have to pre-compute the positions of its centroid and far vertices.",
+      "name": "parallelogram",
+      "isMirrored": false,
+      "rotation": 75,
+      "position": {
+	"xa": 10.15951598841333744,
+	"ya": -0.3639610306789277197
+      }
+    },
+    {
+      "name": "large_triangle",
+      "rotation": 0,
+      "position": {
+	"xa": -2,
+	"ya": 14
+      }
+    },
+    {
+      "comment": "The placement of this is triply tricky, because we have a non-45° rotation about a vertex of the parallelogram which has a doubly-tricky placement.",
+      "name": "small_triangle",
+      "pointOfRotation": {
+	"xa": 0,
+	"ya": -4
+      },
+      "rotation": -175,
+      "position": {
+	"xa": 10.72792206135785543878,
+	"ya": -9.83375060258810458746
+      }
+    },
+    {
+      "name": "large_triangle",
+      "pointOfRotation": {
+	"xa": 0,
+	"ya": -8
+      },
+      "rotation": 120,
+      "position": {
+	"xa": -2,
+	"ya": 6
+      }
+    }
+  ]
+}

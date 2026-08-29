@@ -53,8 +53,8 @@ public class TangramParallelogram extends TangramPiece {
         return VERTICES;
     }
 
-    public float getMaxRadius() {
-        return 9.48683298f;
+    public double getMaxRadius() {
+        return 9.486832980505137996;
     }
 
     @Override

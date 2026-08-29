@@ -1,0 +1,70 @@
+{
+  "id": "test-candle-down",
+  "name": "Candle",
+  "size": 64.9705628,
+  "comment": "This candle is built from the tip downward, with the flame placed last.  Importantly, the orientation of the square is such that its first edge starts on the vertex joining the parallelogram flame.",
+  "pieces": [
+    {
+      "name": "square",
+      "rotation": 45,
+      "position": {
+        "xa": 0,
+        "ya": -7
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": 90,
+      "position": {
+        "xa": -4,
+        "ya": -1
+      }
+    },
+    {
+      "name": "large_triangle",
+      "rotation": -90,
+      "position": {
+        "xa": 2,
+        "ya": 5
+      }
+    },
+    {
+      "name": "large_triangle",
+      "rotation": 90,
+      "position": {
+        "xa": -2,
+        "ya": 17
+      }
+    },
+    {
+      "name": "small_triangle",
+      "rotation": -90,
+      "position": {
+        "xa": 4,
+        "ya": 23
+      }
+    },
+    {
+      "name": "medium_triangle",
+      "rotation": 0,
+      "position": {
+        "xa": 0,
+        "ya": 23,
+        "yb": 4
+      }
+    },
+    {
+      "name": "parallelogram",
+      "isMirrored": false,
+	"pointOfRotation": {
+	  "xa": 9,
+	  "ya": 3
+	},
+      "rotation": 75,
+      "position": {
+        "xa": 0,
+        "ya": -13
+      }
+    }
+  ]
+}
