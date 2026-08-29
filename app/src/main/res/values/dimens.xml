@@ -10,6 +10,7 @@
 
     <!-- Hovering play-area controls (back button, goal preview). -->
     <dimen name="hover_control_size">48dp</dimen>
+    <dimen name="hover_control_small">36dp</dimen>
     <dimen name="hover_control_margin">12dp</dimen>
     <dimen name="hover_control_padding">6dp</dimen>
     <dimen name="hover_control_background_radius">16dp</dimen>

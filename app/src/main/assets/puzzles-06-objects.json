@@ -155,7 +155,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xb": 8,
           "yb": 4
@@ -250,7 +250,7 @@
       },
       {
         "name": "square",
-        "rotation": 315,
+        "rotation": 45,
         "position": {
           "xa": 6,
           "ya": 6,
@@ -317,7 +317,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xb": 13,
           "yb": 2
@@ -399,11 +399,15 @@
       {
         "name": "parallelogram",
         "isMirrored": false,
+	"pointOfRotation": {
+	  "xa": 9,
+	  "ya": 3
+	},
         "rotation_comment": "To get the far ends of the parallelogram lined up, the base has to be rotated 18.435° from vertical.  There is no rational value for this angle.  Instead we're going to snap this to 15°, which puts the centroid at 1.5×√2-0.75×√6 x, -0.75×√2-1.5×√6 y from the lowest point.",
         "rotation": 75,
         "position": {
-          "xa": 0.568406072,
-          "ya": -22.4697896
+          "xa": 0,
+          "ya": -13
         }
       }
     ]
@@ -667,7 +671,7 @@
       },
       {
         "name": "square",
-        "rotation": 315,
+        "rotation": 45,
         "position": {
           "xa": 0,
           "ya": 9
@@ -702,7 +706,7 @@
       },
       {
         "name": "square",
-        "rotation": 315,
+        "rotation": 45,
         "position": {
           "xa": 9,
           "xb": 6,
@@ -732,7 +736,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xa": -3,
           "xb": 2,
@@ -881,7 +885,7 @@
       },
       {
         "name": "medium_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xa": -11,
           "ya": 8
@@ -896,7 +900,7 @@
     "pieces": [
       {
         "name": "large_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": -13,
           "xb": -3,
@@ -1079,7 +1083,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 315,
+        "rotation": -45,
         "position": {
           "xb": 11,
           "yb": -1
@@ -1087,7 +1091,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xb": 1,
           "yb": -7
@@ -1217,7 +1221,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": 6,
           "xb": 3,
@@ -1250,7 +1254,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": 2,
           "ya": -6
@@ -1258,7 +1262,7 @@
       },
       {
         "name": "medium_triangle",
-        "rotation": 315,
+        "rotation": -45,
         "position": {
           "xa": -2,
           "ya": -14
@@ -1274,7 +1278,7 @@
       },
       {
         "name": "square",
-        "rotation": 315,
+        "rotation": 45,
         "position": {
           "xa": 6,
           "ya": 12
@@ -1283,7 +1287,7 @@
       {
         "name": "parallelogram",
         "isMirrored": false,
-        "rotation": 270,
+        "rotation": 90,
         "position": {
           "xa": -9,
           "ya": 15
@@ -1291,7 +1295,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": 10,
           "ya": 18
@@ -1444,7 +1448,7 @@
     "pieces": [
       {
         "name": "large_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xb": -11,
           "yb": -1
@@ -1452,7 +1456,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": -2,
           "xb": -3,
@@ -1462,7 +1466,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xb": 1,
           "yb": -1
@@ -1479,7 +1483,7 @@
       {
         "name": "parallelogram",
         "isMirrored": true,
-        "rotation": 225,
+        "rotation": 45,
         "position": {
           "xb": -9,
           "yb": 6
@@ -1511,7 +1515,7 @@
     "pieces": [
       {
         "name": "large_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": 2,
           "ya": -9,
@@ -1609,7 +1613,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xa": -12,
           "xb": -4,
@@ -1734,7 +1738,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xb": -7,
           "yb": -8
@@ -1759,7 +1763,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xb": 7,
           "yb": 2
@@ -1798,7 +1802,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": -4,
           "ya": 0
@@ -1814,7 +1818,7 @@
       },
       {
         "name": "small_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": 4,
           "ya": -12
@@ -1822,7 +1826,7 @@
       },
       {
         "name": "medium_triangle",
-        "rotation": 315,
+        "rotation": -45,
         "position": {
           "xa": -2,
           "ya": -14
@@ -1923,7 +1927,7 @@
     "pieces": [
       {
         "name": "small_triangle",
-        "rotation": 225,
+        "rotation": -135,
         "position": {
           "xa": -6,
           "xb": 5,
@@ -1933,7 +1937,7 @@
       },
       {
         "name": "large_triangle",
-        "rotation": 270,
+        "rotation": -90,
         "position": {
           "xa": -10,
           "xb": 9,
@@ -1973,7 +1977,7 @@
       {
         "name": "parallelogram",
         "isMirrored": true,
-        "rotation": 225,
+        "rotation": 45,
         "position": {
           "xb": 3,
           "ya": -15,

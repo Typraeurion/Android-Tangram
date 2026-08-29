@@ -213,8 +213,8 @@ public class TangramPuzzleView extends View {
             if (vertexBuffer.length < vertices.length * 2)
                 vertexBuffer = new float[vertices.length * 2];
             for (int v = 0; v < vertices.length; v++) {
-                vertexBuffer[v * 2] = vertices[v].getX();
-                vertexBuffer[v * 2 + 1] = vertices[v].getY();
+                vertexBuffer[v * 2] = (float) vertices[v].getX();
+                vertexBuffer[v * 2 + 1] = (float) vertices[v].getY();
             }
             puzzleToView.mapPoints(vertexBuffer, 0, vertexBuffer, 0, vertices.length);
 

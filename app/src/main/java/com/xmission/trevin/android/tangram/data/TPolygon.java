@@ -226,6 +226,7 @@ public class TPolygon implements Parcelable {
      * result is cached, so further {@link #merge(TangramPiece)} calls would
      * force a rebuild on the next use.</p>
      */
+    // FIXME: This may result in different loops depending on the order in which pieces were added.
     public void build() {
         if (loops != null)
             return;

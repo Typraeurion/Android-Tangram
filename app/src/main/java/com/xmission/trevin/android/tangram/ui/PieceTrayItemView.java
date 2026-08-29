@@ -297,15 +297,15 @@ public class PieceTrayItemView extends FrameLayout {
         float minX = Float.MAX_VALUE, minY = Float.MAX_VALUE;
         float maxX = -Float.MAX_VALUE, maxY = -Float.MAX_VALUE;
         for (TPoint v : vertices) {
-            minX = Math.min(minX, v.getX());
-            maxX = Math.max(maxX, v.getX());
-            minY = Math.min(minY, v.getY());
-            maxY = Math.max(maxY, v.getY());
+            minX = (float) Math.min(minX, v.getX());
+            maxX = (float) Math.max(maxX, v.getX());
+            minY = (float) Math.min(minY, v.getY());
+            maxY = (float) Math.max(maxY, v.getY());
         }
         Path path = new Path();
         for (int i = 0; i < vertices.length; i++) {
-            float px = (vertices[i].getX() - minX) * unitScale;
-            float py = (vertices[i].getY() - minY) * unitScale;
+            float px = (float) (vertices[i].getX() - minX) * unitScale;
+            float py = (float) (vertices[i].getY() - minY) * unitScale;
             if (i == 0)
                 path.moveTo(px, py);
             else

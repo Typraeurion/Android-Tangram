@@ -19,6 +19,7 @@ package com.xmission.trevin.android.tangram.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.UriPermission;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,9 +30,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.view.ContextThemeWrapper;
@@ -94,6 +98,8 @@ public class PlayActivity extends TangramActivity
 
     private PlayTableView playTableView;
 
+    private ViewGroup validCheckFrame;
+
     private ViewGroup saveButtonFrame;
 
     /** Reference to the puzzle name toast if we show one, otherwise null */
@@ -119,6 +125,41 @@ public class PlayActivity extends TangramActivity
     private String lastSaveCollection = "";
     private String lastSaveName = "";
     private String lastSaveId = "";
+
+    /** The transient "valid Tangram" success banner and its message. */
+    private ViewGroup validBanner;
+    private TextView validBannerText;
+
+    /** Whether the play field was a valid Tangram at the last check, so the
+     * banner and prompts fire only on the transition into validity. */
+    private boolean puzzleWasValid = false;
+
+    /** Whether the "no save folder" prompt has already been shown this
+     * session (after which further completions just show a brief toast). */
+    private boolean noSaveFolderPromptShown = false;
+
+    /** Saved-state keys for the fields above. */
+    private static final String STATE_NO_FOLDER_PROMPT_SHOWN =
+            "noSaveFolderPromptShown";
+    private static final String STATE_PUZZLE_WAS_VALID = "puzzleWasValid";
+
+    /** Fade duration for the success banner, in milliseconds. */
+    private static final long BANNER_FADE_MS = 250;
+
+    /** How long the banner stays fully visible for a valid free-play Tangram. */
+    private static final long BANNER_HOLD_SHORT_MS = 1750;
+
+    /** How long the banner stays fully visible when a goal is solved. */
+    private static final long BANNER_HOLD_LONG_MS = 3500;
+
+    /**
+     * Launches {@link PreferencesActivity} (e.g. from the save-folder prompt);
+     * on return the save folder is re-checked.
+     */
+    private final ActivityResultLauncher<Intent> preferencesLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    result -> onReturnFromPreferences());
 
     /**
      * Build an intent to start this activity.
@@ -176,7 +217,16 @@ public class PlayActivity extends TangramActivity
 
         prefs = TangramPreferences.getInstance(this);
 
+        if (savedInstanceState != null) {
+            noSaveFolderPromptShown = savedInstanceState.getBoolean(
+                    STATE_NO_FOLDER_PROMPT_SHOWN, false);
+            puzzleWasValid = savedInstanceState.getBoolean(
+                    STATE_PUZZLE_WAS_VALID, false);
+        }
+
         playTableView = findViewById(R.id.play_table);
+        validBanner = findViewById(R.id.valid_banner);
+        validBannerText = findViewById(R.id.valid_banner_text);
         Intent intent = getIntent();
         TangramPuzzle goal = IntentCompat.getParcelableExtra(
                 intent, EXTRA_PUZZLE_GOAL, TangramPuzzle.class);
@@ -216,6 +266,15 @@ public class PlayActivity extends TangramActivity
                 Log.d(LOG_TAG, "Unnamed goal provided:" + goal);
             }
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // "First time" for the save-folder prompt means the play session, so
+        // remember it across configuration changes (e.g. rotation).
+        outState.putBoolean(STATE_NO_FOLDER_PROMPT_SHOWN, noSaveFolderPromptShown);
+        outState.putBoolean(STATE_PUZZLE_WAS_VALID, puzzleWasValid);
     }
 
     /**
@@ -341,12 +400,16 @@ public class PlayActivity extends TangramActivity
                 canFlip(playTableView.getSelectedPiece())
                         ? View.VISIBLE : View.GONE);
 
+        validCheckFrame = findViewById(R.id.valid_check_frame);
         saveButtonFrame = findViewById(R.id.button_save_frame);
+        moveControlToCorner(R.id.valid_check_frame,
+                prefs.getSaveButtonCorner());
         moveControlToCorner(R.id.button_save_frame,
                 prefs.getSaveButtonCorner());
-        // We only care about saving *if* we're in free-play mode
-        // and *if* the user has set up a directory for user puzzles.
-        if ((goal == null) && (prefs.getUserPuzzlesDir() != null)) {
+        // Saving only applies in free-play mode.  The button stays hidden
+        // until a valid Tangram is formed with a usable save folder, but wire
+        // it up now so it also works if the folder is chosen mid-session.
+        if (goal == null) {
             ImageButton saveButton = findViewById(R.id.button_save);
             saveButton.setOnClickListener(v ->
                     SavePuzzleDialogFragment.newInstance(lastSaveCollection,
@@ -373,19 +436,119 @@ public class PlayActivity extends TangramActivity
      * @param valid whether the play field is currently a valid Tangram
      */
     private void onPuzzleValidated(boolean valid) {
-        if (playTableView.getSolution() == null) {
-            // Free play: offer to save a completed puzzle, but only if the
-            // user has chosen a directory to save user puzzles into.
-            saveButtonFrame.setVisibility(
-                    valid && (prefs.getUserPuzzlesDir() != null)
-                            ? View.VISIBLE : View.GONE);
-            // Reset the finished flag if the puzzle is invalid.
-            if (!valid)
+        boolean freePlay = playTableView.getSolution() == null;
+        // Act only on the transition into validity, so feedback fires once per
+        // completion rather than on every subsequent move.
+        boolean becameValid = valid && !puzzleWasValid;
+        puzzleWasValid = valid;
+
+        if (valid) {
+            Log.d(LOG_TAG, "Valid Tangram formed");
+        } else {
+            if (playTableView.getPuzzle().getPieceCount() == 7)
+                Log.d(LOG_TAG, playTableView.getPuzzle()
+                        .getValidationErrors().toString());
+        }
+
+        if (freePlay) {
+            if (becameValid) {
+                onFreePlayTangramCompleted();
+            } else if (!valid) {
+                validCheckFrame.setVisibility(View.GONE);
+                saveButtonFrame.setVisibility(View.GONE);
                 isFinished = false;
-        } else if (valid) {
+            }
+        } else if (becameValid) {
             // Puzzle mode: see whether this valid Tangram solves the goal.
             checkSolutionAgainstGoal();
         }
+    }
+
+    /**
+     * Give feedback when the player forms a valid Tangram in free-play mode:
+     * a brief success banner, plus either the Save button (if a save folder is
+     * usable) or guidance toward setting one up.
+     */
+    private void onFreePlayTangramCompleted() {
+        showValidBanner(getString(R.string.ValidTangram), BANNER_HOLD_SHORT_MS);
+        if (canSaveToUserDir()) {
+            validCheckFrame.setVisibility(View.GONE);
+            saveButtonFrame.setVisibility(View.VISIBLE);
+            return;
+        }
+        validCheckFrame.setVisibility(View.VISIBLE);
+        saveButtonFrame.setVisibility(View.GONE);
+        if (noSaveFolderPromptShown) {
+            // Already explained once this session; just a gentle reminder.
+            Toast.makeText(this, R.string.ErrorUserDirNotSet,
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            // First time: follow the banner with the explanatory dialog.
+            noSaveFolderPromptShown = true;
+            validBanner.postDelayed(this::showNoSaveFolderDialog,
+                    BANNER_FADE_MS + 250);
+        }
+    }
+
+    /**
+     * Fade the success banner in, hold it, then fade it out.
+     *
+     * @param message the text to show under the checkmark
+     * @param holdMs how long to keep it fully visible
+     */
+    private void showValidBanner(@NonNull String message, long holdMs) {
+        validBannerText.setText(message);
+        validBanner.animate().cancel();
+        validBanner.setAlpha(0f);
+        validBanner.setVisibility(View.VISIBLE);
+        validBanner.animate().alpha(1f)
+                .setStartDelay(0).setDuration(BANNER_FADE_MS)
+                .withEndAction(() -> validBanner.animate()
+                        .alpha(0f).setStartDelay(holdMs).setDuration(BANNER_FADE_MS)
+                        .withEndAction(() -> validBanner.setVisibility(View.GONE)));
+    }
+
+    /**
+     * @return whether there is a user-puzzle folder set for which we still
+     * hold write permission
+     */
+    private boolean canSaveToUserDir() {
+        String dir = prefs.getUserPuzzlesDir();
+        if (dir == null)
+            return false;
+        Uri uri = Uri.parse(dir);
+        for (UriPermission permission
+                : getContentResolver().getPersistedUriPermissions())
+            if (permission.getUri().equals(uri) && permission.isWritePermission())
+                return true;
+        return false;
+    }
+
+    /**
+     * Explain that no usable save folder is set and offer to open Preferences
+     * to choose one (or dismiss without doing so).
+     */
+    private void showNoSaveFolderDialog() {
+        if (isFinishing())
+            return;
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.SaveFolderPromptTitle)
+                .setMessage(R.string.SaveFolderPromptMessage)
+                .setPositiveButton(R.string.SaveFolderPromptChoose, (d, w) ->
+                        preferencesLauncher.launch(
+                                new Intent(this, PreferencesActivity.class)))
+                .setNegativeButton(R.string.SaveFolderPromptDismiss, null)
+                .show();
+    }
+
+    /**
+     * On returning from Preferences, reveal the Save button if a usable folder
+     * is now set and the play field is still a valid Tangram.
+     */
+    private void onReturnFromPreferences() {
+        if (playTableView.getSolution() == null && puzzleWasValid
+                && canSaveToUserDir())
+            saveButtonFrame.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -417,10 +580,7 @@ public class PlayActivity extends TangramActivity
         }
         Log.d(LOG_TAG, "Puzzle solved!");
         isFinished = true;
-        // Placeholder feedback.  The final "solved" experience (e.g. a
-        // congratulations dialog with an option to move on to another puzzle)
-        // is still to be designed.
-        Toast.makeText(this, R.string.PuzzleSolved, Toast.LENGTH_LONG).show();
+        showValidBanner(getString(R.string.BannerPuzzleSolved), BANNER_HOLD_LONG_MS);
     }
 
     /**
@@ -567,7 +727,7 @@ public class PlayActivity extends TangramActivity
      * @param puzzle the puzzle to center in place
      */
     private void centerPuzzle(@NonNull TangramPuzzle puzzle) {
-        TPoint centerAdjust = puzzle.getCenter().mirrorX().mirrorY();
+        TPoint centerAdjust = ImmutableTPoint.ORIGIN.subtract(puzzle.getCenter());
         Log.d(LOG_TAG, String.format(Locale.US,
                 "Adjusting puzzle center by %s", centerAdjust));
         for (TangramPiece piece : puzzle.getPieces()) {

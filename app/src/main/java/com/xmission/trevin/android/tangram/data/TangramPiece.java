@@ -44,14 +44,23 @@ public abstract class TangramPiece implements Cloneable, Parcelable {
     /** JSON key for the name of the piece **/
     public static final String JSON_NAME = "name";
 
+    /** JSON key for whether this piece is mirrored */
+    public static final String JSON_MIRRORED = "isMirrored";
+
+    /**
+     * JSON key for the point of rotation, in case the piece requires
+     * rotating about a point outside of its centroid.  This is only
+     * used when reading puzzles, so the rotational transformation
+     * will be applied to the opposite of this point and then added
+     * to the {@code position} to get the centroid&rsquo;s final position.
+     */
+    public static final String JSON_POINT_OF_ROTATION = "pointOfRotation";
+
     /** JSON key for the rotation of the piece **/
     public static final String JSON_ROTATION = "rotation";
 
     /** JSON key for the position of the piece **/
     public static final String JSON_POSITION = "position";
-
-    /** JSON key for whether this piece is mirrored */
-    public static final String JSON_MIRRORED = "isMirrored";
 
     /**
      * Maximum gap, in puzzle units, between two pieces&rsquo; boundaries for
@@ -315,10 +324,10 @@ public abstract class TangramPiece implements Cloneable, Parcelable {
     public JSONObject toJSON() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(JSON_NAME, getJsonName());
-        json.put(JSON_POSITION, position.toJSON());
         if (canFlip())
             json.put(JSON_MIRRORED, isMirrored);
         json.put(JSON_ROTATION, rotation);
+        json.put(JSON_POSITION, position.toJSON());
         return json;
     }
 
@@ -331,11 +340,17 @@ public abstract class TangramPiece implements Cloneable, Parcelable {
     public static TangramPiece fromJSON(JSONObject json) throws JSONException {
         String name = json.getString(JSON_NAME);
         TangramPiece piece = getTangramPiece(name);
-        piece.position = new ImmutableTPoint(json.getJSONObject(JSON_POSITION));
         if (piece.canFlip())
             piece.isMirrored = json.getBoolean(JSON_MIRRORED);
         // Make sure the rotation is normalized to [0-8).
         piece.setRotation((float) json.getDouble(JSON_ROTATION));
+        piece.position = new ImmutableTPoint(json.getJSONObject(JSON_POSITION));
+        if (json.has(JSON_POINT_OF_ROTATION)) {
+            TPoint relativeCentroid = ImmutableTPoint.ORIGIN.subtract(
+                    new MutableTPoint(json.getJSONObject(JSON_POINT_OF_ROTATION)));
+            piece.position = relativeCentroid.rotate(piece.getRotation())
+                    .add(piece.position).toImmutable();
+        }
         return piece;
     }
 

@@ -117,6 +117,29 @@
                 android:focusable="false" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/valid_check_frame"
+            android:layout_width="@dimen/hover_control_small"
+            android:layout_height="@dimen/hover_control_small"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/hover_control_margin"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:clickable="false"
+            android:focusable="false"
+            android:descendantFocusability="blocksDescendants">
+            <ImageView
+                android:id="@+id/valid_check"
+                android:layout_width="@dimen/hover_control_small"
+                android:layout_height="@dimen/hover_control_small"
+                android:background="@drawable/hover_button_background"
+                android:contentDescription="@string/ValidTangram"
+                android:elevation="4dp"
+                android:padding="@dimen/hover_control_padding"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_checkmark_small"/>
+        </LinearLayout>
+
         <FrameLayout
             android:id="@+id/button_flip_frame"
             android:layout_width="@dimen/flip_button_size"
@@ -146,6 +169,11 @@
                 android:clickable="false"
                 android:focusable="false" />
         </FrameLayout>
+
+        <include layout="@layout/valid_tangram_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
     </FrameLayout>
 

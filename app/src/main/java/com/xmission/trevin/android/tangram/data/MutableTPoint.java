@@ -29,14 +29,16 @@ import org.json.JSONObject;
  */
 public class MutableTPoint extends TPoint {
 
-    private float xa, xb, ya, yb;
+    public static final double SQRT3 = Math.sqrt(3);
+
+    private double xa, xb, ya, yb;
 
     /**
      * Construct a point with coordinates (<i>a<sub>x</sub></i>
      * + <i>b<sub>x</sub></i>&#8730;2&#773;) <i>X</i>, (<i>a<sub>y</sub></i>
      * + <i>b<sub>y</sub></i>&#8730;2&#773;) <i>Y</i>.
      */
-    public MutableTPoint(float ax, float bx, float ay, float by) {
+    public MutableTPoint(double ax, double bx, double ay, double by) {
         xa = ax;
         xb = bx;
         ya = ay;
@@ -47,10 +49,10 @@ public class MutableTPoint extends TPoint {
      * Construct a point from a {@link Parcel}.
      */
     private MutableTPoint(android.os.Parcel in) {
-        xa = in.readFloat();
-        xb = in.readFloat();
-        ya = in.readFloat();
-        yb = in.readFloat();
+        xa = in.readDouble();
+        xb = in.readDouble();
+        ya = in.readDouble();
+        yb = in.readDouble();
     }
 
     /**
@@ -61,25 +63,25 @@ public class MutableTPoint extends TPoint {
      */
     public MutableTPoint(JSONObject json) throws JSONException {
         if (json.has(JSON_X_A))
-            xa = (float) json.getDouble(JSON_X_A);
+            xa = json.getDouble(JSON_X_A);
         else
             xa = 0;
         if (json.has(JSON_X_B))
-            xb = (float) json.getDouble(JSON_X_B);
+            xb = json.getDouble(JSON_X_B);
         else
             xb = 0;
         if (json.has(JSON_Y_A))
-            ya = (float) json.getDouble(JSON_Y_A);
+            ya = json.getDouble(JSON_Y_A);
         else
             ya = 0;
         if (json.has(JSON_Y_B))
-            yb = (float) json.getDouble(JSON_Y_B);
+            yb = json.getDouble(JSON_Y_B);
         else
             yb = 0;
     }
 
     @Override
-    public float getXa() {
+    public double getXa() {
         return xa;
     }
 
@@ -88,12 +90,12 @@ public class MutableTPoint extends TPoint {
      *
      * @param a the new <i>a</i> coefficient
      */
-    public void setXa(float a) {
+    public void setXa(double a) {
         xa = a;
     }
 
     @Override
-    public float getXb() {
+    public double getXb() {
         return xb;
     }
 
@@ -102,12 +104,12 @@ public class MutableTPoint extends TPoint {
      *
      * @param b the new <i>b</i> coefficient
      */
-    public void setXb(float b) {
+    public void setXb(double b) {
         xb = b;
     }
 
     @Override
-    public float getYa() {
+    public double getYa() {
         return ya;
     }
 
@@ -116,12 +118,12 @@ public class MutableTPoint extends TPoint {
      *
      * @param a the new <i>a</i> coefficient
      */
-    public void setYa(float a) {
+    public void setYa(double a) {
         ya = a;
     }
 
     @Override
-    public float getYb() {
+    public double getYb() {
         return yb;
     }
 
@@ -130,7 +132,7 @@ public class MutableTPoint extends TPoint {
      *
      * @param b the new <i>b</i> coefficient
      */
-    public void setYb(float b) {
+    public void setYb(double b) {
         yb = b;
     }
 
@@ -144,11 +146,21 @@ public class MutableTPoint extends TPoint {
         return this;
     }
 
+    /** @return this after translation */
+    @Override
+    public @NonNull MutableTPoint subtract(@NonNull TPoint p2) {
+        xa -= p2.getXa();
+        xb -= p2.getXb();
+        ya -= p2.getYa();
+        yb -= p2.getYb();
+        return this;
+    }
+
     /** @return this after rotation */
     @Override
     public @NonNull MutableTPoint coarseRotate(int steps) {
         steps = Math.floorMod(steps, 8);
-        float xa2, xb2, ya2, yb2;
+        double xa2, xb2, ya2, yb2;
         switch (steps) {
             case 1:
                 xa2 = xb - yb;
@@ -213,20 +225,46 @@ public class MutableTPoint extends TPoint {
             return this;
         // For rotations in an integer multiple
         // of 45 degrees, use coarse rotation.
-        int steps = (int) (degrees / 45);
+        int steps = (int) Math.floor(degrees / 45);
         if (steps != 0) {
             coarseRotate(steps);
             degrees -= steps * 45;
             if (degrees == 0)
                 return this;
         }
-        double radians = Math.toRadians(degrees);
-        double cos = Math.cos(radians);
-        double sin = Math.sin(radians);
-        float xa2 = (float) (xa * cos - ya * sin);
-        float xb2 = (float) (xb * cos - yb * sin);
-        float ya2 = (float) (xa * sin + ya * cos);
-        float yb2 = (float) (xb * sin + yb * cos);
+        // For rotations of exactly 15° or 30°, √2 appears in the exact
+        // result along with √3.  Try to keep the √2 part separate
+        // and move the √3 part to the 'a' coefficient.
+        double xa2, xb2, ya2, yb2;
+        if (degrees == 15) {
+            xa2 = SQRT3 * xa / 2 / SQRT2
+                    + (SQRT3 + 1) * xb / 2
+                    - SQRT3 * ya / 2 / SQRT2
+                    - (SQRT3 - 1) * yb / 2;
+            xb2 = xa / 4 + ya / 4;
+            ya2 = SQRT3 * xa / 2 / SQRT2
+                    + (SQRT3 - 1) * xb / 2
+                    + SQRT3 * ya / 2 / SQRT2
+                    + (SQRT3 + 1) * yb / 2;
+            yb2 = -xa / 4 + ya / 4;
+        }
+        else if (degrees == 30) {
+            xa2 = SQRT3 * xa / 2 + SQRT3 * xb / SQRT2 - ya / 2;
+            xb2 = -yb / 2;
+            ya2 = xa / 2 + SQRT3 * ya / 2 + SQRT3 * yb / SQRT2;
+            yb2 = xb / 2;
+        }
+        else {
+            double radians = Math.toRadians(degrees);
+            double cos = Math.cos(radians);
+            double sin = Math.sin(radians);
+            // For all other rotations, collapse the results
+            // into the 'a' coefficients.
+            xa2 = (xa + xb * SQRT2) * cos - (ya + yb * SQRT2) * sin;
+            xb2 = 0;
+            ya2 = (xa + xb * SQRT2) * sin + (ya + yb * SQRT2) * cos;
+            yb2 = 0;
+        }
         xa = xa2;
         xb = xb2;
         ya = ya2;
@@ -248,6 +286,15 @@ public class MutableTPoint extends TPoint {
         ya = -ya;
         yb = -yb;
         return this;
+    }
+
+    /**
+     * @return an {@link ImmutableTPoint} with the same coordinates
+     * as this point
+     */
+    @Override
+    public @NonNull ImmutableTPoint toImmutable() {
+        return new ImmutableTPoint(xa, xb, ya, yb);
     }
 
     @Override
@@ -280,8 +327,8 @@ public class MutableTPoint extends TPoint {
 
     @Override
     public int hashCode() {
-        return ((Float.hashCode(xa) * 31 + Float.hashCode(xb))
-                * 31 + Float.hashCode(ya)) * 31 + Float.hashCode(yb);
+        return ((Double.hashCode(xa) * 31 + Double.hashCode(xb))
+                * 31 + Double.hashCode(ya)) * 31 + Double.hashCode(yb);
     }
 
     /**

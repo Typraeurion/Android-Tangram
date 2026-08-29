@@ -46,7 +46,7 @@ public class TPointTest {
     public void testCoarseRotateMatchesAnalyticRotationImmutable() {
         TPoint p = new ImmutableTPoint(3, 0, 1, 2);
         // An asymmetric point so x != y and the cases can't alias.
-        double px = p.getX(), py = p.getY();
+        final double px = p.getX(), py = p.getY();
         for (int steps = 0; steps < 8; steps++) {
             double theta = Math.toRadians(45.0 * steps);
             double cos = Math.cos(theta), sin = Math.sin(theta);
@@ -85,8 +85,104 @@ public class TPointTest {
         }
     }
 
-    /** A rotation must never collapse a point onto the x=y diagonal. */
+    /**
+     * Every 15&deg; step of {@link TPoint#rotate(double)} must agree
+     * with an analytic rotation of the point&rsquo;s real coordinates.
+     * This runs the test against the {@link ImmutableTPoint} code,
+     * where the origin point never changes.
+     */
     @Test
+    public void testRotateBy15MatchesAnalyticRotationImmutable() {
+        TPoint p = new ImmutableTPoint(3, 0, 1, 2);
+        final double px = p.getX(), py = p.getY();
+        for (double degrees = -180; degrees <= 540; degrees += 15) {
+            double theta = Math.toRadians(degrees);
+            double cos = Math.cos(theta), sin = Math.sin(theta);
+            double expectedX = px * cos - py * sin;
+            double expectedY = px * sin + py * cos;
+            TPoint rotated = p.rotate(degrees);
+            assertEquals("x after " + degrees + "\u00b0",
+                    expectedX, rotated.getX(), DELTA);
+            assertEquals("y after " + degrees + "\u00b0",
+                    expectedY, rotated.getY(), DELTA);
+        }
+    }
+
+    /**
+     * Every 15&deg; step of {@link TPoint#rotate(double)} must agree
+     * with an analytic rotation of the point&rsquo;s real coordinates.
+     * This runs the test against the {@link MutableTPoint} code,
+     * where the origin point never changes.
+     */
+    @Test
+    public void testRotateBy15MatchesAnalyticRotationMutable() {
+        for (double degrees = -180; degrees <= 540; degrees += 15) {
+            TPoint p = new MutableTPoint(3, 0, 1, 2);
+            double px = p.getX(), py = p.getY();
+            double theta = Math.toRadians(degrees);
+            double cos = Math.cos(theta), sin = Math.sin(theta);
+            double expectedX = px * cos - py * sin;
+            double expectedY = px * sin + py * cos;
+            TPoint rotated = p.rotate(degrees);
+            assertEquals("x after " + degrees + "\u00b0",
+                    expectedX, rotated.getX(), DELTA);
+            assertEquals("y after " + degrees + "\u00b0",
+                    expectedY, rotated.getY(), DELTA);
+        }
+    }
+
+    /**
+     * Verify rotation of angles that are not multiples of 15°.
+     * These may include coarse rotations in multiples of 45°
+     * prior to the final rotation of the difference.
+     * This runs the test against the {@link ImmutableTPoint} code,
+     * where the origin point never changes.
+     */
+    @Test
+    public void testRotateFineMatchesAnalyticRotationImmutable() {
+        TPoint p = new ImmutableTPoint(3, 0, 1, 2);
+        final double px = p.getX(), py = p.getY();
+        // This sequence is guaranteed never to hit a multiple of 15.
+        for (double degrees = 176; degrees < 540; degrees += 42) {
+            double theta = Math.toRadians(degrees);
+            double cos = Math.cos(theta), sin = Math.sin(theta);
+            double expectedX = px * cos - py * sin;
+            double expectedY = px * sin + py * cos;
+            TPoint rotated = p.rotate(degrees);
+            assertEquals("x after " + degrees + "\u00b0",
+                    expectedX, rotated.getX(), DELTA);
+            assertEquals("y after " + degrees + "\u00b0",
+                    expectedY, rotated.getY(), DELTA);
+        }
+    }
+
+    /**
+     * Verify rotation of angles that are not multiples of 15°.
+     * These may include coarse rotations in multiples of 45°
+     * prior to the final rotation of the difference.
+     * This runs the test against the {@link MutableTPoint} code,
+     * where the origin point never changes.
+     */
+    @Test
+    public void testRotateFineMatchesAnalyticRotationMutable() {
+        // This sequence is guaranteed never to hit a multiple of 15.
+        for (double degrees = 176; degrees < 540; degrees += 42) {
+            TPoint p = new MutableTPoint(3, 0, 1, 2);
+            double px = p.getX(), py = p.getY();
+            double theta = Math.toRadians(degrees);
+            double cos = Math.cos(theta), sin = Math.sin(theta);
+            double expectedX = px * cos - py * sin;
+            double expectedY = px * sin + py * cos;
+            TPoint rotated = p.rotate(degrees);
+            assertEquals("x after " + degrees + "\u00b0",
+                    expectedX, rotated.getX(), DELTA);
+            assertEquals("y after " + degrees + "\u00b0",
+                    expectedY, rotated.getY(), DELTA);
+        }
+    }
+
+    @Test
+    /** A rotation must never collapse a point onto the x=y diagonal. */
     public void testCoarseRotatePreservesDistinctCoordinatesImmutable() {
         TPoint p = new ImmutableTPoint(3, 0, 1, 2);
         final double expected = Math.hypot(p.getX(), p.getY());

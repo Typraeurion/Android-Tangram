@@ -53,29 +53,29 @@ public abstract class TPoint implements Cloneable, Parcelable {
     public static final String JSON_Y_B = "yb";
 
     /** @return the <i>a</i> coefficient of the <i>x</i> coordinate */
-    public abstract float getXa();
+    public abstract double getXa();
 
     /** @return the <i>b</i> coefficient of the <i>x</i> coordinate */
-    public abstract float getXb();
+    public abstract double getXb();
 
     /** @return the <i>a</i> coefficient of the <i>y</i> coordinate */
-    public abstract float getYa();
+    public abstract double getYa();
 
     /** @return the <i>b</i> coefficient of the <i>y</i> coordinate */
-    public abstract float getYb();
+    public abstract double getYb();
 
     /**
      * @return the X coordinate of this point
      */
-    public float getX() {
-        return (float) (getXa() + getXb() * SQRT2);
+    public double getX() {
+        return (getXa() + getXb() * SQRT2);
     }
 
     /**
      * @return the Y coordinate of this point
      */
-    public float getY() {
-        return (float) (getYa() + getYb() * SQRT2);
+    public double getY() {
+        return (getYa() + getYb() * SQRT2);
     }
 
     /**
@@ -86,6 +86,16 @@ public abstract class TPoint implements Cloneable, Parcelable {
      * @return the translated point
      */
     public abstract @NonNull TPoint add(@NonNull TPoint p2);
+
+    /**
+     * Translate this point by the negation of another, i.e. subtract
+     * the second point from this one.
+     *
+     * @param p2 the point to subtract from this one
+     *
+     * @return the translated point
+     */
+    public abstract @NonNull TPoint subtract(@NonNull TPoint p2);
 
     /**
      * Rotate this point by a multiple of 45&deg;.  This works by swapping
@@ -150,8 +160,8 @@ public abstract class TPoint implements Cloneable, Parcelable {
         if (isZAligned())
             return this;
 
-        return new ImmutableTPoint((float) Math.round(getX()), 0f,
-                (float) Math.round(getY()), 0f);
+        return new ImmutableTPoint(Math.round(getX()), 0f,
+                Math.round(getY()), 0f);
     }
 
     /**
@@ -183,8 +193,7 @@ public abstract class TPoint implements Cloneable, Parcelable {
         long[] coefX = approximateQ2Field(getX());
         long[] coefY = approximateQ2Field(getY());
 
-        return new ImmutableTPoint((float) coefX[0], (float) coefX[1],
-                (float) coefY[0], (float) coefY[1]);
+        return new ImmutableTPoint(coefX[0], coefX[1], coefY[0], coefY[1]);
     }
 
     /*
@@ -280,6 +289,13 @@ public abstract class TPoint implements Cloneable, Parcelable {
     public abstract @NonNull TPoint clone();
 
     /**
+     * Ensure this point is immutable.
+     *
+     * @return an {@link ImmutableTPoint} representation of this point.
+     */
+    public abstract ImmutableTPoint toImmutable();
+
+    /**
      * Save this point to a {@link Parcel} (typically as part of a
      * {@link TangramPiece}.)
      *
@@ -297,10 +313,10 @@ public abstract class TPoint implements Cloneable, Parcelable {
          * an ImmutableTPoint (0) or MutableTPoint (non-0).
          */
         dest.writeInt((this instanceof ImmutableTPoint) ? 0 : 1);
-        dest.writeFloat(getXa());
-        dest.writeFloat(getXb());
-        dest.writeFloat(getYa());
-        dest.writeFloat(getYb());
+        dest.writeDouble(getXa());
+        dest.writeDouble(getXb());
+        dest.writeDouble(getYa());
+        dest.writeDouble(getYb());
     }
 
     /**

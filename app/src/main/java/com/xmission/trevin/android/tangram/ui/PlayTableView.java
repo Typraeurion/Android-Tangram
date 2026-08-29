@@ -704,12 +704,14 @@ public class PlayTableView extends View {
              * entirely outside the visible area.  (Off-playfield pieces
              * will eventually live in a separate tray view.)
              */
-            pointBuffer[0] = piece.getPosition().getX();
-            pointBuffer[1] = piece.getPosition().getY();
+            pointBuffer[0] = (float) piece.getPosition().getX();
+            pointBuffer[1] = (float) piece.getPosition().getY();
             puzzleToView.mapPoints(pointBuffer);
             float radius = piece.getMaxRadius() * scale;
-            if (pointBuffer[0] + radius < 0 || pointBuffer[0] - radius > w
-                    || pointBuffer[1] + radius < 0 || pointBuffer[1] - radius > h)
+            if (pointBuffer[0] + radius < 0
+                    || pointBuffer[0] - radius > w
+                    || pointBuffer[1] + radius < 0
+                    || pointBuffer[1] - radius > h)
                 continue;
 
             // Build the piece outline from its transformed vertices.
@@ -717,10 +719,11 @@ public class PlayTableView extends View {
             if (vertexBuffer.length < vertices.length * 2)
                 vertexBuffer = new float[vertices.length * 2];
             for (int v = 0; v < vertices.length; v++) {
-                vertexBuffer[v * 2] = vertices[v].getX();
-                vertexBuffer[v * 2 + 1] = vertices[v].getY();
+                vertexBuffer[v * 2] = (float) vertices[v].getX();
+                vertexBuffer[v * 2 + 1] = (float) vertices[v].getY();
             }
-            puzzleToView.mapPoints(vertexBuffer, 0, vertexBuffer, 0, vertices.length);
+            puzzleToView.mapPoints(vertexBuffer, 0,
+                    vertexBuffer, 0, vertices.length);
 
             piecePath.rewind();
             piecePath.moveTo(vertexBuffer[0], vertexBuffer[1]);
@@ -764,8 +767,10 @@ public class PlayTableView extends View {
                 panPointerId = MotionEvent.INVALID_POINTER_ID;
                 pieceDragged = false;
                 raiseToTop(hit);
-                grabOffsetX = hit.getPosition().getX() - touchBuffer[0];
-                grabOffsetY = hit.getPosition().getY() - touchBuffer[1];
+                grabOffsetX = (float) (hit.getPosition().getX()
+                        - touchBuffer[0]);
+                grabOffsetY = (float) (hit.getPosition().getY()
+                        - touchBuffer[1]);
                 invalidate();
                 return true;
             }
@@ -1036,8 +1041,10 @@ public class PlayTableView extends View {
         }
         activePointerId = pointerId;
         mapTouchToPuzzle(event.getX(pointerIndex), event.getY(pointerIndex));
-        grabOffsetX = selectedPiece.getPosition().getX() - touchBuffer[0];
-        grabOffsetY = selectedPiece.getPosition().getY() - touchBuffer[1];
+        grabOffsetX = (float) (selectedPiece.getPosition().getX()
+                - touchBuffer[0]);
+        grabOffsetY = (float) (selectedPiece.getPosition().getY()
+                - touchBuffer[1]);
     }
 
     /**
@@ -1088,7 +1095,7 @@ public class PlayTableView extends View {
         for (int i = 0; i < n; i++) {
             TPoint a = vertices[i];
             TPoint b = vertices[(i + 1) % n];
-            float cross = (b.getX() - a.getX()) * (py - a.getY())
+            double cross = (b.getX() - a.getX()) * (py - a.getY())
                     - (b.getY() - a.getY()) * (px - a.getX());
             if (cross > 0f)
                 positive = true;

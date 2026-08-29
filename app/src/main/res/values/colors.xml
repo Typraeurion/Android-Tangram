@@ -6,6 +6,9 @@
     <color name="invisible">#00808080</color>
     <color name="white_smoke">#FFF5F5F5</color>
     <color name="gray7">#FF121212</color>
+    <color name="gray13">#FF212121</color>
+    <color name="gray19">#FF303030</color>
+    <color name="gray98">#FFFAFAFA</color>
     <color name="dodger_blue">#FF1E90FF</color>
     <color name="forest_green">#FF228B22</color>
     <color name="green">#FF00FF00</color>
@@ -16,8 +19,14 @@
     <color name="dark_orange">#FFFF8C00</color>
     <color name="crimson">#FFDC143C</color>
 
-    <color name="foreground">@color/black</color>
-    <color name="background">@color/white</color>
+    <!-- Android's default foreground color is a translucent black;
+         because translucency can cause pieces' outlines to show up,
+         we need to use the composited result of this on the default background. -->
+    <color name="foreground">@color/gray13</color>
+    <!-- Likewise we hard-code the default background color
+         so the combination remains consistent. -->
+    <color name="background">@color/gray98</color>
     <color name="shadow_background">#99FFFFFF</color>
+    <color name="shadow_border">#77000000</color>
     <color name="translucent_background">#33FFFFFF</color>
 </resources>

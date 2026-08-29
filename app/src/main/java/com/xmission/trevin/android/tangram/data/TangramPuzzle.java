@@ -503,6 +503,14 @@ public class TangramPuzzle implements Cloneable, Parcelable {
         return false;
     }
 
+    /**
+     * @return the errors reported by the last validation attempt,
+     * or {@code null} if the puzzle was valid when checked.
+     */
+    public @Nullable List<TangramException> getValidationErrors() {
+        return validationErrors;
+    }
+
     /** Union-find root of {@code i}, with path halving. */
     private static int find(int[] parent, int i) {
         while (parent[i] != i) {
@@ -912,10 +920,8 @@ public class TangramPuzzle implements Cloneable, Parcelable {
                      * against *if* that piece is aligned to the Q2 grid.
                      */
                     if (other.getPosition().isQ2Aligned()) {
-                        TPoint negatePiece = other.getPosition()
-                                .clone().mirrorX().mirrorY();
                         bestPoint = exactNearest.clone()
-                                .add(negatePiece)
+                                .subtract(other.getPosition())
                                 .nearestQ2GridPoint()
                                 .add(other.getPosition());
                         if (bestPoint.distanceTo(exactNearest)
@@ -1025,10 +1031,8 @@ public class TangramPuzzle implements Cloneable, Parcelable {
              */
             TPoint snapPosition;
             if (contact.neighbor.getPosition().isQ2Aligned()) {
-                TPoint negateNeigbor = contact.neighbor.getPosition()
-                        .clone().mirrorX().mirrorY();
                 snapPosition = exactPosition.clone()
-                        .add(negateNeigbor)
+                        .subtract(contact.neighbor.getPosition())
                         .nearestQ2GridPoint()
                         .add(contact.neighbor.getPosition());
             } else {
