@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Generating the Application Package (Building the Tangram application for Android)</title>
+
+<meta name="description" content="Generating the Application Package (Building the Tangram application for Android)">
+<meta name="keywords" content="Generating the Application Package (Building the Tangram application for Android)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Building-from-the-Source.html" rel="up" title="Building from the Source">
+<link href="Generating-Documentation.html" rel="next" title="Generating Documentation">
+<link href="Testing.html" rel="prev" title="Testing">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Generating-the-Application-Package">
+<div class="nav-panel">
+<p>
+Next: <a href="Generating-Documentation.html" accesskey="n" rel="next">Generating Documentation</a>, Previous: <a href="Testing.html" accesskey="p" rel="prev">Testing</a>, Up: <a href="Building-from-the-Source.html" accesskey="u" rel="up">Building from the Source</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Generating-the-Application-Package-_0028APK_0029"><span>3.3 Generating the Application Package (APK)<a class="copiable-link" href="#Generating-the-Application-Package-_0028APK_0029"> &para;</a></span></h3>
+
+<p>In Android Studio, click on the Build menu then &ldquo;Build APK&rdquo;.  If
+there were no errors, this should produce
+<samp class="file">app/release/app-release.apk</samp> (in Android Studio 2024+).  You
+should rename this file to a more descriptive name like
+<samp class="file">tangram-1.0.0.apk</samp>.
+</p>
+<p>Alternatively from the command line, run the following commands:
+</p>
+<div class="example">
+<pre class="example-preformatted">./gradlew assembleRelease
+</pre></div>
+<p>This will produce an <em class="emph">unsigned</em> APK in
+<samp class="file">app/build/outputs/apk/release/app-release-unsigned.apk</samp>.
+To sign this, you will need to locate the build tools for the version
+specified in <samp class="file">app/build.gradle</samp> under
+<code class="code">android.buildToolsVersion</code> (if present; otherwise the most
+recent build tools supported by the Android Gradle plugin).  You will
+also need to know where the keystore of your app signing key is
+located.
+</p><pre class="verbatim">${BUILD_TOOLS_VERSION_DIRECTORY}/apksigner sign \
+  --alignment-preserved \
+  --ks ${ANDROID_KEYSTORE} --ks-key-alias ${SIGNING_KEY_ALIAS} \
+  --out app/${APP_NAME}-${VERSION}.apk \
+  app/build/outputs/apk/release/app-release-unsigned.apk
+</pre>
+<p><em class="emph">(The <code class="code">--alignment-preserved</code> option may be needed if you
+are using build tools 35 or higher.)</em>
+</p>
+</div>
+
+
+
+</body>
+</html>

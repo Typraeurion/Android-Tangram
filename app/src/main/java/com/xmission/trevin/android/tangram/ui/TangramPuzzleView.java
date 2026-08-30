@@ -16,6 +16,7 @@
  */
 package com.xmission.trevin.android.tangram.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -191,6 +192,12 @@ public class TangramPuzzleView extends View {
     }
 
     @Override
+    /*
+     * Linting is suppressed for the `new float[...]'
+     * in the middle of the loop below because it's
+     * only used when we need to expand the vertexBuffer.
+     */
+    @SuppressLint("DrawAllocation")
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 

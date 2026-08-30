@@ -17,6 +17,7 @@
 package com.xmission.trevin.android.tangram.ui;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -53,11 +54,15 @@ public class AboutDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        // A null button listener is fine: an AlertDialog button dismisses
-        // the dialog by default when tapped.
+        Context context = requireContext();
+        String message = context.getString(R.string.InfoPopupText,
+                context.getString(R.string.VersionName),
+                context.getString(R.string.BuildDate));
         return new AlertDialog.Builder(requireContext())
                 .setTitle(R.string.MenuAbout)
-                .setMessage(requireContext().getText(R.string.InfoPopupText))
+                .setMessage(message)
+                // A null button listener is fine: an AlertDialog
+                // button dismisses the dialog by default when tapped.
                 .setNeutralButton(R.string.InfoButtonOK, null)
                 .create();
     }

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Code Organization (Building the Tangram application for Android)</title>
+
+<meta name="description" content="Code Organization (Building the Tangram application for Android)">
+<meta name="keywords" content="Code Organization (Building the Tangram application for Android)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="index.html" rel="up" title="Top">
+<link href="Creating-Puzzle-Assets.html" rel="next" title="Creating Puzzle Assets">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="chapter-level-extent" id="Code-Organization">
+<div class="nav-panel">
+<p>
+Next: <a href="Creating-Puzzle-Assets.html" accesskey="n" rel="next">Creating Puzzle Assets</a>, Up: <a href="index.html" accesskey="u" rel="up">Menu</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<h2 class="chapter" id="Code-Organization-1"><span>1 Code Organization<a class="copiable-link" href="#Code-Organization-1"> &para;</a></span></h2>
+
+<p>As with all Android projects, the <samp class="file">AndroidManifest.xml</samp> file
+under <samp class="file">app/src/main/</samp> describes the main components of the
+application (its activities).  Some of the specifics such as the
+version number and supported SDK range are contained in
+<samp class="file">app/build.gradle</samp> instead of the manifest.
+</p>
+<p>All code is under the top-level package
+<code class="code">com.xmission.trevin.android.tangram</code>.  The sub-packages
+are:
+</p>
+<dl class="table">
+<dt><code class="code">.data</code></dt>
+<dd><p>Java objects that have little or no dependencies on Android
+</p>
+</dd>
+<dt><code class="code">.exception</code></dt>
+<dd><p>Custom exceptions used for reporting invalid puzzle definitions
+</p>
+</dd>
+<dt><code class="code">.ui</code></dt>
+<dd><p>Classes that implement the user interface of the application
+</p>
+</dd>
+<dt><code class="code">.util</code></dt>
+<dd><p>Utility classes; helper functions
+</p></dd>
+</dl>
+
+<p>The puzzles that are bundled with the application are located in
+<samp class="file">app/src/main/assets/</samp>.  All other resources used by the
+application (UI layout, language-dependent strings, icons, etc.) are
+under <samp class="file">app/src/main/res/</samp>.
+</p>
+
+<ul class="mini-toc">
+<li><a href="Data-Classes.html" accesskey="1">Data Classes</a></li>
+<li><a href="UI-Classes.html" accesskey="2">UI Classes</a></li>
+</ul>
+</div>
+
+
+
+</body>
+</html>

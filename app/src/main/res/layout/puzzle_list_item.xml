@@ -41,5 +41,6 @@
         android:layout_gravity="end|center_vertical"
         android:layout_weight="0"
         android:layout_margin="@dimen/piece_tray_padding"
-        android:src="@drawable/difficulty_dot_1" />
+        android:src="@drawable/difficulty_dot_1"
+        android:contentDescription="@string/DifficultyDot1Tooltip" />
 </LinearLayout>

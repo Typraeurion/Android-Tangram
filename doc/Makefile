@@ -4,26 +4,25 @@
 
 all: pdf html
 
-pdf: Building_Tangram.pdf Tangram.pdf
+pdf: Building_Tangram.pdf # Tangram.pdf
 
-html: Building_Tangram/Building_Tangram.html Tangram/Tangram.html
+html: Building_Tangram_html/index.html # Tangram_html/index.html
 
 Building_Tangram.pdf: Building_Tangram.texinfo
 	texi2pdf Building_Tangram.texinfo
 
-Building_Tangram:
-	mkdir -p Building_Tangram
+Building_Tangram_html:
+	mkdir -p Building_Tangram_html
+	ln -s ../Tan_placement_graph_example.png Building_Tangram_html/
 
-Building_Tangram/Building_Tangram.html: Building_Tangram.texinfo | Building_Tangram
-	texi2html --split node Building_Tangram.texinfo
-	touch $@
+Building_Tangram_html/index.html: Building_Tangram.texinfo | Building_Tangram_html
+	texi2any --html -c HTML_MATH=mathjax --split node Building_Tangram.texinfo && touch $@
 
-Tangram.pdf: Tangram.texinfo
-	texi2pdf Tangram.texinfo
+#Tangram.pdf: Tangram.texinfo
+#	texi2pdf Tangram.texinfo
 
-Tangram:
-	mkdir -p Tangram
+#Tangram_html:
+#	mkdir -p Tangram_html
 
-Tangram/Tangram.html: Tangram.texinfo | Tangram
-	texi2html --split node Tangram.texinfo
-	touch $@
+#Tangram_html/index.html: Tangram.texinfo | Tangram_html
+#	texi2any --html --split node Tangram.texinfo && touch $@

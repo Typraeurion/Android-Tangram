@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Testing (Building the Tangram application for Android)</title>
+
+<meta name="description" content="Testing (Building the Tangram application for Android)">
+<meta name="keywords" content="Testing (Building the Tangram application for Android)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Building-from-the-Source.html" rel="up" title="Building from the Source">
+<link href="Generating-the-Application-Package.html" rel="next" title="Generating the Application Package">
+<link href="Development-Environment.html" rel="prev" title="Development Environment">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Testing">
+<div class="nav-panel">
+<p>
+Next: <a href="Generating-the-Application-Package.html" accesskey="n" rel="next">Generating the Application Package (APK)</a>, Previous: <a href="Development-Environment.html" accesskey="p" rel="prev">Development Environment</a>, Up: <a href="Building-from-the-Source.html" accesskey="u" rel="up">Building from the Source</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Testing-1"><span>3.2 Testing<a class="copiable-link" href="#Testing-1"> &para;</a></span></h3>
+
+<p>There are a variety of automated tests both stand-alone and
+instrumented for testing on emulators.  These are in the
+<samp class="file">app/src/test</samp> and <samp class="file">app/src/androidTest</samp> directories
+respectively.
+</p>
+<p>Running the stand-alone tests can be done from the command line:
+</p>
+<div class="example">
+<pre class="example-preformatted">./gradlew :app:testDebugUnitTest
+</pre></div>
+
+<p>For the instrumented tests, it&rsquo;s recommended that you run these in
+Android Studio where you can manage the virtual devices that the tests
+run on.  At the moment the only instrumented tests are those which
+check the puzzle asset files; these do not have any dependencies on
+SDK features other than reading the assets, so it should only be
+necessary to run them on a device with the minimum SDK level (23) and
+target SDK (37).
+</p>
+</div>
+
+
+
+</body>
+</html>

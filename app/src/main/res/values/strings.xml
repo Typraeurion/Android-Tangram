@@ -1,6 +1,6 @@
 <resources>
     <string name="InfoPopupText">Tangram\n
-version 0.8 (2026.08.29)\n
+version %1$s (%2$s)\n
 by Trevin Beattie\n
 \n
 Documentation for this app can be found on its GitHub project page:
@@ -28,6 +28,13 @@ concepts that cannot be copyrighted.\n
         <item>Goal</item>
         <item>Save</item>
     </array>
+    <string name="DifficultyDot1Tooltip">Novice</string>
+    <string name="DifficultyDot2Tooltip">Apprentice</string>
+    <string name="DifficultyDot3Tooltip">Competent</string>
+    <string name="DifficultyDot4Tooltip">Skilled</string>
+    <string name="DifficultyDot5Tooltip">Expert</string>
+    <string name="DifficultyDot6Tooltip">Master</string>
+    <string name="DifficultyDot7Tooltip">Grandmaster</string>
     <string name="ErrorBadUserArrayPuzzle">Entry at %s[%d] is not a valid Tangram puzzle: %s</string>
     <string name="ErrorBadUserPuzzle">%s is not a valid Tangram puzzle: %s</string>
     <string name="ErrorCannotCreateSaveFile">Unable to create the file "%s" to save the puzzle.</string>

@@ -5,15 +5,16 @@ An implementation of the
 [Tangram](https://en.wikipedia.org/wiki/Tangram) — a tiling puzzle
 consisting of seven polygons (five triangles in three sizes, a square,
 and a parallelogram) that can be put together to form shapes.
-Includes a number of puzzles that the player can try to solve, or the
-player can sketch out their own shapes.
+Includes over a hundred puzzles that the player can try to solve, or
+the player can sketch out their own shapes.
 
 _Planned for release on [F-Droid](https://f-droid.org/)…_
 
 This application is free to use and modify according to the terms of
 the [Gnu General Public License (GPL) Version 3](doc/gpl-3.0.txt).
 
-Instructions for building the application from source on the to-do list…
+Instructions for building the application from source are in the
+[Building the Tangram Application](doc/Building_Tangram.pdf) document.
 
 ## What Is a Tangram?
 
@@ -61,9 +62,11 @@ underneath.
 
 From the main menu, clicking on “Puzzle Library” will show a list of
 all the puzzles the app knows.  The app comes with over 100 puzzles.
-Clicking on any of these will start the game with that puzzle as your
-goal.  Alternatively you can click “Random Puzzle” from the main menu
-to have the app choose a puzzle for you.
+The colored dot next to each puzzle is an estimate of its difficulty,
+from green for easy puzzles to red for very hard ones.  Clicking on
+any of these will start the game with that puzzle as your goal.
+Alternatively you can click “Random Puzzle” from the main menu to have
+the app choose a puzzle for you.
 
 When you solve the puzzle, the app will let you know.  Some puzzles may
 have more than one solution; it doesn’t matter which arrangement you

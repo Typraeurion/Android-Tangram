@@ -185,6 +185,8 @@ public class PuzzleListAdapter extends BaseAdapter {
                 puzzleName.setText(puzzle.getName());
                 puzzleSource.setText(getPuzzleSource(puzzle));
                 difficultyDot.setImageResource(getDifficultyDot(puzzle));
+                difficultyDot.setContentDescription(
+                        getDifficultyDotDescription(puzzle));
                 return vg;
             }
         }
@@ -203,6 +205,8 @@ public class PuzzleListAdapter extends BaseAdapter {
         puzzleName.setText(puzzle.getName());
         puzzleSource.setText(getPuzzleSource(puzzle));
         difficultyDot.setImageResource(getDifficultyDot(puzzle));
+        difficultyDot.setContentDescription(
+                getDifficultyDotDescription(puzzle));
         return vg;
     }
 
@@ -225,6 +229,26 @@ public class PuzzleListAdapter extends BaseAdapter {
         if (puzzle.getDifficulty() < 86)
             return R.drawable.difficulty_dot_6;
         return R.drawable.difficulty_dot_7;
+    }
+
+    /**
+     * Get the string description of a difficulty level for the given
+     * puzzle; this is used for accessibility.
+     */
+    protected String getDifficultyDotDescription(TangramPuzzle puzzle) {
+        if (puzzle.getDifficulty() < 15)
+            return context.getString(R.string.DifficultyDot1Tooltip);
+        if (puzzle.getDifficulty() < 29)
+            return context.getString(R.string.DifficultyDot2Tooltip);
+        if (puzzle.getDifficulty() < 43)
+            return context.getString(R.string.DifficultyDot3Tooltip);
+        if (puzzle.getDifficulty() < 58)
+            return context.getString(R.string.DifficultyDot4Tooltip);
+        if (puzzle.getDifficulty() < 72)
+            return context.getString(R.string.DifficultyDot5Tooltip);
+        if (puzzle.getDifficulty() < 86)
+            return context.getString(R.string.DifficultyDot6Tooltip);
+        return context.getString(R.string.DifficultyDot7Tooltip);
     }
 
     /**

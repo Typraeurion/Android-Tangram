@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Data Classes (Building the Tangram application for Android)</title>
+
+<meta name="description" content="Data Classes (Building the Tangram application for Android)">
+<meta name="keywords" content="Data Classes (Building the Tangram application for Android)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Code-Organization.html" rel="up" title="Code Organization">
+<link href="UI-Classes.html" rel="next" title="UI Classes">
+<link href="Code-Organization.html" rel="prev" title="Code Organization">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+<script type='text/javascript'>
+MathJax = {
+  options: {
+    skipHtmlTags: {'[-]': ['pre']},
+    ignoreHtmlClass: 'tex2jax_ignore',
+    processHtmlClass: 'tex2jax_process'
+  },
+};
+</script><script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+</head>
+
+<body lang="en" class="tex2jax_ignore">
+<div class="section-level-extent" id="Data-Classes">
+<div class="nav-panel">
+<p>
+Next: <a href="UI-Classes.html" accesskey="n" rel="next">UI Classes</a>, Previous: <a href="Code-Organization.html" accesskey="p" rel="prev">Code Organization</a>, Up: <a href="Code-Organization.html" accesskey="u" rel="up">Code Organization</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Data-Classes-1"><span>1.1 Data Classes<a class="copiable-link" href="#Data-Classes-1"> &para;</a></span></h3>
+
+<p>Following is an overview of the high-level Java objects used in
+Tangram.
+</p>
+<dl class="table">
+<dt><code class="code">TangramPuzzle</code></dt>
+<dd><p>This is the basic container for puzzles.  It includes their name,
+source, list of <code class="code">TangramPiece</code>s, and methods for reading,
+building, and validating puzzles.
+</p>
+</dd>
+<dt><code class="code">TangramPiece</code></dt>
+<dd><p>An abstract class representing a single tan.  It defines its shape,
+rotation, position, and in the case of the parallelogram whether it is
+flipped over.  It includes a few helper methods for checking whether
+the edges of two tans are touching.  There are subclasses of this for
+each type of tan.
+</p>
+</dd>
+<dt><code class="code">TPoint</code></dt>
+<dd><p>An <em class="math tex2jax_process">\(x, y\)</em> coordinate in <em class="math tex2jax_process">\(Q\sqrt{2}\)</em> space, which is known as
+the <a class="url" href="https://mathworld.wolfram.com/QuadraticField.html">Real
+Quadratic Field</a>.  Coordinates are defined as
+<em class="math tex2jax_process">\(a_{x}+b_{x}\sqrt{2}\)</em>, <em class="math tex2jax_process">\(a_{y}+b_{y}\sqrt{2}\)</em>.
+Since most puzzles have tans oriented at multiples of 45&deg;,
+using separate coefficients for the rational part and a multiple of
+<em class="math tex2jax_process">\(\sqrt{2}\)</em> allows them to be integers in the vast majority of
+cases.  This is an abstract class, with separate
+<code class="code">ImmutableTPoint</code> and <code class="code">MutableTPoint</code> implementations that
+are alternately used depending on whether ease of math operations or
+reducing Java object allocations is needed more.
+</p>
+</dd>
+<dt><code class="code">TEdge</code></dt>
+<dd><p>A line segment in <em class="math tex2jax_process">\(Q\sqrt{2}\)</em> space.  This utility class is used
+to help snap tans together, test for overlaps, and is a component of
+<code class="code">TPolygon</code>s.
+</p>
+</dd>
+<dt><code class="code">TPolygon</code></dt>
+<dd><p>A polygon in <em class="math tex2jax_process">\(Q\sqrt{2}\)</em> space.  This is used to find the
+silhouette of a puzzle and compare two puzzles to see whether they are
+identical (i.e. make the same shape).
+</p></dd>
+</dl>
+
+</div>
+<hr>
+<div class="nav-panel">
+<p>
+Next: <a href="UI-Classes.html">UI Classes</a>, Previous: <a href="Code-Organization.html">Code Organization</a>, Up: <a href="Code-Organization.html">Code Organization</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+
+
+<a href="js_licenses.html" rel="jslicense"><small>JavaScript license information</small></a>
+</body>
+</html>

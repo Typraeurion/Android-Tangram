@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>UI Classes (Building the Tangram application for Android)</title>
+
+<meta name="description" content="UI Classes (Building the Tangram application for Android)">
+<meta name="keywords" content="UI Classes (Building the Tangram application for Android)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Code-Organization.html" rel="up" title="Code Organization">
+<link href="Creating-Puzzle-Assets.html" rel="next" title="Creating Puzzle Assets">
+<link href="Data-Classes.html" rel="prev" title="Data Classes">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="UI-Classes">
+<div class="nav-panel">
+<p>
+Next: <a href="Creating-Puzzle-Assets.html" accesskey="n" rel="next">Creating Puzzle Assets</a>, Previous: <a href="Data-Classes.html" accesskey="p" rel="prev">Data Classes</a>, Up: <a href="Code-Organization.html" accesskey="u" rel="up">Code Organization</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="UI-Classes-1"><span>1.2 UI Classes<a class="copiable-link" href="#UI-Classes-1"> &para;</a></span></h3>
+
+<p>Following are just a few of the UI components which are specialized
+for the Tangram application.
+</p>
+<dl class="table">
+<dt><code class="code">PieceTrayLayout</code></dt>
+<dd><p>A custom layout which holds tans not yet placed on the playing field.
+This contains operations for dragging tans to and from the playing
+field, keeping track of how many pieces are available.
+</p>
+</dd>
+<dt><code class="code">PlayTableView</code></dt>
+<dd><p>The main play area where puzzles can be built.  This contains most of
+the code for drawing the tans in play, moving them as the user drags
+within a tan boundary, rotating them as the user moves them with two
+fingers, moving the play field when the user drags outside of any
+tans, and zooming in and out of the play field when the user pinches
+or stretches it with two fingers.
+</p>
+</dd>
+<dt><code class="code">TangramPuzzleView</code></dt>
+<dd><p>A custom view that displays a static Tangram puzzle.  It contains
+mostly the same drawing code as <code class="code">PlayTableView</code>, but none of the
+interactions.  This is used both to display the goal in the corner
+when working on a puzzle and also to show previews of puzzles when
+browsing the library.
+</p></dd>
+</dl>
+
+</div>
+
+
+
+</body>
+</html>

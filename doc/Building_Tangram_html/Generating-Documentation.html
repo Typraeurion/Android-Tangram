@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<!-- Created by GNU Texinfo 7.1, https://www.gnu.org/software/texinfo/ -->
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Generating Documentation (Building the Tangram application for Android)</title>
+
+<meta name="description" content="Generating Documentation (Building the Tangram application for Android)">
+<meta name="keywords" content="Generating Documentation (Building the Tangram application for Android)">
+<meta name="resource-type" content="document">
+<meta name="distribution" content="global">
+<meta name="Generator" content="texi2any">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<link href="index.html" rel="start" title="Top">
+<link href="index.html#SEC_Contents" rel="contents" title="Table of Contents">
+<link href="Building-from-the-Source.html" rel="up" title="Building from the Source">
+<link href="Generating-the-Application-Package.html" rel="prev" title="Generating the Application Package">
+<style type="text/css">
+<!--
+a.copiable-link {visibility: hidden; text-decoration: none; line-height: 0em}
+div.example {margin-left: 3.2em}
+span:hover a.copiable-link {visibility: visible}
+-->
+</style>
+
+
+</head>
+
+<body lang="en">
+<div class="section-level-extent" id="Generating-Documentation">
+<div class="nav-panel">
+<p>
+Previous: <a href="Generating-the-Application-Package.html" accesskey="p" rel="prev">Generating the Application Package (APK)</a>, Up: <a href="Building-from-the-Source.html" accesskey="u" rel="up">Building from the Source</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>]</p>
+</div>
+<hr>
+<h3 class="section" id="Generating-Documentation-1"><span>3.4 Generating Documentation<a class="copiable-link" href="#Generating-Documentation-1"> &para;</a></span></h3>
+
+<p>Lastly, if you need to generate a new edition of this manual or the
+user manual, you will need
+<a class="uref" href="http://www.gnu.org/software/texinfo/"><code class="command">texinfo</code></a> and
+<a class="uref" href="https://www.gnu.org/software/texinfo/manual/texinfo/html_node/Format-with-texi2dvi-or-texi2pdf.html"><code class="command">texi2pdf</code></a>
+and/or
+<a class="uref" href="https://www.gnu.org/software/texinfo/manual/texi2any_api/html_node/index.html"><code class="command">texi2any</code></a>.
+If you have <code class="command">make</code> there is a <samp class="file">Makefile</samp> which will make
+running <code class="code">texinfo</code> more convenient.
+</p>
+<p>To generate the manuals in PDF, simply run:
+</p>
+<div class="example">
+<pre class="example-preformatted">make pdf
+</pre></div>
+
+<p>if you have <code class="command">make</code>, or:
+</p>
+<div class="example">
+<pre class="example-preformatted">texi2pdf Building_Tangram.texinfo
+texi2pdf Tangram.texinfo
+</pre></div>
+
+<p>To generate the manuals in HTML, run:
+</p>
+<div class="example">
+<pre class="example-preformatted">make html
+</pre></div>
+
+<p>or:
+</p>
+<div class="example">
+<pre class="example-preformatted">texi2any --html -c HTML_MATH=mathjax --split node Building_Tangram.texinfo
+texi2any --html --split node Tangram.texinfo
+</pre></div>
+<p>which will produce the manuals under
+<samp class="file">doc/Building_Tangram_html/index.html</samp> and
+<samp class="file">doc/Tangram_html/index.html</samp>.
+</p>
+</div>
+
+
+
+</body>
+</html>

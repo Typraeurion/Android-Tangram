@@ -1,12 +1,21 @@
+import java.time.format.DateTimeFormatter
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+// Determine the build date in the local time zone.
+def buildDate = LocalDate.now(ZoneId.of("America/Los_Angeles")).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
 
 android {
     namespace = 'com.xmission.trevin.android.tangram'
     compileSdk = 37
 
     buildToolsVersion = "37.0.0"
+
+    buildFeatures {
+        resValues = true
+    }
 
     /**
      * The defaultConfig block encapsulates default settings and entries
@@ -18,21 +27,25 @@ android {
 
     defaultConfig {
         // Uniquely identifies the package for publishing.
-        applicationId "com.xmission.trevin.android.tangram"
+        applicationId = "com.xmission.trevin.android.tangram"
 
         // Defines the minimum API level required to run the app.
         // Current minimum is Marshmallow (Android 6)
-        minSdk 23
+        minSdk = 23
 
         // Specifies the API level used to test the app.
         // Current target is Cinnamon Bun (Android 17)
-        targetSdk 37
+        targetSdk = 37
 
         // Defines the version number of your app.
-        versionCode 80001
+        versionCode = 80001
 
         // Defines a user-friendly version name for your app.
-        versionName "0.8"
+        versionName = "0.8"
+
+        // Inject the version and build date into the string resources
+        resValue "string", "BuildDate", buildDate
+        resValue "string", "VersionName", versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,14 +55,14 @@ android {
         }
         release {
             optimization {
-                enable false
+                enable = false
             }
         }
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     aaptOptions {
@@ -59,6 +72,8 @@ android {
     }
 
     lintOptions {
+        disable 'UnusedResources'
+
         // Workaround for issues with Android Studio
         // complaining about not targeting the latest SDK
         disable 'ExpiredTargetSdkVersion'
@@ -81,12 +96,14 @@ dependencies {
 }
 
 configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'org.jetbrains.kotlin') {
-            // Force all transient Kotlin dependencies to use the same version
-            details.useVersion '1.8.22'
-        }
-    }
+    // Since Kotlin 1.8 the JDK7/JDK8 standard-library classes were merged
+    // into the main kotlin-stdlib artifact, so any transitively-pulled
+    // kotlin-stdlib-jdk7 / -jdk8 modules collide with kotlin-stdlib and
+    // produce "Duplicate class" errors.  Excluding the obsolete artifacts
+    // resolves this without pinning a Kotlin version (which would otherwise
+    // break AGP's bundled lint, that requires a newer Kotlin runtime).
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk7'
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-jdk8'
 }
 
 tasks.register('generateCustomJavadoc', Javadoc) {
