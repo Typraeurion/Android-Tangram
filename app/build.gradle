@@ -1,21 +1,12 @@
-import java.time.format.DateTimeFormatter
-
 plugins {
     alias(libs.plugins.android.application)
 }
-
-// Determine the build date in the local time zone.
-def buildDate = LocalDate.now(ZoneId.of("America/Los_Angeles")).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
 
 android {
     namespace = 'com.xmission.trevin.android.tangram'
     compileSdk = 37
 
     buildToolsVersion = "37.0.0"
-
-    buildFeatures {
-        resValues = true
-    }
 
     /**
      * The defaultConfig block encapsulates default settings and entries
@@ -38,14 +29,10 @@ android {
         targetSdk = 37
 
         // Defines the version number of your app.
-        versionCode = 80001
+        versionCode = 80101
 
         // Defines a user-friendly version name for your app.
-        versionName = "0.8"
-
-        // Inject the version and build date into the string resources
-        resValue "string", "BuildDate", buildDate
-        resValue "string", "VersionName", versionName
+        versionName = "0.8.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

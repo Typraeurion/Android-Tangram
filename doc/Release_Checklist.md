@@ -13,6 +13,7 @@
     2. Check the results in `app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt` for any “Error”s.
     3. Fix the errors as needed.
 - [ ] Increment the application version to the next applicable number (minor for added features, patch for bug fixes).
+    - `app/src/main/res/values/strings.xml`: `InfoPopupText` line 2 (version string and build date)
     - `app/build.gradle`: `android.defaultConfig`: `versionCode` and `versionName`
 - [ ] When applicable, increment the target SDK level / Android version.
     - `app/build.gradle`: `android.defaultConfig.targetSdk`
