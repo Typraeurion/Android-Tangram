@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Black-and-white variation of the application icon; this is
+     used to represent the outlined coloring option in Preferences. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="170.66dp"
+    android:height="170.66dp"
+    android:viewportWidth="170.6548085423135644"
+    android:viewportHeight="170.6548085423135644">
+    <group>
+        <path android:strokeWidth="2"
+            android:strokeColor="@color/background"
+            android:strokeLineJoin="round"
+            android:fillColor="@color/foreground"
+            android:pathData="M 85.3274042711567822,85.3274042711567822 L 165.3274042711567822,165.3274042711567822 L 5.3274042711567822,165.3274042711567822 Z"/>
+        <path android:strokeWidth="2"
+            android:strokeColor="@color/background"
+            android:strokeLineJoin="round"
+            android:fillColor="@color/foreground"
+            android:pathData="M 85.3274042711567822,85.3274042711567822 L 5.3274042711567822,165.3274042711567822 L 5.3274042711567822,5.3274042711567822 Z"/>
+        <path android:strokeWidth="2"
+            android:strokeColor="@color/background"
+            android:strokeLineJoin="round"
+            android:fillColor="@color/foreground"
+            android:pathData="M 165.3274042711567822,5.3274042711567822 L 165.3274042711567822,85.3274042711567822 L 85.3274042711567822,5.3274042711567822 Z"/>
+        <path android:strokeWidth="2"
+            android:strokeColor="@color/background"
+            android:strokeLineJoin="round"
+            android:fillColor="@color/foreground"
+            android:pathData="M 5.3274042711567822,5.3274042711567822 L 85.3274042711567822,5.3274042711567822 L 125.3274042711567822,45.3274042711567822 L 45.3274042711567822,45.3274042711567822 Z"/>
+        <path android:strokeWidth="2"
+            android:strokeColor="@color/background"
+            android:strokeLineJoin="round"
+            android:fillColor="@color/foreground"
+            android:pathData="M 125.3274042711567822,45.3274042711567822 L 165.3274042711567822,85.3274042711567822 L 125.3274042711567822,125.3274042711567822 L 85.3274042711567822,85.3274042711567822 Z"/>
+        <path android:strokeWidth="2"
+            android:strokeColor="@color/background"
+            android:strokeLineJoin="round"
+            android:fillColor="@color/foreground"
+            android:pathData="M 45.3274042711567822,45.3274042711567822 L 125.3274042711567822,45.3274042711567822 L 85.3274042711567822,85.3274042711567822 Z"/>
+        <path android:strokeWidth="2"
+            android:strokeColor="@color/background"
+            android:strokeLineJoin="round"
+            android:fillColor="@color/foreground"
+            android:pathData="M 165.3274042711567822,85.3274042711567822 L 165.3274042711567822,165.3274042711567822 L 125.3274042711567822,125.3274042711567822 Z"/>
+    </group>
+</vector>

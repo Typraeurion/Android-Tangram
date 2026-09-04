@@ -69,6 +69,12 @@ public class TangramPuzzleView extends View {
     private final Path piecePath = new Path();
 
     /**
+     * Reusable path holding the union of all pieces, drawn as an
+     * underlay in {@link #onDraw} to hide anti-aliasing seams.
+     */
+    private final Path silhouettePath = new Path();
+
+    /**
      * Reusable buffer for mapping a piece&rsquo;s vertices, as interleaved
      * (x, y) pairs.  Grown on demand for pieces with more vertices.
      */
@@ -212,30 +218,53 @@ public class TangramPuzzleView extends View {
         outlinePaint.setColor(outlineColor);
         outlinePaint.setStrokeWidth(outlineWidthPx);
 
+        // Adjacent pieces are drawn as separate filled paths.  Where two
+        // anti-aliased edges abut, their partial coverage does not add up
+        // to full opacity, so faint background seams show through between
+        // same-colored pieces.  Painting the union of all the pieces
+        // underneath in the outline color means those sub-pixel seams
+        // reveal the outline color instead of the background, matching the
+        // per-piece outlines already drawn between differently-colored
+        // pieces and yielding a clean silhouette in monochrome modes.
+        silhouettePath.rewind();
+        for (int i = 0; i < puzzle.getPieceCount(); i++) {
+            buildPiecePath(puzzle.getPiece(i));
+            silhouettePath.op(piecePath, Path.Op.UNION);
+        }
+        fillPaint.setColor(outlineColor);
+        canvas.drawPath(silhouettePath, fillPaint);
+
         for (int i = 0; i < puzzle.getPieceCount(); i++) {
             TangramPiece piece = puzzle.getPiece(i);
-
-            // Build the piece outline from its transformed vertices.
-            TPoint[] vertices = piece.getVertices();
-            if (vertexBuffer.length < vertices.length * 2)
-                vertexBuffer = new float[vertices.length * 2];
-            for (int v = 0; v < vertices.length; v++) {
-                vertexBuffer[v * 2] = (float) vertices[v].getX();
-                vertexBuffer[v * 2 + 1] = (float) vertices[v].getY();
-            }
-            puzzleToView.mapPoints(vertexBuffer, 0, vertexBuffer, 0, vertices.length);
-
-            piecePath.rewind();
-            piecePath.moveTo(vertexBuffer[0], vertexBuffer[1]);
-            for (int v = 1; v < vertices.length; v++)
-                piecePath.lineTo(vertexBuffer[v * 2], vertexBuffer[v * 2 + 1]);
-            piecePath.close();
-
+            buildPiecePath(piece);
             fillPaint.setColor(fillColors.get(piece.getColorAttr(), Color.GRAY));
             canvas.drawPath(piecePath, fillPaint);
             if (outlineWidthPx > 0f)
                 canvas.drawPath(piecePath, outlinePaint);
         }
+    }
+
+    /**
+     * Build {@link #piecePath} from the given piece&rsquo;s vertices,
+     * transformed to view coordinates.
+     *
+     * @param piece the piece whose outline to build
+     */
+    private void buildPiecePath(@NonNull TangramPiece piece) {
+        TPoint[] vertices = piece.getVertices();
+        if (vertexBuffer.length < vertices.length * 2)
+            vertexBuffer = new float[vertices.length * 2];
+        for (int v = 0; v < vertices.length; v++) {
+            vertexBuffer[v * 2] = (float) vertices[v].getX();
+            vertexBuffer[v * 2 + 1] = (float) vertices[v].getY();
+        }
+        puzzleToView.mapPoints(vertexBuffer, 0, vertexBuffer, 0, vertices.length);
+
+        piecePath.rewind();
+        piecePath.moveTo(vertexBuffer[0], vertexBuffer[1]);
+        for (int v = 1; v < vertices.length; v++)
+            piecePath.lineTo(vertexBuffer[v * 2], vertexBuffer[v * 2 + 1]);
+        piecePath.close();
     }
 
     @Override

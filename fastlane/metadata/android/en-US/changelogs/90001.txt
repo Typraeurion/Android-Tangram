@@ -1,0 +1,3 @@
+Version 0.9.0
+* Fixed an issue where seams between tans were showing on the puzzle goals in "no hint" mode.
+* Changed the top half of the Preferences page to look more professional.

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plain solid variation of the application icon; this is used to
+     represent the monochrome piece option and the "no hint" level in
+     Preferences.  The tangram pieces fill a square with no gaps, so it
+     is drawn as a single filled square (avoiding anti-aliasing seams). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="170.66dp"
+    android:height="170.66dp"
+    android:viewportWidth="170.6548085423135644"
+    android:viewportHeight="170.6548085423135644">
+    <path android:fillColor="@color/foreground"
+        android:pathData="M 5.3274042711567822,5.3274042711567822 L 165.3274042711567822,5.3274042711567822 L 165.3274042711567822,165.3274042711567822 L 5.3274042711567822,165.3274042711567822 Z"/>
+</vector>

@@ -177,4 +177,13 @@ public class TangramPuzzleTests {
         runTest("puzzles-26-alphabet.json");
     }
 
+    /**
+     * Test the icon puzzles file.  These were copied from a few different
+     * sources or created from scratch.
+     */
+    @Test
+    public void testReadIconPuzzles() throws IOException, JSONException {
+        runTest("puzzles-94-icons.json");
+    }
+
 }

@@ -141,6 +141,84 @@
     ]
   },
   {
+    "id": "icons-crescent-moon",
+    "name": "Crescent Moon",
+    "size": 37.45584412,
+    "size_comment": "The width is 12+12√2; the height is 12+18√2.",
+    "pieces": [
+      {
+	"name": "large_triangle",
+	"rotation": 90,
+	"position": {
+	  "xa": -2,
+	  "xb": 6,
+	  "ya": -6,
+	  "yb": 9
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 45,
+	"position": {
+	  "xa": 6,
+	  "xb": 2,
+	  "ya": -6,
+	  "yb": 1
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 0,
+	"position": {
+	  "xa": 6,
+	  "ya": -6,
+	  "yb": -5
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": false,
+	"rotation": -45,
+	"position": {
+	  "xa": 6,
+	  "xb": -6,
+	  "ya": -6,
+	  "yb": -6
+	}
+      },
+      {
+	"name": "square",
+	"rotation": 0,
+	"position": {
+	  "xa": -6,
+	  "xb": 3,
+	  "ya": 6,
+	  "yb": 6
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 45,
+	"position": {
+	  "xa": -6,
+	  "xb": -2,
+	  "ya": 6,
+	  "yb": 5
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 135,
+	"position": {
+	  "xa": -6,
+	  "xb": 4,
+	  "ya": 6,
+	  "yb": 1
+	}
+      }
+    ]
+  },
+  {
     "id": "icons-pen",
     "name": "Pen",
     "size": 42.42640686035156,
@@ -201,6 +279,70 @@
           "xb": 12,
           "yb": -12
         }
+      }
+    ]
+  },
+  {
+    "id": "icons-star",
+    "name": "Star",
+    "size": 42.42640687,
+    "pieces": [
+      {
+	"name": "square",
+	"rotation": 0,
+	"position": {
+	  "xb": 0,
+	  "yb": 3
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": -135,
+	"position": {
+	  "xb": -1,
+	  "yb": -2
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": -45,
+	"position": {
+	  "xb": -1,
+	  "yb": 8
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": false,
+	"rotation": 45,
+	"position": {
+	  "xb": 0,
+	  "yb": -6
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 45,
+	"position": {
+	  "xb": -7,
+	  "yb": -2
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": -45,
+	"position": {
+	  "xb": 7,
+	  "yb": -2
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 0,
+	"position": {
+	  "xb": 9,
+	  "yb": 4
+	}
       }
     ]
   }
