@@ -4,8 +4,8 @@
      Preferences.  The tangram pieces fill a square with no gaps, so it
      is drawn as a single filled square (avoiding anti-aliasing seams). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="170.66dp"
-    android:height="170.66dp"
+    android:width="56dp"
+    android:height="56dp"
     android:viewportWidth="170.6548085423135644"
     android:viewportHeight="170.6548085423135644">
     <path android:fillColor="@color/foreground"

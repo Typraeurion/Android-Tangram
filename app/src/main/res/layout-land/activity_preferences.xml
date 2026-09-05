@@ -34,15 +34,15 @@
                     android:orientation="horizontal">
                     <RadioButton android:id="@+id/PreferencesRadioButtonUILight"
                         style="@style/PrefOptionButton"
-                        android:drawableTop="@drawable/pref_ic_light"
+                        android:drawableTop="@drawable/ic_star"
                         android:text="@string/PrefsTextThemeLight" />
                     <RadioButton android:id="@+id/PreferencesRadioButtonUIDark"
                         style="@style/PrefOptionButton"
-                        android:drawableTop="@drawable/pref_ic_dark"
+                        android:drawableTop="@drawable/ic_moon"
                         android:text="@string/PrefsTextThemeDark" />
                     <RadioButton android:id="@+id/PreferencesRadioButtonUIDefault"
                         style="@style/PrefOptionButton"
-                        android:drawableTop="@drawable/pref_ic_default"
+                        android:drawableTop="@drawable/ic_day_night"
                         android:text="@string/PrefsTextThemeDefault" />
                 </RadioGroup>
             </LinearLayout>
@@ -62,11 +62,11 @@
                     android:orientation="horizontal">
                     <RadioButton android:id="@+id/PreferencesRadioButtonPieceThemeSolid"
                         style="@style/PrefOptionButton"
-                        android:drawableTop="@drawable/pref_ic_solid"
+                        android:drawableTop="@drawable/icon_solid"
                         android:text="@string/PrefsTextPieceThemeSolid" />
                     <RadioButton android:id="@+id/PreferencesRadioButtonPieceThemeOutline"
                         style="@style/PrefOptionButton"
-                        android:drawableTop="@drawable/pref_ic_outline"
+                        android:drawableTop="@drawable/icon_outlines"
                         android:text="@string/PrefsTextPieceThemeOutline" />
                     <RadioButton android:id="@+id/PreferencesRadioButtonPieceThemeMulticolor"
                         style="@style/PrefOptionButton"
@@ -90,11 +90,11 @@
                     android:orientation="horizontal">
                     <RadioButton android:id="@+id/PreferencesRadioButtonHintNone"
                         style="@style/PrefOptionButton"
-                        android:drawableTop="@drawable/pref_ic_solid"
+                        android:drawableTop="@drawable/icon_solid"
                         android:text="@string/PrefsTextHintNone" />
                     <RadioButton android:id="@+id/PreferencesRadioButtonHintOutline"
                         style="@style/PrefOptionButton"
-                        android:drawableTop="@drawable/pref_ic_outline"
+                        android:drawableTop="@drawable/icon_outlines"
                         android:text="@string/PrefsTextHintOutline" />
                     <RadioButton android:id="@+id/PreferencesRadioButtonHintSolve"
                         style="@style/PrefOptionButton"

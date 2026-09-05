@@ -2,8 +2,8 @@
 <!-- Black-and-white variation of the application icon; this is
      used to represent the outlined coloring option in Preferences. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="170.66dp"
-    android:height="170.66dp"
+    android:width="56dp"
+    android:height="56dp"
     android:viewportWidth="170.6548085423135644"
     android:viewportHeight="170.6548085423135644">
     <group>
