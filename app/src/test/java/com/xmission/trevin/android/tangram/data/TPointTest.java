@@ -181,8 +181,8 @@ public class TPointTest {
         }
     }
 
-    @Test
     /** A rotation must never collapse a point onto the x=y diagonal. */
+    @Test
     public void testCoarseRotatePreservesDistinctCoordinatesImmutable() {
         TPoint p = new ImmutableTPoint(3, 0, 1, 2);
         final double expected = Math.hypot(p.getX(), p.getY());

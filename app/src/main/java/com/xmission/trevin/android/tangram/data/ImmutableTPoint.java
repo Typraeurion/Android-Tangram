@@ -31,7 +31,7 @@ import org.json.JSONObject;
 public class ImmutableTPoint extends TPoint {
 
     /** The origin of the coordinate space. */
-    public static ImmutableTPoint ORIGIN =
+    public static final ImmutableTPoint ORIGIN =
             new ImmutableTPoint(0f, 0f, 0f, 0f);
 
     private final double xa, xb, ya, yb;

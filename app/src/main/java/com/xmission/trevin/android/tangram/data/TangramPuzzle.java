@@ -16,7 +16,6 @@
  */
 package com.xmission.trevin.android.tangram.data;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -165,6 +164,7 @@ public class TangramPuzzle implements Cloneable, Parcelable {
                     name, i));
             // We have to do this separate from the constructor since
             // older Android SDK's did not implement the 2-arg constructor.
+            //noinspection UnnecessaryInitCause
             wrappedException.initCause(e);
             throw wrappedException;
         }
@@ -1405,7 +1405,8 @@ public class TangramPuzzle implements Cloneable, Parcelable {
             TPolygon poly = TPolygon.fromPuzzle(this);
             double perimeterRatio = poly.getPerimeter()
                     / TOTAL_PIECES_PERIMETER;
-            double vertexRatio = poly.countVertices() / TOTAL_PIECES_VERTICES;
+            double vertexRatio = (double) poly.countVertices()
+                    / TOTAL_PIECES_VERTICES;
             boolean hasMirror = false;
             for (TangramPiece piece : pieces) {
                 if (piece.isMirrored()) {

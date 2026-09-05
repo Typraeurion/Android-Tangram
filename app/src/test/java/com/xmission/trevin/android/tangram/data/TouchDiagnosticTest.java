@@ -92,7 +92,7 @@ public class TouchDiagnosticTest {
                     sb.append(String.format("%s <-> %s : minVE=%.5f touches=%b overlaps=%b%n",
                             names[i], names[j], d, t, o));
             }
-        assertTrue("Puzzle failed validation:\n" + sb.toString(),
+        assertTrue("Puzzle failed validation:\n" + sb,
                 puzzle.isValid(false));
     }
 }

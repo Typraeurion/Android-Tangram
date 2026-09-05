@@ -175,7 +175,6 @@ public class PuzzleLibrary {
         }
         Object json;
         for (String assetName : assets) {
-            json = null;
             if (PUZZLE_PATTERN.matcher(assetName).matches()) try {
                 json = readJSONAsset(context, assetName);
             } catch (IOException | JSONException e) {
@@ -254,7 +253,7 @@ public class PuzzleLibrary {
             if (!puzzleFilePattern.matcher(file.getName()).matches())
                 continue;
             String sourceFileName = file.getName();
-            Object json = null;
+            Object json;
             try {
                 json = readJSONUserFile(context, file);
             } catch (IOException | JSONException e) {

@@ -322,7 +322,7 @@ public abstract class TPoint implements Cloneable, Parcelable {
     /**
      * Create a point from a {@link Parcel}.
      */
-    public static Creator<TPoint> CREATOR = new Creator<>() {
+    public static final Creator<TPoint> CREATOR = new Creator<>() {
         @Override
         public TPoint createFromParcel(Parcel in) {
             boolean isMutable = (in.readInt() != 0);

@@ -17,6 +17,7 @@
 package com.xmission.trevin.android.tangram.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -256,7 +257,7 @@ public class TangramPuzzleSnapTest {
         puzzle.snap(piece);
 
         assertEquals(1, puzzle.getPieceCount());
-        assertTrue(puzzle.getPiece(0) == piece);
+        assertSame(puzzle.getPiece(0), piece);
     }
 
     /** A large triangle at the given rotation (deg) and centroid (x, y). */

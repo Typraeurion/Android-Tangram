@@ -155,7 +155,7 @@ public class TangramPuzzleTests {
      */
     @Test
     public void testReadChristmasPuzzles() throws IOException, JSONException {
-        String jsonString = readAsset("puzzles-18-Christmas.json");
+        runTest("puzzles-18-Christmas.json");
     }
 
     /**

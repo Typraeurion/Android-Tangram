@@ -244,7 +244,7 @@ public class TEdge implements Parcelable {
     /**
      * Create an edge from a {@link Parcel}.
      */
-    public static Creator<TEdge> CREATOR = new Creator<>() {
+    public static final Creator<TEdge> CREATOR = new Creator<>() {
         @Override
         public TEdge createFromParcel(Parcel in) {
             return new TEdge(in);

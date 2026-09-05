@@ -405,7 +405,6 @@ public class TPolygon implements Parcelable {
 
     // ---- comparison helpers -----------------------------------------------
 
-    @NonNull
     /**
      * @return whether two loops have the same cyclic sequence of edge angles
      * and lengths, within tolerance, at some rotational offset

@@ -52,5 +52,5 @@
     - Title the release (e.g. “_Android Version_ Update”, “_Bug_ Patch”).
     - Enter release notes; generally the same items listed in the F-Droid change log.
     - Upload the APK from `app/Tangram-`_versionName_`.apk`
-    7. “Publish release”
+    6. “Publish release”
 - [ ] Within the next couple of days, check the [F-Droid build monitor](https://monitor.f-droid.org/builds/build) to see whether the build was successful or failed.
