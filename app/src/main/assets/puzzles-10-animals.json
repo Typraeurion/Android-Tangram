@@ -1551,5 +1551,78 @@
         }
       }
     ]
+  },
+  {
+    "id": "animals-vulture",
+    "name": "Vulture",
+    "size": 38.48528134,
+    "pieces": [
+      {
+	"name": "large_triangle",
+	"rotation": 90,
+	"position": {
+	  "xa": 7,
+	  "xb": -3,
+	  "ya": -1.5
+	}
+      },
+      {
+	"name": "large_triangle",
+	"rotation": 135,
+	"position": {
+	  "xa": 3,
+	  "xb": -7,
+	  "ya": -13.5,
+	  "yb": 8
+	}
+      },
+      {
+	"name": "parallelogram",
+	"isMirrored": true,
+	"rotation": 0,
+	"position": {
+	  "xa": -6,
+	  "xb": -3,
+	  "ya": -10.5,
+	  "yb": 12
+	}
+      },
+      {
+	"name": "medium_triangle",
+	"rotation": 45,
+	"position": {
+	  "xa": 11,
+	  "xb": -3,
+	  "ya": -9.5
+	}
+      },
+      {
+	"name": "square",
+	"rotation": 0,
+	"position": {
+	  "xa": 15,
+	  "ya": -1.5
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 45,
+	"position": {
+	  "xa": 15,
+	  "xb": 1,
+	  "ya": -1.5,
+	  "yb": 5
+	}
+      },
+      {
+	"name": "small_triangle",
+	"rotation": 0,
+	"position": {
+	  "xa": 6,
+	  "xb": -3,
+	  "ya": 11.5
+	}
+      }
+    ]
   }
 ]

@@ -38,7 +38,7 @@
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
             android:strokeWidth="?attr/tangramOutlineWidth" />
-      <path android:fillColor="?attr/tangramSmallSquareColor"
+      <path android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 69,140 L 111.5,140 L 111.5,182.5 L 69,182.5 Z"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
@@ -75,7 +75,7 @@
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
             android:strokeWidth="?attr/tangramOutlineWidth" />
-      <path android:fillColor="?attr/tangramSmallSquareColor"
+      <path android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 292.5,55 L 334.5,55 L 334.5,97.5 L 292.5,97.5 Z"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
@@ -112,7 +112,7 @@
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
             android:strokeWidth="?attr/tangramOutlineWidth" />
-      <path android:fillColor="?attr/tangramSmallSquareColor"
+      <path android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 367.5,140 L 410,140 L 410,182.5 L 367.5,182.5 Z"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
@@ -149,7 +149,7 @@
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
             android:strokeWidth="?attr/tangramOutlineWidth" />
-      <path android:fillColor="?attr/tangramSmallSquareColor"
+      <path android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 594,106 L 624,76 L 654,106 L 624,136 L 594,106 Z"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
@@ -186,7 +186,7 @@
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
             android:strokeWidth="?attr/tangramOutlineWidth" />
-      <path android:fillColor="?attr/tangramSmallSquareColor"
+      <path android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 771.5,55 L 814,55 L 814,97.5 L 771.5,97.5 Z"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
@@ -223,7 +223,7 @@
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
             android:strokeWidth="?attr/tangramOutlineWidth" />
-      <path android:fillColor="?attr/tangramSmallSquareColor"
+      <path android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 931.75,55 L 973.75,55 L 973.75,97.5 L 931.75,97.5 Z"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
@@ -260,7 +260,7 @@
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
             android:strokeWidth="?attr/tangramOutlineWidth" />
-      <path android:fillColor="?attr/tangramSmallSquareColor"
+      <path android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 1005.25,97.5 L 1047.75,97.5 L 1047.75,140 1005.25,140 Z"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"

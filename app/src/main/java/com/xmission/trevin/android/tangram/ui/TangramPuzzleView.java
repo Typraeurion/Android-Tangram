@@ -149,8 +149,8 @@ public class TangramPuzzleView extends View {
             fillColors.clear();
             fillColors.put(R.attr.tangramSmallTriangleColor, a.getColor(
                     R.styleable.PlayTableView_tangramSmallTriangleColor, Color.GRAY));
-            fillColors.put(R.attr.tangramSmallSquareColor, a.getColor(
-                    R.styleable.PlayTableView_tangramSmallSquareColor, Color.GRAY));
+            fillColors.put(R.attr.tangramSquareColor, a.getColor(
+                    R.styleable.PlayTableView_tangramSquareColor, Color.GRAY));
             fillColors.put(R.attr.tangramParallelogramColor, a.getColor(
                     R.styleable.PlayTableView_tangramParallelogramColor, Color.GRAY));
             fillColors.put(R.attr.tangramMediumTriangleColor, a.getColor(

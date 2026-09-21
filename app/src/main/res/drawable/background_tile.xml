@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The background tile is constructed from four sets of tans arranged in a large square.  The colors are muted from the bold "solution" colors and go lighter or darker according to the theme.  Scale is 4× puzzle units. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="192dp"
+    android:height="192dp"
+    android:viewportWidth="192"
+    android:viewportHeight="192">
+  <group
+      android:pivotX="96"
+      android:pivotY="96"
+      android:rotation="0">
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 0,0 L 96,0 L 48,48 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 96,0 L 96,96 L 48,48 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 96,0 L 192,0 L 144,48 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 192,0 L 192,96 L 144,48 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 96,48 L 144,96 L 96,144 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 0,96 L 48,144 L 0,192 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 24,168 L 72,120 L 120,168 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_blue"
+          android:pathData="M 96,192 L 144,144 L 192,192 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_green"
+          android:pathData="M 0,0 L 48,48 L 0,48 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_green"
+          android:pathData="M 96,0 L 144,48 L 96,48 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_green"
+          android:pathData="M 24,72 L 72,120 L 24,120 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_green"
+          android:pathData="M 120,120 L 168,120 L 120,168 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_orange"
+          android:pathData="M 0,48 L 24,72 L 24,120 L 0,96 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_orange"
+          android:pathData="M 96,48 L 144,48 L 168,72 L 120,72 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_orange"
+          android:pathData="M 24,168 L 72,168 L 48,192 L 0,192 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_orange"
+          android:pathData="M 72,168 L 120,168 L 96,192 L 48,192 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_yellow"
+          android:pathData="M 48,48 L 72,72 L 48,96 L 24,72 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_yellow"
+          android:pathData="M 72,72 L 96,96 L 72,120 L 48,96 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_yellow"
+          android:pathData="M 168,72 L 192,96 L 168,120 L 144,96 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_yellow"
+          android:pathData="M 168,120 L 192,144 L 168,168 L 144,144 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 0,48 L 48,48 L 24,72 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 120,72 L 168,72 L 144,96 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 24,120 L 72,120 L 48,144 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 72,120 L 96,96 L 96,144 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 96,144 L 120,120 L 120,168 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 120,120 L 144,96 L 168,120 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 168,120 L 192,96 L 192,144 Z"/>
+
+    <path android:strokeWidth="1"
+          android:strokeColor="@color/bgtile_outline"
+          android:strokeLineJoin="round"
+          android:fillColor="@color/bgtile_red"
+          android:pathData="M 168,168 L 192,144 L 192,192 Z"/>
+
+  </group>
+</vector>

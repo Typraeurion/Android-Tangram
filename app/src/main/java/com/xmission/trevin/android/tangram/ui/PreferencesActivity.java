@@ -82,6 +82,7 @@ public class PreferencesActivity extends TangramActivity {
                 savedInstanceState == null ? "" : "saved state"));
         setContentView(R.layout.activity_preferences);
         WindowInsetsUtil.applySafeAreaPadding(this);
+        BackgroundTiler.applyTiledBackground(this, R.drawable.background_tile);
 
         prefs = TangramPreferences.getInstance(this);
         library = PuzzleLibrary.getInstance();

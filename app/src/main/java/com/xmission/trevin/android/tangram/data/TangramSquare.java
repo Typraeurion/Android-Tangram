@@ -60,7 +60,7 @@ public class TangramSquare extends TangramPiece {
 
     @Override
     public int getColorAttr() {
-        return R.attr.tangramSmallSquareColor;
+        return R.attr.tangramSquareColor;
     }
 
 }

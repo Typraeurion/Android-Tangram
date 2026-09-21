@@ -26,6 +26,24 @@
         <item name="android:paddingEnd">8dp</item>
     </style>
 
+    <!-- Rounded, outlined button showing the chosen user-puzzle folder,
+         styled to match the rest of the Preferences screen. -->
+    <style name="PrefFolderButton">
+        <item name="android:background">@drawable/pref_folder_button_background</item>
+        <item name="android:textColor">@color/foreground</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:drawableStart">@drawable/ic_folder</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+    </style>
+
     <!-- A single icon-over-text option within a Preferences RadioGroup.
          The radio circle is hidden; selection is shown by the background. -->
     <style name="PrefOptionButton">

@@ -5,4 +5,14 @@
     <color name="shadow_background">#99121212</color>
     <color name="shadow_border">#77FAFAFA</color>
     <color name="translucent_background">#33121212</color>
+
+    <!-- Colors for the background tile pattern are muted puzzle colors.
+         These are the defaults for night / dark mode; they're computed
+         as 20% of the original color plus 80% of the background. -->
+    <color name="bgtile_outline">@color/gray30</color>
+    <color name="bgtile_blue">@color/dark_dodger_blue</color>
+    <color name="bgtile_green">@color/dark_forest_green</color>
+    <color name="bgtile_orange">@color/dark_dark_orange</color>
+    <color name="bgtile_red">@color/dark_crimson</color>
+    <color name="bgtile_yellow">@color/dark_gold</color>
 </resources>

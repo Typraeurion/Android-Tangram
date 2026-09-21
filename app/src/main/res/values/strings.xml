@@ -1,6 +1,6 @@
 <resources>
     <string name="InfoPopupText">Tangram\n
-version 0.9.0 (2026.09.05)\n
+version 0.9.0 (2026.09.21)\n
 by Trevin Beattie\n
 \n
 Documentation for this app can be found on its GitHub project page:
@@ -76,12 +76,7 @@ concepts that cannot be copyrighted.\n
     <string name="PlayButtonSaveTooltip">Save the completed Tangram</string>
     <string name="PlayViewGoalText">Goal</string>
     <string name="PlayViewGoalTooltip">Puzzle goal</string>
-    <string name="PrefsDialogUserDirTitle">Choose a folder for user puzzles</string>
-    <string name="PrefsTextCornerBottomLeft">Bottom Left</string>
-    <string name="PrefsTextCornerBottomRight">Bottom Right</string>
     <string name="PrefsTextCornerButtons">Corner Buttons: </string>
-    <string name="PrefsTextCornerTopLeft">Top Left</string>
-    <string name="PrefsTextCornerTopRight">Top Right</string>
     <string name="PrefsTextHintLevel">Hint Level: </string>
     <string name="PrefsTextHintNone">None</string>
     <string name="PrefsTextHintOutline">Outline</string>

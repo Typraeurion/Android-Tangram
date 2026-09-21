@@ -11,7 +11,7 @@
         <path android:strokeWidth="?attr/tangramOutlineWidth"
             android:strokeColor="?attr/tangramOutlineColor"
             android:strokeLineJoin="round"
-            android:fillColor="?attr/tangramSmallSquareColor"
+            android:fillColor="?attr/tangramSquareColor"
             android:pathData="M 5,5 L 61.568542494923802,5 L 61.568542494923802,61.568542494923802 L 5,61.568542494923802 Z"/>
     </group>
 </vector>

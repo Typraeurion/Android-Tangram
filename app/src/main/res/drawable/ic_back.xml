@@ -35,7 +35,7 @@
         android:strokeLineJoin="round"
         android:strokeWidth="?attr/tangramOutlineWidth"/>
 
-    <path android:fillColor="?attr/tangramSmallSquareColor"
+    <path android:fillColor="?attr/tangramSquareColor"
         android:pathData="M 14.75,26 L 26,26 L 26,37.25 L 14.75,37.25 Z"
         android:strokeColor="?attr/tangramOutlineColor"
         android:strokeLineJoin="round"

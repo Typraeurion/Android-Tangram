@@ -99,26 +99,17 @@
                 android:layout_marginBottom="8dp" />
 
             <!-- Folder for User Puzzles -->
-            <LinearLayout
+            <TextView
+                style="@style/PrefSectionHeader"
+                android:text="@string/PrefsTextSaveFolder" />
+
+            <Button android:id="@+id/PreferencesButtonSaveFolder"
+                style="@style/PrefFolderButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/PrefsTextSaveFolder" />
-                <Button android:id="@+id/PreferencesButtonSaveFolder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:ellipsize="marquee"
-                    android:maxLines="1"
-                    android:scrollHorizontally="true"
-                    android:text="@string/PrefsTextNoUserDir"
-                    android:textAllCaps="false" />
-            </LinearLayout>
-
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/PrefsTextNoUserDir" />
         </LinearLayout>
 
     </ScrollView>

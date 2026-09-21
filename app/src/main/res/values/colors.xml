@@ -4,20 +4,29 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="invisible">#00808080</color>
-    <color name="white_smoke">#FFF5F5F5</color>
-    <color name="gray7">#FF121212</color>
     <color name="gray13">#FF212121</color>
-    <color name="gray19">#FF303030</color>
+    <color name="gray30">#FF4D4D4D</color>
+    <color name="gray81">#FFCFCFCF</color>
     <color name="gray98">#FFFAFAFA</color>
+    <color name="dark_dodger_blue">#FF20374D</color>
     <color name="dodger_blue">#FF1E90FF</color>
+    <color name="light_dodger_blue">#FFCEE4FB</color>
+    <color name="dark_forest_green">#FF203620</color>
     <color name="forest_green">#FF228B22</color>
+    <color name="light_forest_green">#FFCFE4CF</color>
     <color name="green">#FF00FF00</color>
     <color name="lawn_green">#FF7CFC00</color>
     <color name="green_yellow">#FFADFF2F</color>
     <color name="yellow_2">#FFEEEE00</color>
+    <color name="dark_gold">#FF4D451A</color>
     <color name="gold">#FFFFD700</color>
+    <color name="light_gold">#FFFBF3C8</color>
+    <color name="dark_dark_orange">#FF4D361A</color>
     <color name="dark_orange">#FFFF8C00</color>
+    <color name="light_dark_orange">#FFFBE4C8</color>
     <color name="crimson">#FFDC143C</color>
+    <color name="dark_crimson">#FF4A1E26</color>
+    <color name="light_crimson">#FFF4CCD4</color>
 
     <!-- Android's default foreground color is a translucent black;
          because translucency can cause pieces' outlines to show up,
@@ -29,4 +38,14 @@
     <color name="shadow_background">#99FFFFFF</color>
     <color name="shadow_border">#77000000</color>
     <color name="translucent_background">#33FFFFFF</color>
+
+    <!-- Colors for the background tile pattern are muted puzzle colors.
+         These are the defaults for day / light mode; they're computed
+         as 20% of the original color plus 80% of the background. -->
+    <color name="bgtile_outline">@color/gray81</color>
+    <color name="bgtile_blue">@color/light_dodger_blue</color>
+    <color name="bgtile_green">@color/light_forest_green</color>
+    <color name="bgtile_orange">@color/light_dark_orange</color>
+    <color name="bgtile_red">@color/light_crimson</color>
+    <color name="bgtile_yellow">@color/light_gold</color>
 </resources>

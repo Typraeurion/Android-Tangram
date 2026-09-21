@@ -55,6 +55,7 @@ public class MainActivity extends TangramActivity {
                 "onCreate(%s)", savedInstanceState == null ? "" : "saved state"));
         setContentView(R.layout.activity_main);
         WindowInsetsUtil.applySafeAreaPadding(this);
+        BackgroundTiler.applyTiledBackground(this, R.drawable.background_tile);
 
         TangramPreferences prefs = TangramPreferences.getInstance(this);
         prefs.registerPieceColoringListener(new PieceColoringChangeListener());

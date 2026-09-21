@@ -15,7 +15,7 @@
         <item name="tableOutlineWidth">1dp</item>
         <item name="tangramOutlineColor">@color/foreground</item>
         <item name="tangramSmallTriangleColor">@color/crimson</item>
-        <item name="tangramSmallSquareColor">@color/gold</item>
+        <item name="tangramSquareColor">@color/gold</item>
         <item name="tangramParallelogramColor">@color/dark_orange</item>
         <item name="tangramMediumTriangleColor">@color/forest_green</item>
         <item name="tangramLargeTriangleColor">@color/dodger_blue</item>
@@ -29,7 +29,7 @@
         <item name="tableOutlineWidth">0.25dp</item>
         <item name="tangramOutlineColor">@color/foreground</item>
         <item name="tangramSmallTriangleColor">@color/foreground</item>
-        <item name="tangramSmallSquareColor">@color/foreground</item>
+        <item name="tangramSquareColor">@color/foreground</item>
         <item name="tangramParallelogramColor">@color/foreground</item>
         <item name="tangramMediumTriangleColor">@color/foreground</item>
         <item name="tangramLargeTriangleColor">@color/foreground</item>
@@ -41,7 +41,7 @@
         <item name="tableOutlineWidth">1dp</item>
         <item name="tangramOutlineColor">@color/background</item>
         <item name="tangramSmallTriangleColor">@color/foreground</item>
-        <item name="tangramSmallSquareColor">@color/foreground</item>
+        <item name="tangramSquareColor">@color/foreground</item>
         <item name="tangramParallelogramColor">@color/foreground</item>
         <item name="tangramMediumTriangleColor">@color/foreground</item>
         <item name="tangramLargeTriangleColor">@color/foreground</item>
